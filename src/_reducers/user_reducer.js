@@ -1,0 +1,20 @@
+import {
+    LOGIN_USER
+} from '../_actions/types';
+
+export default function (state={}, action){
+    switch(action.tyoe) {
+        case LOGIN_USER:
+            return {...state, loginSucess : action.payload}
+
+            break;
+
+        default:
+
+            return state;
+
+
+
+    }
+
+}
