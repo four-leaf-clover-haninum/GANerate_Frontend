@@ -11,6 +11,7 @@ function RegisterPage(props){
     const [Name, serName] = useState('');
     const [Password, setPassword] = useState('');
     const [ConfirmPassword, setConfirmPassword] = useState('');
+    const [PhoneNumber, setPhoneNumber] = useState('');
 
 
     const onEmailHandler = (event) => {
@@ -29,6 +30,10 @@ function RegisterPage(props){
         setConfirmPassword(event.currentTarget.value);
     };
 
+    const onPhoneNumberHandler = (event) => {
+        setPhoneNumber(event.currentTarget.value);
+    };
+
     const onSubmitHandler = (event) => {
         event.preventDefault();
 
@@ -39,7 +44,8 @@ function RegisterPage(props){
         let body = {
             email: Email,
             name : Name,
-            password: Password
+            password: Password,
+            phoneNumber: PhoneNumber
         };
 
 
@@ -75,6 +81,10 @@ function RegisterPage(props){
 
                 <label>Confirm Password</label>
                 <input type="password" value={ConfirmPassword} onChange={onConfirmPasswordHandler} />
+
+                <label>Phone Number</label>
+                <input type="tel" value={PhoneNumber} onChange={onPhoneNumberHandler} />
+
 
 
                 <br />
