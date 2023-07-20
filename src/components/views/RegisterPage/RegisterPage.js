@@ -10,7 +10,6 @@ function RegisterPage(props){
     const [Email, setEmail] = useState('');
     const [Name, serName] = useState('');
     const [Password, setPassword] = useState('');
-    const [ConfirmPassword, setConfirmPassword] = useState('');
     const [PhoneNumber, setPhoneNumber] = useState('');
 
 
@@ -26,10 +25,6 @@ function RegisterPage(props){
         setPassword(event.currentTarget.value);
     };
 
-    const onConfirmPasswordHandler = (event) => {
-        setConfirmPassword(event.currentTarget.value);
-    };
-
     const onPhoneNumberHandler = (event) => {
         setPhoneNumber(event.currentTarget.value);
     };
@@ -37,27 +32,20 @@ function RegisterPage(props){
     const onSubmitHandler = (event) => {
         event.preventDefault();
 
-        if(Password !== ConfirmPassword) {
-            return alert('비밀번호와 비밀번호 확인은 같아야합니다.')
-        }
+        ///
 
-        let body = {
+          let body = {
             email: Email,
             name : Name,
             password: Password,
             phoneNumber: PhoneNumber
-        };
-
-
-        dispatch(registerUser(body))
-            .then(response => {
-                if(response.payload.success){
-                    props.history.push("/auth/signin")
-                }else {
-                    alert("failed to signup")
-                }
-            })
-    }
+          };
+          dispatch(registerUser(body)).then((res) => {
+            alert("가입이 정상적으로 완료되었습니다");
+            props.history.push("/auth/signin");
+          });
+        }
+    /////
 
 
     return (
@@ -78,9 +66,6 @@ function RegisterPage(props){
 
                 <label>Password</label>
                 <input type="password" value={Password} onChange={onPasswordHandler} />
-
-                <label>Confirm Password</label>
-                <input type="password" value={ConfirmPassword} onChange={onConfirmPasswordHandler} />
 
                 <label>Phone Number</label>
                 <input type="tel" value={PhoneNumber} onChange={onPhoneNumberHandler} />

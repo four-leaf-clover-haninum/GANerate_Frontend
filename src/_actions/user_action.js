@@ -23,3 +23,13 @@ export function registerUser(dataToSubmit) {
         payload: request
     };
 }
+
+export function navbarUser(dataToSubmit) {
+    const request = axios.post('/', dataToSubmit)
+        .then(response => response.data)
+
+    return {
+        type: REGISTER_USER,
+        payload: request
+    };
+}

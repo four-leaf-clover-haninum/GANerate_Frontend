@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../_actions/user_action';
+import "./LoginPage.css"
+
 
 function LoginPage(props) {
     const dispatch = useDispatch();
@@ -21,34 +23,26 @@ function LoginPage(props) {
     const onSubmitHandler = (event) => {
         event.preventDefault();
 
-        console.log('Email', Email);
-        console.log('Password', Password);
+        ////통신하는 부분
 
         let body = {
             email: Email,
             password: Password
         };
 
+
         dispatch(loginUser(body))
             .then(response => {
                 if (response.payload.loginSuccess) {
                     props.history.push('/');
                 } else {
-                    const { code } = response.payload;
-                    if (code === 2201) {
-                        alert('존재하지 않는 아이디');
-                    } else if (code === 2202) {
-                        alert('올바르지 않은 비밀번호');
-                    } else if (code === -1) {
-                        alert('비밀번호는 필수입니다.');
-                    } else if (code === 0) {
-                        alert('성공');
-                    } else {
                         alert('로그인 실패');
-                    }
                 }
-            });
+            })
     };
+
+        /////통신하는 부분
+
 
     return (
         <div style={{
@@ -64,9 +58,12 @@ function LoginPage(props) {
                 <label>Password</label>
                 <input type="password" value={Password} onChange={onPasswordHandler} />
                 <br />
-                <button>
+                {/* 수정된 부분 */}
+                <button type="submit">
                     로그인
                 </button>
+                {/* ------------ */}
+                <p className="message">Not registered? <a href="/auth/signup">Create an account</a></p>
             </form>
 
         </div>
