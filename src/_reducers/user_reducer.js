@@ -1,20 +1,25 @@
 import {
-    LOGIN_USER,
-    NAVBAR_USER,
-    REGISTER_USER
+  LOGIN_USER,
+  LOGIN_USER_FAILURE,
+  REGISTER_USER,
+  NAVBAR_USER
 } from '../_actions/types';
 
-const userReducer = function (state = {}, action) {
-    switch (action.type) { // action.tyoe가 아닌 action.type으로 수정해줍니다.
+const initialState = {};
+
+const userReducer = function (state = initialState, action) {
+  switch (action.type) {
       case LOGIN_USER:
-        return { ...state, loginSuccess: action.payload }; // loginSucess가 아닌 loginSuccess로 수정해줍니다.
+          return { ...state, loginSuccess: action.payload };
+      case LOGIN_USER_FAILURE:
+          return { ...state, error: action.payload };
       case REGISTER_USER:
-        return { ...state, register: action.payload };
+          return { ...state, register: action.payload };
       case NAVBAR_USER:
-        return { ...state, navbar: action.payload };
+          return { ...state, navbar: action.payload };
       default:
-        return state;
-    }
-  };
-  
-  export default userReducer;
+          return state;
+  }
+};
+
+export default userReducer;

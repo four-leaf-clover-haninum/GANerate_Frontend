@@ -6,6 +6,7 @@ import { loginUser } from '../../../_actions/user_action';
 import "./LoginPage.css"
 
 
+
 function LoginPage(props) {
     const dispatch = useDispatch();
 
@@ -23,22 +24,14 @@ function LoginPage(props) {
     const onSubmitHandler = (event) => {
         event.preventDefault();
 
-        ////통신하는 부분
+  
 
         let body = {
             email: Email,
             password: Password
         };
-
-
-        dispatch(loginUser(body))
-            .then(response => {
-                if (response.payload.loginSuccess) {
-                    props.history.push('/');
-                } else {
-                        alert('로그인 실패');
-                }
-            })
+    
+        dispatch(loginUser(body));
     };
 
         /////통신하는 부분
@@ -50,7 +43,7 @@ function LoginPage(props) {
             width: '100%', height: '100vh'
         }}>
 
-            <form style={{ display: 'felx', flexDirection: 'column' }}
+            <form style={{ display: 'flex', flexDirection: 'column' }}
                 onSubmit={onSubmitHandler}
             >
                 <label>Email</label>
