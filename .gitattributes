@@ -1,3 +1,4 @@
 node_modules/.cache/**/*.pack filter=lfs diff=lfs merge=lfs -text
 GAN.exe filter=lfs diff=lfs merge=lfs -text
+node_modules/.cache/*.pack filter=lfs diff=lfs merge=lfs -text
 node_modules/.cache/default-development/*.pack filter=lfs diff=lfs merge=lfs -text
