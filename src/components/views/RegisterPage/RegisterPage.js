@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../../../_actions/user_action';
+import "./RegisterPage.css"
+
 
 
 function RegisterPage(props){
@@ -49,36 +51,25 @@ function RegisterPage(props){
 
 
     return (
-        <div style={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center',
-            width: '100%', height: '100vh'
-        }}>
-
-            <form style={{ display: 'felx', flexDirection: 'column' }}
-                onSubmit={onSubmitHandler}
-            >
-
-                <label>Name</label>
-                <input type="text" value={Name} onChange={onNameHandler} />
-
-                <label>Email</label>
-                <input type="email" value={Email} onChange={onEmailHandler} />
-
-                <label>Password</label>
-                <input type="password" value={Password} onChange={onPasswordHandler} />
-
-                <label>Phone Number</label>
-                <input type="tel" value={PhoneNumber} onChange={onPhoneNumberHandler} />
-
-
-
-                <br />
-                <button>
-                    회원가입
-                </button>
-            </form>
-
+        <div className="RegisterPage">
+          <form className="form" onSubmit={onSubmitHandler}>
+            <label>Name</label>
+            <input type="text" value={Name} onChange={onNameHandler} />
+    
+            <label>Email</label>
+            <input type="email" value={Email} onChange={onEmailHandler} />
+    
+            <label>Password</label>
+            <input type="password" value={Password} onChange={onPasswordHandler} />
+    
+            <label>Phone Number</label>
+            <input type="tel" value={PhoneNumber} onChange={onPhoneNumberHandler} />
+    
+            <br />
+            <button type="submit">회원가입</button>
+          </form>
         </div>
-    )
-}
+      );
+    }
+    
 export default RegisterPage

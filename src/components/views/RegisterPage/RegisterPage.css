@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300');
 
-.loginPage {
+.RegisterPage {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   min-height: 100vh;
   margin-top: 310px; /* You can adjust this value as needed */
+  width: 360px; /* Adjust the width as per your preference */
 }
-
 
 .form input {
   font-family: "Roboto", sans-serif;
@@ -37,7 +37,9 @@
   cursor: pointer;
 }
 
-.form button:hover, .form button:active, .form button:focus {
+.form button:hover,
+.form button:active,
+.form button:focus {
   background: #7e0e3d;
 }
 

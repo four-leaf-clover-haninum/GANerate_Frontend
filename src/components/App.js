@@ -4,7 +4,7 @@ import "../../src/App.css";
 import LandingPage from "./views/LandingPage/LandingPage";
 import LoginPage from "./views/LoginPage/LoginPage";
 import RegisterPage from "./views/RegisterPage/RegisterPage";
-import NavBar from './views/NavBar/NavBar';
+import HomePage from './views/HomePage/HomePage';
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
           <Route exact path="/" component={LandingPage} />
           <Route exact path="/auth/signin" component={LoginPage} />
           <Route exact path="/auth/signup" component={RegisterPage} />
-          <Route exact path="/" component={NavBar} />
+          <Route exact path="/HomePage" component={HomePage} />
         </Switch>
       </div>
     </Router>

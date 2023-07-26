@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import Navbar from "../NavBar/NavBar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAppleAlt } from '@fortawesome/free-solid-svg-icons';
 import '../LandingPage/LandingPage.css'
@@ -19,7 +18,6 @@ function LandingPage() {
 
     return (
         <div>
-      <Navbar />
       <div className="apple-icon">
         <FontAwesomeIcon icon={faAppleAlt} size="4x" color="#e74c3c" />
       </div>
@@ -31,3 +29,7 @@ function LandingPage() {
 }
 
 export default LandingPage;
+
+
+
+

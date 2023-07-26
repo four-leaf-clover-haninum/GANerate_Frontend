@@ -2,7 +2,8 @@ import axios from 'axios';
 import {
     LOGIN_USER,
     REGISTER_USER,
-    LOGIN_USER_FAILURE
+    LOGIN_USER_FAILURE,
+    HOMEPAGE_USER
 } from './types';
 
 export function loginUser(dataToSubmit) {
@@ -72,3 +73,14 @@ export function navbarUser(dataToSubmit) {
         payload: request
     };
 }
+
+export function homepageUser(dataToSubmit) {
+    const request = axios.post('/', dataToSubmit)
+        .then(response => response.data)
+
+    return {
+        type: HOMEPAGE_USER,
+        payload: request
+    };
+}
+
