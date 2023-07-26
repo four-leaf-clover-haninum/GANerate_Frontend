@@ -9,36 +9,39 @@ function HomePage() {
 
   return (
 
-    <div className="HomePage">
+    <div className="HomePage d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
     <div style={{ justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
 
       <React.Fragment>
         {/* 네비 바 */}
         
-        <CustomNavbar bg="light" variant="light" className="static-top" style={{ padding: '20px' }}>
-        <div className="container">
-          <a className="navbar-brand" href="/" style={{ fontWeight: '900', fontSize: '35px', color: '#BB2649' }}>
-            <strong>GAN:ERATE</strong>
-          </a>
-  
-          {/* 링크 추가 및 라우팅 설정 */}
-          <Nav className="me-auto">
-            <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 50px' }}>이용 안내</Nav.Link>
-            <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 50px' }}>데이터 생성</Nav.Link>
-            <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 50px' }}>데이터 마켓</Nav.Link>
-            <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 50px' }}>데이터 검색</Nav.Link>
-          </Nav>
-  
-          {/* 로그인 및 마이페이지 링크 추가 및 라우팅 설정 */}
-          <Nav>
-          <Nav.Link href="/auth/signin" className="btn btn-1" style={{ fontSize: '20px' }}>Log In</Nav.Link>
-          <Nav.Link href="/auth/signup" className="btn btn-2" style={{ fontSize: '20px', marginLeft: '10px' }}>
-              <FaUserCircle style={{ fontSize: '24px', marginRight: '5px' }} />
-              My Page
-            </Nav.Link>
-          </Nav>
-        </div>
-      </CustomNavbar>
+        
+    {/* 네비 바 */}
+    <CustomNavbar bg="light" variant="light" className="static-top" style={{ padding: '20px' }}>
+      <div className="container">
+        <a className="navbar-brand" href="/HomePage" style={{ fontWeight: '900', fontSize: '35px', color: '#BB2649' }}>
+          <strong>GAN:ERATE</strong>
+        </a>
+
+        {/* 링크 추가 및 라우팅 설정 */}
+        <Nav className="me-auto">
+          <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>이용 안내</Nav.Link>
+          <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 생성</Nav.Link>
+          <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 마켓</Nav.Link>
+          <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 검색</Nav.Link>
+        </Nav>
+
+        {/* 로그인 및 마이페이지 링크 추가 및 라우팅 설정 */}
+        <Nav className="ml-auto">
+    <Nav.Link href="/auth/signin" className="btn btn-1" style={{ fontSize: '20px', color: 'white' }}>Log In</Nav.Link>
+    <Nav.Link href="/auth/signup" className="btn btn-2 ml-2" style={{ fontSize: '20px', color: 'white', marginLeft: '20px' }}>
+      <FaUserCircle style={{ fontSize: '24px', marginRight: '10px' }} />
+      My Page
+    </Nav.Link>
+    </Nav>
+
+      </div>
+    </CustomNavbar>
 
         {/* 플랫폼 설명 */}
       
@@ -152,118 +155,118 @@ function HomePage() {
                 
                 
                         {/* 카테고리 설정 */}
-      <section className="showcase">
-      <div className="container-fluid p-0">
-        <div className="row g-0">
-          <div className="col-lg-12 order-lg-1 my-auto showcase-text">
-            <h1>카테고리</h1>
-            <p className="lead mb-0">아래 카테고리를 선택하시면 검색된 데이터들을 주제별로 분류하여 조회하실 수 있습니다.</p>
-
-            {/* Centering container for c buttons */}
-            <div className="d-flex justify-content-center mt-4">
-              <div className="row">
-                {/* 첫 번째 줄 */}
-                <div className="col-lg-3 mb-3">
-                  <div className="rounded-box rounded p-3 bg-light">
-                    <a className="btn btn-primary btn-lg btn-block" href="/">
-                      보건/의료
-                    </a>
-                  </div>
-                </div>
-                <div className="col-lg-3 mb-3">
-                  <div className="rounded-box rounded p-3 bg-light">
-                    <a className="btn btn-primary btn-lg btn-block" href="/">동물/식물
-                    </a>
-                  </div>
-                  </div>
-                  <div className="col-lg-3 mb-3">
-                    <div className="rounded-box rounded p-3 bg-light">
-                      <a className="btn btn-primary btn-lg btn-block" href="/">
-                        사람
-                      </a>
-                    </div>
-                  </div>
-                  <div className="col-lg-3 mb-3">
-                    <div className="rounded-box rounded p-3 bg-light">
-                      <a className="btn btn-primary btn-lg btn-block" href="/">
-                        추상
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex justify-content-center mt-4">
-                <div className="row">
-                  {/* 두 번째 줄 */}
-                  <div className="col-lg-3 mb-3">
-                    <div className="rounded-box rounded p-3 bg-light">
-                      <a className="btn btn-primary btn-lg btn-block" href="/">
-                        패션
-                      </a>
-                    </div>
-                  </div>
-                  <div className="col-lg-3 mb-3">
-                    <div className="rounded-box rounded p-3 bg-light">
-                      <a className="btn btn-primary btn-lg btn-block" href="/">
-                        건물/랜드마크
-                      </a>
-                    </div>
-                  </div>
-                  <div className="col-lg-3 mb-3">
-                    <div className="rounded-box rounded p-3 bg-light">
-                      <a className="btn btn-primary btn-lg btn-block" href="/">
-                        풍경/배경
-                      </a>
-                    </div>
-                  </div>
-                  <div className="col-lg-3 mb-3">
-                    <div className="rounded-box rounded p-3 bg-light">
-                      <a className="btn btn-primary btn-lg btn-block" href="/">
-                        과학, 항공 및 우주
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex justify-content-center mt-4">
-                <div className="row">
-                  {/* 세 번째 줄 */}
-                  <div className="col-lg-3 mb-3">
-                    <div className="rounded-box rounded p-3 bg-light">
-                      <a className="btn btn-primary btn-lg btn-block" href="/">
-                        경제/비즈니스
-                      </a>
-                    </div>
-                  </div>
-                  <div className="col-lg-3 mb-3">
-                    <div className="rounded-box rounded p-3 bg-light">
-                      <a className="btn btn-primary btn-lg btn-block" href="/">
-                        사물/제품
-                      </a>
-                    </div>
-                  </div>
-                  <div className="col-lg-3 mb-3">
-                    <div className="rounded-box rounded p-3 bg-light">
-                      <a className="btn btn-primary btn-lg btn-block" href="/">
-                        교통/물류
-                      </a>
-                    </div>
-                  </div>
-                  <div className="col-lg-3 mb-3">
-                    <div className="rounded-box rounded p-3 bg-light">
-                      <a className="btn btn-primary btn-lg btn-block" href="/">
-                        스포츠
-                      </a>
-                    </div>
-                  </div>
-                  </div>
-              </div>
-            </div>
-          </div>
-          </div>
-          
-      </section>
-
+      <div class="centered-showcase">
+        <section class="showcase">
+          <div class="container-fluid p-0">
+              <div class="row g-0">
+                <div class="col-lg-12 order-lg-0 my-auto showcase-text">
+                  <h1>카테고리</h1>
+                      <p class="lead mb-5">아래 카테고리를 선택하시면 검색된 데이터들을 주제별로 분류하여 조회하실 수 있습니다.</p>
+                    
+                                <div class="d-flex justify-content-center mt-4">
+                                  <div class="row">
+                                  
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          보건/의료
+                                        </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          동물/식물
+                                        </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          사람
+                                        </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          추상
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-4">
+                                  <div class="row">
+                                   
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          패션
+                                        </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          건물/랜드마크
+                                        </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          풍경/배경
+                                        </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          과학, 항공 및 우주
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="d-flex justify-content-center mt-4">
+                                  <div class="row">
+                                   
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          경제/비즈니스
+                                        </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          사물/제품
+                                        </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          교통/물류
+                                        </a>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-3 mb-3">
+                                      <div class="rounded-box rounded p-3 bg-light">
+                                        <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
+                                          스포츠
+                                        </a>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </section>
+                      </div>
       {/* Add the rest of your code below */}
       
       {/*footer*/}

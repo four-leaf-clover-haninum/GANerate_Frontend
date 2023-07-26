@@ -1,5 +1,31 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300');
 
+.centered-showcase {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 30vh;
+  }
+  
+  /* Smaller box size */
+  .rounded-box {
+    max-width: 1000px; /* Adjust this value to change the box width */
+    width: 100%;
+    margin: 0 ;
+  }
+  
+  
+  .HomePage {
+    position: absolute;
+    top: 0; /* Positioned at the top */
+    left: 50%;
+    transform: translateX(-50%);
+    min-height: 100vh;
+    padding-top: 0px; /* Adding some top padding to create space from the top */
+    width: 100%; /* Setting width to 100% to take up the entire width of the viewport */
+  }
+
+
 .RegisterPage {
   position: absolute;
   top: 50%;

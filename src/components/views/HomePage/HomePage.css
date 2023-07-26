@@ -1,5 +1,29 @@
 @charset "UTF-8";
 
+.custom-btn-size {
+  /* Adjust the values as per your desired button size */
+  font-size: 18px; /* Set the font size */
+  padding: 220px 20px; /* Set the padding around the text */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Center showcase section */
+.centered-showcase {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 30vh;
+}
+
+/* Smaller box size */
+.rounded-box {
+  max-width: 100px; /* Adjust this value to change the box width */
+  width: 100%;
+  margin: 0 ;
+}
+
 
 .HomePage {
   position: absolute;
@@ -7,7 +31,7 @@
   left: 50%;
   transform: translateX(-50%);
   min-height: 100vh;
-  padding-top: 50px; /* Adding some top padding to create space from the top */
+  padding-top: 0px; /* Adding some top padding to create space from the top */
   width: 100%; /* Setting width to 100% to take up the entire width of the viewport */
 }
 
@@ -642,13 +666,13 @@ progress {
 .container-md,
 .container-sm 
 {
-  --bs-gutter-x: 0.5rem;
+  --bs-gutter-x: -0.5rem;
   --bs-gutter-y: 0.5rem;
   width: 100%;
   padding-right: calc(var(--bs-gutter-x) * 0.9);
   padding-left: calc(var(--bs-gutter-x) * 0.9);
   margin-right: -10%;
-  margin-left: 15%;
+  margin-left: 0%;
 }
 
 
