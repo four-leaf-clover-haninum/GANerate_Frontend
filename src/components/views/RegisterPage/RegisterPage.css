@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300');
 
+
+.custom-h1-spacing {
+    margin-bottom: 10px;
+  }
+
 .centered-showcase {
     display: flex;
     justify-content: center;
@@ -28,7 +33,7 @@
 
 .RegisterPage {
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   min-height: 100vh;

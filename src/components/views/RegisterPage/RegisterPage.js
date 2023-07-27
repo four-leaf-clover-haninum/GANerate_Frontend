@@ -75,26 +75,30 @@ function RegisterPage(props) {
           </div>
         </CustomNavbar>
 
-                <div className="RegisterPage">
+        <div className="container mt-5">
+  <h1 className="text-center mb-3">회원가입</h1>
 
-                <h1 style={{ textAlign: 'center', fontSize: '40px'}}>회원가입</h1>
-                    <form className="form" onSubmit={onSubmitHandler}>
-                        <label>Name</label>
-                        <input type="text" value={Name} onChange={onNameHandler} />
+  <div className="RegisterPage">
+    <form className="form" onSubmit={onSubmitHandler}>
+      <label>Name</label>
+      <input type="text" value={Name} onChange={onNameHandler} />
 
-                        <label>Email</label>
-                        <input type="email" value={Email} onChange={onEmailHandler} />
+      <label>Email</label>
+      <input type="email" value={Email} onChange={onEmailHandler} />
 
-                        <label>Password</label>
-                        <input type="password" value={Password} onChange={onPasswordHandler} />
+      <label>Password</label>
+      <input type="password" value={Password} onChange={onPasswordHandler} />
 
-                        <label>Phone Number</label>
-                        <input type="tel" value={PhoneNumber} onChange={onPhoneNumberHandler} />
+      <label>Phone Number</label>
+      <input type="tel" value={PhoneNumber} onChange={onPhoneNumberHandler} />
 
-                        <br />
-                        <button type="submit">회원가입</button>
-                    </form>
-                </div>
+      <br />
+      <button type="submit">회원가입</button>
+    </form>
+  </div>
+</div>
+      
+   
                 <footer className="py-3 bg-dark fixed-bottom">
     <div className="container px-7 px-lg-100">
       <p className="m-0 text-white footer-center">Copyright &copy; four-leaf-clover-haninum</p>
@@ -102,6 +106,7 @@ function RegisterPage(props) {
   </footer>
             </div>
         </div>
+
     );
 }
 

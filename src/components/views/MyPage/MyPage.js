@@ -40,16 +40,15 @@ function MyPage(props) {
     </React.Fragment>
    
 
-        <div className="container mt-5">
-          <h1 className="text-center">My Page</h1>
-
+    <div className="container mt-5">
+    <h1 className="text-center" style={{ marginBottom: "60px" }}>My Page</h1>
 
           
           <div className="row mt-4">
             <div className="col-lg-6">
               <div className="user-info-box p-4 rounded bg-light">
               <h3 className="text-center">회원 정보</h3>
-                <p>구매밍밍밍</p>
+                <p>나는 옥지얌</p>
                 <p>Email: john@example.com</p>
                 <div className="edit-item">
   <a href="/edit-profile" className="btn btn-primary d-flex justify-content-center align-items-center" style={{ height: '100%', width: '100%', textDecoration: 'none', color: 'black' }}>
@@ -61,9 +60,9 @@ function MyPage(props) {
             </div>
 
             <div className="col-lg-6 d-flex justify-content-center"> {/* Center-align the box */}
-  <div className="purchase-history-box p-4 rounded bg-light" style={{ width: '80%' }}> {/* Increase the width of the box */}
+  <div className="purchase-history-box p-4 rounded bg-light" style={{ width: '300%' }}> {/* Increase the width of the box */}
     <h3 className="text-center">구매한 상품 다운로드</h3> {/* Center-align the heading */}
-    <p style={{ marginBottom: '10px', fontSize: '18px' }}>총 n개</p> {/* Replace {n} with the actual number of items */}
+    <p style={{ marginBottom: '40px', fontSize: '20px' }}>총 n개</p> {/* Replace {n} with the actual number of items */}
     <div className="purchase-item">
       <p style={{ marginBottom: '5px' }}>데이터 1</p>
       <button className="btn btn-success"><FaDownload /> Download</button>
