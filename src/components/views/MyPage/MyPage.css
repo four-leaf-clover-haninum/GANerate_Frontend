@@ -1,0 +1,102 @@
+/* MyPage.css */
+@import url('https://fonts.googleapis.com/css?family=Roboto:300');
+
+.centered-showcase {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 30vh;
+  }
+  
+  /* Smaller box size */
+  .rounded-box {
+    max-width: 1000px; /* Adjust this value to change the box width */
+    width: 100%;
+    margin: 0 ;
+  }
+  
+  
+  .HomePage {
+    position: absolute;
+    top: 0; /* Positioned at the top */
+    left: 50%;
+    transform: translateX(-50%);
+    min-height: 100vh;
+    padding-top: 0px; /* Adding some top padding to create space from the top */
+    width: 100%; /* Setting width to 100% to take up the entire width of the viewport */
+  }
+/* Add any additional styles for the MyPage component here */
+
+/* Center the user-info-box and purchase-history-box */
+
+  
+  /* Style the user-info-box */
+  .user-info-box {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Style the purchase-history-box */
+  .purchase-history-box {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Style the purchase-item */
+  .purchase-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  /* Style the download button in the purchase-item */
+  .purchase-item button {
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .purchase-item button:hover {
+    background-color: #000000;
+  }
+
+
+  .edit-item {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .edit-item a {
+    display: inline-block;
+    text-decoration: none;
+    color: #000;
+    background-color: #fff;
+    padding: 12px 20px;
+    border: 2px solid #bb2649;
+    border-radius: 5px;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .edit-item a:hover {
+    background-color: #bb2649;
+    color: #fff;
+  }
+  
+  
+  
+  /* Optional: Add any other custom styles for your MyPage component */
+  

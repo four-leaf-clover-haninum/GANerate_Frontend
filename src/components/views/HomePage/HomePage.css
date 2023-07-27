@@ -19,7 +19,7 @@
 
 /* Smaller box size */
 .rounded-box {
-  max-width: 100px; /* Adjust this value to change the box width */
+  max-width: 1000px; /* Adjust this value to change the box width */
   width: 100%;
   margin: 0 ;
 }

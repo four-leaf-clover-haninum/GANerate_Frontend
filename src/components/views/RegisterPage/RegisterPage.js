@@ -51,7 +51,7 @@ function RegisterPage(props) {
     
         <CustomNavbar bg="light" variant="light" className="static-top" style={{ padding: '20px' }}>
           <div className="container">
-            <a className="navbar-brand" href="/HomePage" style={{ fontWeight: '900', fontSize: '35px', color: '#BB2649' }}>
+            <a className="navbar-brand" href="/MyPage" style={{ fontWeight: '900', fontSize: '35px', color: '#BB2649' }}>
               <strong>GAN:ERATE</strong>
             </a>
     
@@ -95,6 +95,11 @@ function RegisterPage(props) {
                         <button type="submit">회원가입</button>
                     </form>
                 </div>
+                <footer className="py-3 bg-dark fixed-bottom">
+    <div className="container px-7 px-lg-100">
+      <p className="m-0 text-white footer-center">Copyright &copy; four-leaf-clover-haninum</p>
+    </div>
+  </footer>
             </div>
         </div>
     );

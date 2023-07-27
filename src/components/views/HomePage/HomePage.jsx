@@ -3,25 +3,19 @@ import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../HomePage/HomePage.css';
 import { FaUserCircle } from 'react-icons/fa';
+import appleBackground from './apple.png';
 
 function HomePage() {
-
-
   return (
-
     <div className="HomePage d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-    <div style={{ justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-
-      <React.Fragment>
-        {/* 네비 바 */}
-        
-        
-    {/* 네비 바 */}
-    <CustomNavbar bg="light" variant="light" className="static-top" style={{ padding: '20px' }}>
-      <div className="container">
-        <a className="navbar-brand" href="/HomePage" style={{ fontWeight: '900', fontSize: '35px', color: '#BB2649' }}>
-          <strong>GAN:ERATE</strong>
-        </a>
+      <div style={{ justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <React.Fragment>
+          {/* 네비 바 */}
+          <CustomNavbar bg="light" variant="light" className="static-top" style={{ padding: '10px 20px', height: '80px' }}>
+            <div className="container">
+              <a className="navbar-brand" href="/MyPage" style={{ fontWeight: '900', fontSize: '35px', color: '#BB2649' }}>
+                <strong>GAN:ERATE</strong>
+              </a>
 
         {/* 링크 추가 및 라우팅 설정 */}
         <Nav className="me-auto">
@@ -34,7 +28,7 @@ function HomePage() {
         {/* 로그인 및 마이페이지 링크 추가 및 라우팅 설정 */}
         <Nav className="ml-auto">
     <Nav.Link href="/auth/signin" className="btn btn-1" style={{ fontSize: '20px', color: 'white' }}>Log In</Nav.Link>
-    <Nav.Link href="/auth/signup" className="btn btn-2 ml-2" style={{ fontSize: '20px', color: 'white', marginLeft: '20px' }}>
+    <Nav.Link href="/MyPage" className="btn btn-2 ml-2" style={{ fontSize: '20px', color: 'white', marginLeft: '20px' }}>
       <FaUserCircle style={{ fontSize: '24px', marginRight: '10px' }} />
       My Page
     </Nav.Link>
@@ -143,7 +137,7 @@ function HomePage() {
       </section>
   
           {/* 플랫폼 이용 안내 */}
-          <section className="py-5 bg-image-full" style={{ backgroundImage: "url('https://source.unsplash.com/7Z1GtnZw_sI/1600x900')" }}>
+          <section className="py-5 bg-image-full" style={{ backgroundImage: `url(${appleBackground})` }}>
   <div className="text-center my-1">
     <h2 className="text-white fs-0 fw-bolder" style={{ fontSize: '50px', marginBottom: '20px' }}>인기데이터 넣을 예정</h2>
     <p className="text-white fs-0" style={{ fontSize: '20px', color: '#FECCBE' }}>
@@ -270,12 +264,18 @@ function HomePage() {
       {/* Add the rest of your code below */}
       
       {/*footer*/}
-      <footer className="py-3 bg-dark">
-        <div className="container px-7 px-lg-100">
-          <p className="m-0 text-white footer-center">Copyright &copy; four-leaf-clover-haninum</p>
-        </div>
-      </footer>
-      </React.Fragment>
+      <React.Fragment>
+  {/* The rest of your JSX code */}
+  
+  {/*footer*/}
+  <footer className="py-3 bg-dark">
+    <div className="container px-7 px-lg-100">
+      <p className="m-0 text-white footer-center">Copyright &copy; four-leaf-clover-haninum</p>
+    </div>
+  </footer>
+</React.Fragment>
+</React.Fragment>
+
     </div>
     </div>
   );

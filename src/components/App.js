@@ -5,6 +5,7 @@ import LandingPage from "./views/LandingPage/LandingPage";
 import LoginPage from "./views/LoginPage/LoginPage";
 import RegisterPage from "./views/RegisterPage/RegisterPage";
 import HomePage from './views/HomePage/HomePage';
+import MyPage from './views/MyPage/MyPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route exact path="/auth/signin" component={LoginPage} />
           <Route exact path="/auth/signup" component={RegisterPage} />
           <Route exact path="/HomePage" component={HomePage} />
+          <Route exact path="/MyPage" component={MyPage} />
         </Switch>
       </div>
     </Router>
