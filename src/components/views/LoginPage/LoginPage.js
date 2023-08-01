@@ -21,7 +21,7 @@ function LoginPage(props) {
     event.preventDefault(); //버튼만 누르면 리로드 되는 것을 막고
     // 이메일 형식과 비밀번호 형식을 체크하는 정규식 패턴
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    //const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
     // 이메일 형식과 비밀번호 형식을 체크
     if (!emailPattern.test(Email)) {
@@ -29,10 +29,10 @@ function LoginPage(props) {
       return;
     }
 
-    if (!passwordPattern.test(Password)) {
-      alert('비밀번호는 숫자와 영문을 혼합하여 8자 이상 입력해주세요.');
-      return;
-    }
+    //if (!passwordPattern.test(Password)) {
+      //alert('비밀번호는 숫자와 영문을 혼합하여 8자 이상 입력해주세요.');
+      //return;
+    //}
 
     const dataToSubmit = {
       email: Email,

@@ -43,10 +43,10 @@ function RegisterPage(props) {
       return;
     }
 
-    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(Password)) {
-      alert('비밀번호는 숫자와 영문자를 혼합하여 8자 이상 입력해주세요.');
-      return;
-    }
+    //if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(Password)) {
+      //alert('비밀번호는 숫자와 영문자를 혼합하여 8자 이상 입력해주세요.');
+      //return;
+    //}
 
     // 제약 조건을 모두 만족하면 회원가입 요청
     let body = {
