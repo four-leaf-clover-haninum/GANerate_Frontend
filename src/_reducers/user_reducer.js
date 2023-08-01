@@ -6,9 +6,8 @@ import {
   HOMEPAGE_USER
 } from '../_actions/types';
 
-const initialState = {};
 
-const userReducer = function (state = initialState, action) {
+const userReducer = function (state = {}, action) {
   switch (action.type) {
       case LOGIN_USER:
           return { ...state, loginSuccess: action.payload };

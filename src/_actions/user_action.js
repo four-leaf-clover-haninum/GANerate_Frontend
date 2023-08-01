@@ -9,7 +9,7 @@ import {
 export function loginUser(dataToSubmit) {
     return async (dispatch) => {
         try {
-            const response = await axios.post('/auth/signin', dataToSubmit);
+            const response = await axios.post('/v1/users/sign-in', dataToSubmit);
             const { code, data } = response.data;
 
             if (code === 0) {
@@ -53,9 +53,44 @@ export function loginUser(dataToSubmit) {
     };
 }
 
+export function getUserProfile(userId) {
+    return async (dispatch) => {
+      try {
+        const response = await axios.get(`/v1/users/${userId}/profile`);
+        const { code, data } = response.data;
+  
+        if (code === 0) {
+          // 프로필 정보를 가져오기 성공 시
+          dispatch({
+            type: HOMEPAGE_USER,
+            payload: data
+          });
+        } else if (code === -1) {
+          // 해당 유저가 존재하지 않을 때
+          dispatch({
+            type: LOGIN_USER_FAILURE,
+            payload: { message: '해당 유저가 존재하지 않습니다.' }
+          });
+        } else {
+          // 기타 요청 실패 시
+          dispatch({
+            type: LOGIN_USER_FAILURE,
+            payload: { message: '프로필 정보 가져오기 실패' }
+          });
+        }
+      } catch (error) {
+        // 서버 오류 등 요청 실패 시
+        dispatch({
+          type: LOGIN_USER_FAILURE,
+          payload: { message: '서버 오류: 프로필 정보 가져오기 실패' }
+        });
+      }
+    };
+  }
+
 
 export function registerUser(dataToSubmit) {
-    const request = axios.post('/auth/signup', dataToSubmit)
+    const request = axios.post('/v1/users/sign-up', dataToSubmit)
         .then(response => response.data)
 
     return {

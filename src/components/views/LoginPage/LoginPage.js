@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../../_actions/user_action';
-import { FaUserCircle } from 'react-icons/fa';
+import { loginUser, getUserProfile } from '../../../_actions/user_action';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import "./LoginPage.css"
 
@@ -19,43 +18,64 @@ function LoginPage(props) {
   };
 
   const onSubmitHandler = (event) => {
-    event.preventDefault();
-    let body = {
+    event.preventDefault(); //버튼만 누르면 리로드 되는 것을 막고
+    // 이메일 형식과 비밀번호 형식을 체크하는 정규식 패턴
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+    // 이메일 형식과 비밀번호 형식을 체크
+    if (!emailPattern.test(Email)) {
+      alert('올바른 이메일 형식을 입력해주세요.');
+      return;
+    }
+
+    if (!passwordPattern.test(Password)) {
+      alert('비밀번호는 숫자와 영문을 혼합하여 8자 이상 입력해주세요.');
+      return;
+    }
+
+    const dataToSubmit = {
       email: Email,
-      password: Password
+      userPw: Password
     };
-    dispatch(loginUser(body));
+    
+    dispatch(loginUser(dataToSubmit))
+      .then(() => {
+        // 로그인 성공 시 프로필 정보 가져오기
+        const { email } = dataToSubmit;
+        dispatch(getUserProfile(email));
+      });
   };
+
+
+
+
+
 
   return (
     <div className="HomePage d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
     <div style={{ justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    
+        {/* 네비 바 */}
+        <React.Fragment>
+        <CustomNavbar bg="light" variant="light" className="static-top" style={{ padding: '10px 20px', height: '80px' }}>
+          <div className="container">
+            <a className="navbar-brand" href="/HomePage" style={{ fontWeight: '900', fontSize: '35px', color: '#BB2649' }}>
+              <strong>GAN:ERATE</strong>
+            </a>
 
-    <CustomNavbar bg="light" variant="light" className="static-top" style={{ padding: '20px' }}>
-      <div className="container">
-        <a className="navbar-brand" href="/MyPage" style={{ fontWeight: '900', fontSize: '35px', color: '#BB2649' }}>
-          <strong>GAN:ERATE</strong>
-        </a>
+      {/* 링크 추가 및 라우팅 설정 */}
+      <Nav className="me-auto">
+        <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>이용 안내</Nav.Link>
+        <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 생성</Nav.Link>
+        <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 마켓</Nav.Link>
+        <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 검색</Nav.Link>
+      </Nav>
 
-        {/* 링크 추가 및 라우팅 설정 */}
-        <Nav className="me-auto">
-          <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>이용 안내</Nav.Link>
-          <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 생성</Nav.Link>
-          <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 마켓</Nav.Link>
-          <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 검색</Nav.Link>
-        </Nav>
-
-        {/* 로그인 및 마이페이지 링크 추가 및 라우팅 설정 */}
-        <Nav className="ml-auto">
-    <Nav.Link href="/auth/signin" className="btn btn-1" style={{ fontSize: '20px', color: 'white' }}>Log In</Nav.Link>
-    <Nav.Link href="/auth/signup" className="btn btn-2 ml-2" style={{ fontSize: '20px', color: 'white', marginLeft: '20px' }}>
-      <FaUserCircle style={{ fontSize: '24px', marginRight: '10px' }} />
-      My Page
-    </Nav.Link>
-    </Nav>
 
       </div>
     </CustomNavbar>
+    </React.Fragment>
 
         <div className="loginPage">
           {/* Add the large centered login text */}
@@ -72,16 +92,20 @@ function LoginPage(props) {
           </form>
         </div>
 
-    
+       
 
-      </div>
       <footer className="py-3 bg-dark fixed-bottom">
     <div className="container px-7 px-lg-100">
       <p className="m-0 text-white footer-center">Copyright &copy; four-leaf-clover-haninum</p>
     </div>
   </footer>
-    </div>
+ 
 
+
+  </div>
+  </div>
+  
+   
     
   );
 }

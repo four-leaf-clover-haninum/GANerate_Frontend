@@ -6,44 +6,78 @@ import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle } from 'react-icons/fa';
 
 function RegisterPage(props) {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const [Email, setEmail] = useState('');
-    const [Name, setName] = useState(''); // Fix the typo here
-    const [Password, setPassword] = useState('');
-    const [PhoneNumber, setPhoneNumber] = useState('');
+  const [Email, setEmail] = useState('');
+  const [Name, setName] = useState('');
+  const [Password, setPassword] = useState('');
+  const [PhoneNumber, setPhoneNumber] = useState('');
 
-    const onEmailHandler = (event) => {
-        setEmail(event.currentTarget.value);
+  const onEmailHandler = (event) => {
+    setEmail(event.currentTarget.value);
+  };
+
+  const onNameHandler = (event) => {
+    setName(event.currentTarget.value);
+  };
+
+  const onPasswordHandler = (event) => {
+    setPassword(event.currentTarget.value);
+  };
+
+  const onPhoneNumberHandler = (event) => {
+    setPhoneNumber(event.currentTarget.value);
+  };
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+
+    // 제약 조건 검사
+    if (!Email || !Name || !Password || !PhoneNumber) {
+      alert('모든 필드를 입력해주세요.');
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(Email)) {
+      alert('유효한 이메일 주소를 입력해주세요.');
+      return;
+    }
+
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(Password)) {
+      alert('비밀번호는 숫자와 영문자를 혼합하여 8자 이상 입력해주세요.');
+      return;
+    }
+
+    // 제약 조건을 모두 만족하면 회원가입 요청
+    let body = {
+      email: Email,
+      userPw: Password,
+      name: Name,
+      PhoneNumber: PhoneNumber
     };
 
-    const onNameHandler = (event) => {
-        setName(event.currentTarget.value); // Fix the typo here
-    };
 
-    const onPasswordHandler = (event) => {
-        setPassword(event.currentTarget.value);
-    };
+    dispatch(registerUser(body))
+      .then((res) => {
+        alert("가입이 정상적으로 완료되었습니다");
+        props.history.push("/v1/users/sign-in");
+      })
+      .catch((error) => {
+        // 서버에서 오류 응답이 온 경우 오류 메시지를 표시
+        if (error.response) {
+          alert(error.response.data.message);
+        } else {
+          alert('서버 오류가 발생했습니다.');
+        }
+      });
+  };
 
-    const onPhoneNumberHandler = (event) => {
-        setPhoneNumber(event.currentTarget.value);
-    };
 
-    const onSubmitHandler = (event) => {
-        event.preventDefault();
 
-        let body = {
-            email: Email,
-            name: Name,
-            password: Password,
-            phoneNumber: PhoneNumber
-        };
 
-        dispatch(registerUser(body)).then((res) => {
-            alert("가입이 정상적으로 완료되었습니다");
-            props.history.push("/auth/signin");
-        });
-    };
+
+
+
 
     return (
         <div className="HomePage d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
