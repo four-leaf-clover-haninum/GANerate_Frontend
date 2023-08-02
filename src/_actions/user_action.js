@@ -102,9 +102,14 @@ export function registerUser(dataToSubmit) {
 
 // user_actions.js
 
+// user_actions.js
+
 export function sendEmailVerification(email, verificationCode) {
     return async (dispatch) => {
       try {
+        const response = await axios.post('/v1/users/email', { email });
+        console.log(response.data);
+  
         // Assuming you have the backend API endpoint to verify the code
         const verifyCodeEndpoint = '/v1/users/verify-code';
   
@@ -122,6 +127,30 @@ export function sendEmailVerification(email, verificationCode) {
           // Code is valid, dispatch an action to update the state or do any other actions
           dispatch({ type: 'EMAIL_VERIFICATION_SUCCESS', payload: verificationResponse.data });
           console.log('인증번호 확인이 완료되었습니다.');
+  
+          // Save isEmailVerified to Local Storage
+          localStorage.setItem('isEmailVerified', JSON.stringify(true));
+  
+          // 회원가입 요청
+          let body = {
+            email: email,
+            userPw: '', // 비밀번호 필드는 빈 값으로 요청
+            name: '', // 이름 필드는 빈 값으로 요청
+            PhoneNumber: '', // 전화번호 필드는 빈 값으로 요청
+            emailAuth: verificationCode, // 인증번호를 사용하여 요청
+          };
+  
+          try {
+            await dispatch(registerUser(body));
+            console.log("가입이 정상적으로 완료되었습니다");
+            // 회원가입이 성공적으로 완료되면 이후에 필요한 처리를 수행하도록 하면 됩니다.
+          } catch (error) {
+            if (error.response) {
+              console.log(error.response.data.message);
+            } else {
+              console.log('서버 오류가 발생했습니다.');
+            }
+          }
         } else {
           // Code is invalid, dispatch an action to handle the error or do any other actions
           dispatch({ type: 'EMAIL_VERIFICATION_FAILURE', payload: verificationResponse.data });

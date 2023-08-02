@@ -88,7 +88,7 @@ function LoginPage(props) {
             <input type="password" value={Password} onChange={onPasswordHandler} />
             <br />
             <button type="submit">로그인</button>
-            <p className="message">Not registered? <a href="/auth/signup">Create an account</a></p>
+            <p className="message">Not registered? <a href="/v1/users/sign-up">Create an account</a></p>
           </form>
         </div>
 
