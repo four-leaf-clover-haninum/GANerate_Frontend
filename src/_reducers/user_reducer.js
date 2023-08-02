@@ -3,7 +3,8 @@ import {
   LOGIN_USER_FAILURE,
   REGISTER_USER,
   NAVBAR_USER,
-  HOMEPAGE_USER
+  HOMEPAGE_USER,
+  AUTH_USER
 } from '../_actions/types';
 
 
@@ -17,8 +18,10 @@ const userReducer = function (state = {}, action) {
           return { ...state, register: action.payload };
       case NAVBAR_USER:
           return { ...state, navbar: action.payload };
-        case HOMEPAGE_USER:
-            return { ...state, homepage: action.payload };
+      case HOMEPAGE_USER:
+          return { ...state, homepage: action.payload };
+      case AUTH_USER:
+          return {...state, userData: action.payload}
       default:
           return state;
   }

@@ -3,13 +3,14 @@ import {
     LOGIN_USER,
     REGISTER_USER,
     LOGIN_USER_FAILURE,
-    HOMEPAGE_USER
+    HOMEPAGE_USER,
+    AUTH_USER
 } from './types';
 
 export function loginUser(dataToSubmit) {
     return async (dispatch) => {
         try {
-            const response = await axios.post('/v1/users/sign-in', dataToSubmit);
+            const response = await axios.post('v1/users/sign-in', dataToSubmit);
             const { code, data } = response.data;
 
             if (code === 0) {
@@ -117,5 +118,17 @@ export function homepageUser(dataToSubmit) {
         type: HOMEPAGE_USER,
         payload: request
     };
+}
+
+
+export function auth() {
+
+    const request = axios.get('/v1/users/auth')
+        .then(response => response.data)
+
+    return {
+        type: AUTH_USER,
+        payload: request
+    }
 }
 
