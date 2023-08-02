@@ -100,6 +100,44 @@ export function registerUser(dataToSubmit) {
     };
 }
 
+// user_actions.js
+
+export function sendEmailVerification(email, verificationCode) {
+    return async (dispatch) => {
+      try {
+        // Assuming you have the backend API endpoint to verify the code
+        const verifyCodeEndpoint = '/v1/users/verify-code';
+  
+        // Prepare the request body
+        const requestBody = {
+          email: email,
+          verificationCode: verificationCode,
+        };
+  
+        // Make the HTTP POST request to the backend API
+        const verificationResponse = await axios.post(verifyCodeEndpoint, requestBody);
+  
+        // If the code is valid, the backend API should return a success response
+        if (verificationResponse.data.success) {
+          // Code is valid, dispatch an action to update the state or do any other actions
+          dispatch({ type: 'EMAIL_VERIFICATION_SUCCESS', payload: verificationResponse.data });
+          console.log('인증번호 확인이 완료되었습니다.');
+        } else {
+          // Code is invalid, dispatch an action to handle the error or do any other actions
+          dispatch({ type: 'EMAIL_VERIFICATION_FAILURE', payload: verificationResponse.data });
+          console.log('유효하지 않은 인증번호입니다.');
+        }
+      } catch (error) {
+        console.log(error.response);
+        // Handle any errors that occurred during the API call
+        dispatch({ type: 'EMAIL_VERIFICATION_FAILURE', payload: error.response });
+      }
+    };
+  }
+  
+
+
+
 export function navbarUser(dataToSubmit) {
     const request = axios.post('/', dataToSubmit)
         .then(response => response.data)

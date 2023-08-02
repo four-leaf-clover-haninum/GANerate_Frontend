@@ -68,6 +68,16 @@
   cursor: pointer;
 }
 
+.button12 {
+  /* 원하는 스타일을 여기에 추가합니다. 예시로 배경색과 테두리를 설정합니다. */
+  background-color: #000000;
+  border: 1px solid #000;
+  color: #FFF;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
 .form button:hover,
 .form button:active,
 .form button:focus {

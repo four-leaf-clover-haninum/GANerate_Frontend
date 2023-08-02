@@ -6,7 +6,6 @@ import LoginPage from "./views/LoginPage/LoginPage";
 import RegisterPage from "./views/RegisterPage/RegisterPage";
 import HomePage from './views/HomePage/HomePage';
 import MyPage from './views/MyPage/MyPage';
-import Auth from '../hoc/auth'
 
 function App() {
   return (

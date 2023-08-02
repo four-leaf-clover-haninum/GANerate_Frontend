@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { registerUser } from '../../../_actions/user_action';
 import "./RegisterPage.css"
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
+import { sendEmailVerification } from '../../../_actions/user_action';
 import { FaUserCircle } from 'react-icons/fa';
 
 function RegisterPage(props) {
@@ -12,6 +13,9 @@ function RegisterPage(props) {
   const [Name, setName] = useState('');
   const [Password, setPassword] = useState('');
   const [PhoneNumber, setPhoneNumber] = useState('');
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [VerificationCode, setVerificationCode] = useState('');
+  const [isCodeVerified, setIsCodeVerified] = useState(false);
 
   const onEmailHandler = (event) => {
     setEmail(event.currentTarget.value);
@@ -29,8 +33,53 @@ function RegisterPage(props) {
     setPhoneNumber(event.currentTarget.value);
   };
 
+  const onEmailVerificationHandler = () => {
+    dispatch(sendEmailVerification(Email))
+      .then(() => {
+        alert('이메일 인증이 전송되었습니다. 이메일을 확인하세요.');
+        setIsEmailVerified(true);
+      })
+      .catch((error) => {
+        if (error.response) {
+          alert(error.response.data.message);
+        } else {
+          alert('서버 오류가 발생했습니다.');
+        }
+      });
+  };
+
+
+  const onVerificationCodeHandler = (event) => {
+    setVerificationCode(event.currentTarget.value);
+  };
+
+
+  const onVerificationCheckHandler = () => {
+    // Send the verification request to the server
+    dispatch(sendEmailVerification(Email, VerificationCode))
+      .then((response) => {
+        if (response.success) {
+          // Code is valid, set isCodeVerified to true
+          setIsCodeVerified(true);
+          alert('인증번호 확인이 완료되었습니다.');
+        } else {
+          // Code is invalid, set isCodeVerified to false
+          setIsCodeVerified(false);
+          alert('유효하지 않은 인증번호입니다.');
+        }
+      })
+      .catch((error) => {
+        console.log(error.response);
+        // Handle any errors that occurred during the API call
+        alert('서버 오류가 발생했습니다.');
+      });
+  };
+
+    
   const onSubmitHandler = (event) => {
     event.preventDefault();
+
+
 
     // 제약 조건 검사
     if (!Email || !Name || !Password || !PhoneNumber) {
@@ -53,9 +102,11 @@ function RegisterPage(props) {
       email: Email,
       userPw: Password,
       name: Name,
-      PhoneNumber: PhoneNumber
+      PhoneNumber: PhoneNumber,
+      emailAuth : VerificationCode
     };
 
+    dispatch(sendEmailVerification(Email)); 
 
     dispatch(registerUser(body))
       .then((res) => {
@@ -63,7 +114,6 @@ function RegisterPage(props) {
         props.history.push("/v1/users/sign-in");
       })
       .catch((error) => {
-        // 서버에서 오류 응답이 온 경우 오류 메시지를 표시
         if (error.response) {
           alert(error.response.data.message);
         } else {
@@ -71,8 +121,6 @@ function RegisterPage(props) {
         }
       });
   };
-
-
 
 
 
@@ -110,38 +158,51 @@ function RegisterPage(props) {
         </CustomNavbar>
 
         <div className="container mt-5">
-  <h1 className="text-center mb-3">회원가입</h1>
+          <h1 className="text-center mb-3">회원가입</h1>
+          <div className="RegisterPage">
+            <form className="form" onSubmit={onSubmitHandler}>
+              <label>Name</label>
+              <input type="text" value={Name} onChange={onNameHandler} />
 
-  <div className="RegisterPage">
-    <form className="form" onSubmit={onSubmitHandler}>
-      <label>Name</label>
-      <input type="text" value={Name} onChange={onNameHandler} />
+              <label>Email</label>
+              <input type="email" value={Email} onChange={onEmailHandler} />
 
-      <label>Email</label>
-      <input type="email" value={Email} onChange={onEmailHandler} />
+              {!isEmailVerified && (
+                <button className="button12" type="button" onClick={onEmailVerificationHandler}>
+                  인증번호 전송
+                </button>
+              )}
+              
+              <label>인증번호</label>
+              <input type="number" value={VerificationCode} onChange={onVerificationCodeHandler} />
 
-      <label>Password</label>
-      <input type="password" value={Password} onChange={onPasswordHandler} />
 
-      <label>Phone Number</label>
-      <input type="tel" value={PhoneNumber} onChange={onPhoneNumberHandler} />
+              {!isCodeVerified && (
+                <button className="button12" type="button" onClick={onVerificationCheckHandler}>
+                  인증번호 확인
+                </button>
+              )}
 
-      <br />
-      <button type="submit">회원가입</button>
-    </form>
-  </div>
-</div>
-      
-   
-                <footer className="py-3 bg-dark fixed-bottom">
-    <div className="container px-7 px-lg-100">
-      <p className="m-0 text-white footer-center">Copyright &copy; four-leaf-clover-haninum</p>
-    </div>
-  </footer>
-            </div>
+
+              <label>Password</label>
+              <input type="password" value={Password} onChange={onPasswordHandler} />
+
+              <label>Phone Number</label>
+              <input type="tel" value={PhoneNumber} onChange={onPhoneNumberHandler} />
+
+              <br />
+              <button type="submit">회원가입</button>
+            </form>
+          </div>
         </div>
-
-    );
+        <footer className="py-3 bg-dark fixed-bottom">
+          <div className="container px-7 px-lg-100">
+            <p className="m-0 text-white footer-center">Copyright &copy; four-leaf-clover-haninum</p>
+          </div>
+        </footer>
+      </div>
+    </div>
+  );
 }
 
 export default RegisterPage;
