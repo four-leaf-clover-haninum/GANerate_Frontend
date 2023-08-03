@@ -40,13 +40,13 @@ function LoginPage(props) {
     };
     
     dispatch(loginUser(dataToSubmit))
-      .then(() => {
-        // 로그인 성공 시 프로필 정보 가져오기
+      .then((response) => {
+        // 로그인 성공 시 인증 토큰을 로컬 스토리지에 저장
+        localStorage.setItem('authToken', response.payload.token);
         const { email } = dataToSubmit;
         dispatch(getUserProfile(email));
       });
   };
-
 
 
 

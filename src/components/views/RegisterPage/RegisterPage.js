@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { registerUser } from '../../../_actions/user_action';
-import "./RegisterPage.css"
+import React, { useState, useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser, sendEmailVerification, verifyEmailVerification } from '../../../_actions/user_action';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
-import { sendEmailVerification } from '../../../_actions/user_action';
 import { FaUserCircle } from 'react-icons/fa';
+import { Input, Button } from 'antd';
 
 function RegisterPage(props) {
   const dispatch = useDispatch();
-
+  const mailnumber = useSelector((state) => state.user.mailnumber);
   const [Email, setEmail] = useState('');
   const [Name, setName] = useState('');
   const [Password, setPassword] = useState('');
   const [PhoneNumber, setPhoneNumber] = useState('');
-  const [isEmailVerified, setIsEmailVerified] = useState(false); //인증발송 코드 수정했음 
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [VerificationCode, setVerificationCode] = useState('');
-  const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [isCodeVerified] = useState(false);
+  const [authDone, setAuthDone] = useState(false);
+  const [authError, setAuthError] = useState(false);
+  const marginTop = { marginTop: '10px' };
 
   useEffect(() => {
     const storedIsEmailVerified = JSON.parse(localStorage.getItem('isEmailVerified'));
@@ -23,7 +25,6 @@ function RegisterPage(props) {
       setIsEmailVerified(true);
     }
   }, []);
-
 
   const onEmailHandler = (event) => {
     setEmail(event.currentTarget.value);
@@ -41,20 +42,19 @@ function RegisterPage(props) {
     setPhoneNumber(event.currentTarget.value);
   };
 
-  //
+
+  //user_action 파일에서 불러온 sendEmailVerification 함수를 dispatch에 넣어서 활용
   const onEmailVerificationHandler = () => {
     if (!Email) {
-      alert('이메일을 먼저 입력해주세요.'); // 이메일을 먼저 입력하지 않은 경우 알림창 띄우기
+      alert('이메일을 먼저 입력해주세요.');
       return;
     }
 
     dispatch(sendEmailVerification(Email))
       .then(() => {
         alert('이메일 인증이 전송되었습니다. 이메일을 확인하세요.');
-        setIsEmailVerified(true); // 이메일 인증 완료 상태를 true로 설정
-        setIsCodeVerified(false); // 인증번호 확인 상태를 초기화
-
-        // Save isEmailVerified to Local Storage
+        setIsEmailVerified(true);
+        setVerificationCode(''); // Reset verification code input field
         localStorage.setItem('isEmailVerified', JSON.stringify(true));
       })
       .catch((error) => {
@@ -66,58 +66,38 @@ function RegisterPage(props) {
       });
   };
 
-  //
   
-
   const onVerificationCodeHandler = (event) => {
     setVerificationCode(event.currentTarget.value);
   };
+  
+  
+  const onCheckNumber = useCallback(() => {
+    // 값이 유효한지 확인 후, 유효하지 않은 경우 처리
+    if (!VerificationCode) {
+      alert('인증번호를 입력해주세요.');
+      return;
+    }
+  
+    if (VerificationCode === mailnumber) {
+      setAuthDone(true);
+      setAuthError(false);
+      alert('인증이 완료되었습니다.');
+    } else {
+      setAuthDone(false);
+      setAuthError(true);
+      alert('인증번호가 일치하지 않습니다.');
+    }
+  }, [VerificationCode, mailnumber]);
+  
 
+  
+  
+  
 
-  const onVerificationCheckHandler = () => {
-    dispatch(sendEmailVerification(Email, VerificationCode))
-      .then((response) => {
-        if (response.success) {
-          setIsCodeVerified(true); // 인증번호 확인 완료 상태를 true로 설정
-          alert('인증번호 확인이 완료되었습니다.');
-
-          // 회원가입 요청
-          let body = {
-            email: Email,
-            userPw: '', // 비밀번호 필드는 빈 값으로 요청
-            name: '', // 이름 필드는 빈 값으로 요청
-            PhoneNumber: '', // 전화번호 필드는 빈 값으로 요청
-            emailAuth: VerificationCode, // 인증번호를 사용하여 요청
-          };
-
-          dispatch(registerUser(body))
-            .then(() => {
-              alert('가입이 정상적으로 완료되었습니다');
-              props.history.push('/v1/users/sign-in');
-            })
-            .catch((error) => {
-              if (error.response) {
-                alert(error.response.data.message);
-              } else {
-                alert('서버 오류가 발생했습니다.');
-              }
-            });
-        } else {
-          setIsCodeVerified(false); // 인증번호 확인 실패 상태를 false로 설정
-          alert('유효하지 않은 인증번호입니다.');
-        }
-      })
-      .catch((error) => {
-        console.log(error.response);
-        alert('서버 오류가 발생했습니다.');
-      });
-  };
-
-    
   const onSubmitHandler = async (event) => {
     event.preventDefault();
   
-    // 제약 조건 검사
     if (!Email || !Name || !Password || !PhoneNumber) {
       alert('모든 필드를 입력해주세요.');
       return;
@@ -127,41 +107,40 @@ function RegisterPage(props) {
       alert('유효한 이메일 주소를 입력해주세요.');
       return;
     }
-
-    if (!isEmailVerified) {
-      alert('이메일 인증을 먼저 완료해주세요.');
+  
+    if (!isEmailVerified || !isCodeVerified) {
+      alert('이메일 인증 및 인증번호 확인을 먼저 완료해주세요.');
       return;
     }
   
-    if (!isCodeVerified) {
-      alert('인증번호 확인을 먼저 완료해주세요.');
-      return;
-    }
-
-  
-    // 인증 이메일 발송 요청
+    // 이메일 인증 수행
     try {
-      await dispatch(sendEmailVerification(Email));
-      // 인증 이메일 발송이 성공적으로 완료되었을 때 회원가입 요청 수행
-      let body = {
-        email: Email,
-        userPw: Password,
-        name: Name,
-        PhoneNumber: PhoneNumber,
-        emailAuth: VerificationCode
-      };
-  
-      try {
-        await dispatch(registerUser(body));
-        alert("가입이 정상적으로 완료되었습니다");
-        props.history.push("/v1/users/sign-in");
-      } catch (error) {
-        if (error.response) {
-          alert(error.response.data.message);
-        } else {
-          alert('서버 오류가 발생했습니다.');
-        }
+      await dispatch(verifyEmailVerification(Email, VerificationCode));
+      alert('이메일 인증이 완료되었습니다.');
+      setAuthDone(true); // 인증 상태를 true로 설정
+      setAuthError(false);
+    } catch (error) {
+      if (error.response) {
+        alert(error.response.data.message);
+      } else {
+        alert('서버 오류가 발생했습니다.');
       }
+      return; // 인증 실패 시 회원가입 요청을 중지하고 함수 종료
+    }
+  
+    // 회원가입 요청
+    let body = {
+      email: Email,
+      userPw: Password,
+      name: Name,
+      PhoneNumber: PhoneNumber,
+      emailAuth: VerificationCode,
+    };
+  
+    try {
+      await dispatch(registerUser(body));
+      alert('가입이 정상적으로 완료되었습니다.');
+      props.history.push('/v1/users/sign-in');
     } catch (error) {
       if (error.response) {
         alert(error.response.data.message);
@@ -171,11 +150,9 @@ function RegisterPage(props) {
     }
   };
   
+  
 
-
-
-
-
+  
 
     return (
         <div className="HomePage d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
@@ -229,12 +206,37 @@ function RegisterPage(props) {
             <div>
               <label>인증번호</label>
               <input type="number" value={VerificationCode} onChange={onVerificationCodeHandler} />
-              <button className="button12" type="button" onClick={onVerificationCheckHandler}>
+              <button className="button12" type="button" onClick={onCheckNumber}>
                 인증번호 확인
               </button>
             </div>
           )}
 
+          {mailnumber ? (
+            <div style={{ marginTop: 10, width: 200 }}>
+              <Input
+                placeholder="번호입력"
+                name="user-emailcheck"
+                type="text"
+                value={VerificationCode}
+                required
+                onChange={(e) => setVerificationCode(e.target.value)} // onVerificationCodeHandler 삭제
+              />
+              <br />
+              <Button type="primary" onClick={onCheckNumber} disabled={authDone} style={marginTop}>
+                확인
+              </Button>
+          
+              {authDone && <div style={{ color: 'blue' }}>인증 완료되었습니다.</div>}
+              {authError && <div style={{ color: 'red' }}>인증번호가 일치하지 않습니다.</div>}
+            </div>
+          ) : null}
+          
+          
+
+
+
+    
               <label>Password</label>
               <input type="password" value={Password} onChange={onPasswordHandler} />
 
@@ -243,15 +245,11 @@ function RegisterPage(props) {
 
               <br />
               <button type="submit">회원가입</button>
+
             </form>
           </div>
         </div>
         
-        <footer className="py-3 bg-dark fixed-bottom">
-          <div className="container px-7 px-lg-100">
-            <p className="m-0 text-white footer-center">Copyright &copy; four-leaf-clover-haninum</p>
-          </div>
-        </footer>
       </div>
     </div>
   );

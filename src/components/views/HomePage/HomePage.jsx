@@ -5,6 +5,7 @@ import '../HomePage/HomePage.css';
 import { FaUserCircle } from 'react-icons/fa';
 import appleBackground from './apple.png';
 
+
 function HomePage() {
   return (
     <div className="HomePage d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
