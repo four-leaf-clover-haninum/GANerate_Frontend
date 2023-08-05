@@ -9,11 +9,13 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "ant": "^0.2.0",
-    "antd": "^5.8.1",
+    "antd": "^5.8.2",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.1",
     "concurrently": "^8.2.0",
+    "formik": "^2.4.3",
     "http-proxy-middleware": "^2.0.6",
+    "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
     "react-dom": "^18.2.0",
@@ -24,7 +26,8 @@
     "redux": "^4.2.1",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.4.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

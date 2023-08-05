@@ -7,6 +7,7 @@ import RegisterPage from "./views/RegisterPage/RegisterPage";
 import HomePage from './views/HomePage/HomePage';
 import MyPage from './views/MyPage/MyPage';
 
+
 function App() {
   return (
     <Router>
