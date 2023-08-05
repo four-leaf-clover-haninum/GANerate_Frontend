@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser, sendEmailVerification, verifyEmailVerification } from '../../../_actions/user_action';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
@@ -7,11 +7,11 @@ import { Input, Button } from 'antd';
 
 function RegisterPage(props) {
   const dispatch = useDispatch();
-  const mailnumber = useSelector((state) => state.user.mailnumber);
   const [Email, setEmail] = useState('');
   const [Name, setName] = useState('');
   const [Password, setPassword] = useState('');
   const [PhoneNumber, setPhoneNumber] = useState('');
+
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [VerificationCode, setVerificationCode] = useState('');
   const [authDone, setAuthDone] = useState(false);
@@ -25,12 +25,12 @@ function RegisterPage(props) {
     }
   }, []);
 
-  const onEmailHandler = (event) => {
-    setEmail(event.currentTarget.value);
-  };
-
   const onNameHandler = (event) => {
     setName(event.currentTarget.value);
+  };
+
+  const onEmailHandler = (event) => {
+    setEmail(event.currentTarget.value);
   };
 
   const onPasswordHandler = (event) => {
@@ -42,11 +42,15 @@ function RegisterPage(props) {
   };
 
   const onEmailVerificationHandler = () => {
+    const emailPattern = /\S+@\S+\.\S+/;
     if (!Email) {
       alert('이메일을 먼저 입력해주세요.');
       return;
     }
-
+    if (!emailPattern.test(Email)) {
+      alert('올바른 이메일 형식을 입력해주세요.');
+      return;
+    }
     dispatch(sendEmailVerification(Email))
       .then(() => {
         alert('인증코드가 발송되었습니다. 이메일을 확인하세요.');
@@ -63,22 +67,21 @@ function RegisterPage(props) {
       });
   };
 
-  const onCheckNumber = useCallback(() => {
-    if (!VerificationCode) {
-      alert('인증번호를 입력해주세요.');
-      return;
-    }
-    if (VerificationCode === mailnumber) {
+  const handleVerifyEmail = async () => {
+    try {
+      await verifyEmailVerification(Email, VerificationCode);
+      // 인증 성공
+      alert('인증번호 확인이 완료되었습니다.');
       setAuthDone(true);
       setAuthError(false);
-      alert('인증이 완료되었습니다.');
-    } else {
+    } catch (error) {
+      // 인증 실패
+      alert('유효하지 않은 인증번호입니다.');
       setAuthDone(false);
       setAuthError(true);
-      alert('인증번호가 일치하지 않습니다.');
     }
-  }, [VerificationCode, mailnumber]);
-  
+  };
+
   const onVerificationCodeHandler = (event) => {
     setVerificationCode(event.target.value);
   };
@@ -99,21 +102,6 @@ function RegisterPage(props) {
     if (!isEmailVerified || !authDone) {
       alert('이메일 인증 및 인증번호 확인을 먼저 완료해주세요.');
       return;
-    }
-
-    // 이메일 인증 수행
-    try {
-      await dispatch(verifyEmailVerification(Email, VerificationCode));
-      alert('이메일 인증이 완료되었습니다.');
-      setAuthDone(true); // 인증 상태를 true로 설정
-      setAuthError(false);
-    } catch (error) {
-      if (error.response) {
-        alert(error.response.data.message);
-      } else {
-        alert('서버 오류가 발생했습니다.');
-      }
-      return; // 인증 실패 시 회원가입 요청을 중지하고 함수 종료
     }
 
     // 회원가입 요청
@@ -137,6 +125,8 @@ function RegisterPage(props) {
       }
     }
   };
+
+
   
   
     return (
@@ -184,27 +174,24 @@ function RegisterPage(props) {
               인증번호 발송
               </button>
             </div>
-          
-
             
-<div style={{ marginTop: 10, width: 200 }}>
-<Input
-  placeholder="번호입력"
-  name="user-emailcheck"
-  type="text"
-  value={VerificationCode}
-  required
-  onChange={onVerificationCodeHandler}
-/>
-<br />
-<Button type="primary" onClick={onCheckNumber} disabled={authDone} style={marginTop}>
-  확인
-</Button>
-
-{authDone && <div style={{ color: 'blue' }}>인증 완료되었습니다.</div>}
-{authError && <div style={{ color: 'red' }}>인증번호가 일치하지 않습니다.</div>}
-</div>
-  
+            <div style={{ marginTop: 10, width: 200 }}>
+            <Input
+              placeholder="번호입력"
+              name="user-emailcheck"
+              type="text"
+              value={VerificationCode}
+              required
+              onChange={onVerificationCodeHandler}
+            />
+            <br />
+            <div>
+              <Button onClick={handleVerifyEmail}>이메일 인증 확인</Button>
+              {/* 인증 결과에 따른 메시지 띄우기 */}
+              {authDone && <div style={{ color: 'blue' }}>인증 완료되었습니다.</div>}
+              {authError && <div style={{ color: 'red' }}>인증번호가 일치하지 않습니다.</div>}
+            </div>
+          </div>
           
     
               <label>Password</label>
@@ -219,10 +206,11 @@ function RegisterPage(props) {
             </form>
           </div>
         </div>
-        
+    
       </div>
     </div>
   );
 }
+
 
 export default RegisterPage;

@@ -9,7 +9,6 @@ import {
     AUTH_USER,
     EMAIL_VERIFICATION_SUCCESS,
     EMAIL_VERIFICATION_FAILURE
-
 } from './types';
 
 
@@ -112,7 +111,7 @@ export function registerUser(dataToSubmit) {
 export function sendEmailVerification(email) {
   return async (dispatch) => {
     try {
-      const response = await axios.post('/v1/users/email', { email });
+      const response = await axios.post('/v1/users/email', {email });
       console.log(response.data);
 
       // 서버로부터 인증번호 전송 성공 시
@@ -127,43 +126,50 @@ export function sendEmailVerification(email) {
 }
 
 // 이메일 인증 번호 인증 API 처리 함수
-export function verifyEmailVerification(email, verificationCode) {
+export function verifyEmailVerification(email, certificationNum) {
   return async (dispatch) => {
     try {
-      const verifyCodeEndpoint = '/v1/users/email';
-
       const requestData = {
         email: email,
-        certificationNum: verificationCode,
+        certificationNum: certificationNum,
       };
-
-      const response = await axios.get(verifyCodeEndpoint, {
+      const response = await axios.get('/v1/users/email', {
+        params: requestData,
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
           'Accept': 'application/json',
         },
-        data: requestData,
       });
-
-      if (response.data.success) {
-        // 인증번호 인증 성공 시
-        dispatch({ EMAIL_VERIFICATION_SUCCESS, payload: response.data });
+      if (response.data.code === 0) {
+        dispatch(emailVerificationSuccess(response.data));
         console.log('인증번호 확인이 완료되었습니다.');
-
-        // You can stop the process here if you don't want to proceed with user registration
         return;
       } else {
-        // 인증번호 인증 실패 시
-        dispatch({ EMAIL_VERIFICATION_FAILURE, payload: response.data });
+        dispatch(emailVerificationFailure(response.data));
         console.log('유효하지 않은 인증번호입니다.');
       }
     } catch (error) {
       console.log(error.response);
-      // 서버 오류 등 요청 실패 시
-      dispatch({ EMAIL_VERIFICATION_FAILURE, payload: error.response });
+      dispatch({ type: 'EMAIL_VERIFICATION_FAILURE', payload: error.response });
     }
   };
 }
+
+  //
+  export const emailVerificationFailure = (payload) => ({
+    type: EMAIL_VERIFICATION_FAILURE,
+    payload,
+  });
+
+  export const emailVerificationSuccess = (payload) => ({
+    type: EMAIL_VERIFICATION_SUCCESS,
+    payload,
+  });
+
+
+
+
+
 
 
 

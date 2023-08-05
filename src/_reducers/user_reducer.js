@@ -4,11 +4,19 @@ import {
   REGISTER_USER,
   NAVBAR_USER,
   HOMEPAGE_USER,
-  AUTH_USER
+  AUTH_USER,
+  EMAIL_VERIFICATION_FAILURE,
+  EMAIL_VERIFICATION_SUCCESS
 } from '../_actions/types';
 
 
-const userReducer = function (state = {}, action) {
+const initialState = {
+    emailFailure: null,
+    emailSuccess: null
+  };
+
+
+const userReducer = function (state = initialState, action) {
   switch (action.type) {
       case LOGIN_USER:
           return { ...state, loginSuccess: action.payload };
@@ -21,7 +29,11 @@ const userReducer = function (state = {}, action) {
       case HOMEPAGE_USER:
           return { ...state, homepage: action.payload };
       case AUTH_USER:
-          return {...state, userData: action.payload}
+          return {...state, userData: action.payload};
+    case EMAIL_VERIFICATION_FAILURE:
+        return { ...state, emailFailure: action.payload, emailSuccess: null };
+    case EMAIL_VERIFICATION_SUCCESS:
+        return { ...state, emailSuccess: action.payload, emailFailure: null };
       default:
           return state;
   }
