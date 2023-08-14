@@ -27,10 +27,6 @@ function CartPage() {
         setCategory(checkedValues);
     };
 
-    const handlePriceRangeChange = (checkedValues) => {
-        // 가격 범위 체크박스 선택 시 동작
-        setPriceRange(checkedValues);
-    };
 
     const handleSearchQueryChange = (e) => {
         // 검색어 입력 시 동작
@@ -41,7 +37,22 @@ function CartPage() {
         // 검색 버튼 클릭 시 검색 결과 가져오는 액션 디스패치
         searchProducts(Category, PriceRange, SearchQuery);
       };
+
+      const handlePriceRangeChange = (checkedValues) => {
+        // "직접입력" 체크 시 해당 값만 선택
+        if (checkedValues.includes("range4")) {
+            setPriceRange(["range4"]);
+        } else {
+            // 다른 체크박스 선택 시 "직접입력" 체크 해제 후 선택한 값만 선택
+            const filteredValues = checkedValues.filter(value => value !== "range4");
+            setPriceRange(filteredValues);
+        }
+    };
+
+
     
+    
+      
 
 
 
@@ -112,24 +123,24 @@ function CartPage() {
 
 
           <div className="search-input">
-            <h4>가격</h4>
-            {/* 가격 범위 체크박스 */}
-            <Checkbox.Group onChange={handlePriceRangeChange}>
-                <Checkbox value="range1">5만원 이하</Checkbox>
-                <Checkbox value="range2">5만원 - 10만원</Checkbox>
-                <Checkbox value="range3">10만원 - 20만원</Checkbox>
-                <Checkbox value="range4">직접입력</Checkbox>
-            </Checkbox.Group>
+    <h4>가격</h4>
+    {/* 가격 범위 체크박스 */}
+    <Checkbox.Group value={PriceRange} onChange={handlePriceRangeChange}>
+        <Checkbox value="range1">5만원 이하</Checkbox>
+        <Checkbox value="range2">5만원 - 10만원</Checkbox>
+        <Checkbox value="range3">10만원 - 20만원</Checkbox>
+        <Checkbox value="range4">직접입력</Checkbox>
+    </Checkbox.Group>
 
-            {/* 직접 입력 칸 */}
-            {PriceRange.includes("range4") && (
-                <div style={{ marginTop: "10px", display: "flex", alignItems: "center" }}>
-                  <Input placeholder="최솟값" style={{ marginBottom: "5px", width: "120px", marginRight: "10px" }} />
-                  <span style={{ fontSize: "20px" }}>~</span>
-                  <Input placeholder="최댓값" style={{ width: "120px", marginLeft: "10px" }} />
-                </div>
-              )}
-            </div>
+    {/* 직접 입력 칸 */}
+    {PriceRange.includes("range4") && (
+        <div style={{ marginTop: "10px", display: "flex", alignItems: "center" }}>
+            <Input placeholder="최솟값" style={{ marginBottom: "5px", width: "120px", marginRight: "10px" }} />
+            <span style={{ fontSize: "20px" }}>~</span>
+            <Input placeholder="최댓값" style={{ width: "120px", marginLeft: "10px" }} />
+        </div>
+    )}
+</div>
 
 
             
