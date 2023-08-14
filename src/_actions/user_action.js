@@ -8,7 +8,12 @@ import {
     HOMEPAGE_USER,
     AUTH_USER,
     EMAIL_VERIFICATION_SUCCESS,
-    EMAIL_VERIFICATION_FAILURE
+    EMAIL_VERIFICATION_FAILURE,
+    ADD_TO_CART,
+    GET_CART_ITEMS,
+    REMOVE_CART_ITEM,
+    ON_SUCCESS_BUY,
+    SET_PRODUCTS
 } from './types';
 
 
@@ -205,3 +210,116 @@ export function auth() {
         payload: request
     }
 }
+
+
+
+export function addToCart(id) {
+  let body = {
+      productId: id
+  }
+  const request = axios.post(`${'v1/data-products?page=0'}/addToCart`, body)
+      .then(response => response.data);
+
+  return {
+      type: ADD_TO_CART,
+      payload: request
+  }
+}
+
+export function getCartItems(cartItems, userCart) {
+
+  const request = axios.get(`/api/product/products_by_id?id=${cartItems}&type=array`)
+      .then(response => {
+          // CartItem들에 해당하는 정보들을  
+          // Product Collection에서 가져온후에 
+          // Quantity 정보를 넣어 준다.
+          userCart.forEach(cartItem => {
+              response.data.forEach((productDetail, index) => {
+                  if (cartItem.id === productDetail._id) {
+                      response.data[index].quantity = cartItem.quantity
+                  }
+              })
+          })
+          return response.data;
+      });
+
+  return {
+      type: GET_CART_ITEMS,
+      payload: request
+  }
+}
+
+export function removeCartItem(productId) {
+
+  const request = axios.get(`/api/users/removeFromCart?id=${productId}`)
+      .then(response => {
+          //productInfo ,  cart 정보를 조합해서   CartDetail을 만든다. 
+          response.data.cart.forEach(item => {
+              response.data.productInfo.forEach((product, index) => {
+                  if (item.id === product._id) {
+                      response.data.productInfo[index].quantity = item.quantity
+                  }
+
+              })
+          })
+          return response.data;
+      });
+
+  return {
+      type: REMOVE_CART_ITEM,
+      payload: request
+  }
+}
+
+
+
+export function onSuccessBuy(data) {
+
+  const request = axios.post(`/api/users/successBuy`, data)
+      .then(response => response.data);
+
+  return {
+      type: ON_SUCCESS_BUY,
+      payload: request
+  }
+}
+
+
+//상품 조회 페이지
+
+
+// 액션 생성 함수
+export const setProducts = (products) => {
+  return {
+    type: SET_PRODUCTS,
+    payload: products,
+  };
+};
+
+// 서버에서 상품 데이터 가져오는 액션
+export const fetchProducts = () => {
+  return (dispatch) => {
+    // 서버로부터 데이터 가져오는 요청
+    axios.get('/v1/data-products/{data-product-id}')
+      .then(response => {
+        dispatch(setProducts(response.data));
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+};
+
+// 검색 결과 가져오는 액션
+export const searchProducts = (category, priceRange, searchQuery) => {
+  return (dispatch) => {
+    // 검색 조건에 맞는 상품 데이터 가져오는 요청
+    axios.get(`/api/product/search?category=${category.join(',')}&price=${priceRange.join(',')}&q=${searchQuery}`)
+      .then(response => {
+        dispatch(setProducts(response.data));
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+};

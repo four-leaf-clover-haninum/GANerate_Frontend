@@ -16,7 +16,7 @@ function RegisterPage(props) {
   const [VerificationCode, setVerificationCode] = useState('');
   const [authDone, setAuthDone] = useState(false);
   const [authError, setAuthError] = useState(false);
-  const marginTop = { marginTop: '10px' };
+  const marginTop = { marginTop: '10px' }; 
 
   useEffect(() => {
     const storedIsEmailVerified = JSON.parse(localStorage.getItem('isEmailVerified'));
@@ -102,6 +102,7 @@ function RegisterPage(props) {
     if (!isEmailVerified || !authDone) {
       alert('이메일 인증 및 인증번호 확인을 먼저 완료해주세요.');
       return;
+     
     }
 
     // 회원가입 요청

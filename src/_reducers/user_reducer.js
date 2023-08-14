@@ -6,7 +6,13 @@ import {
   HOMEPAGE_USER,
   AUTH_USER,
   EMAIL_VERIFICATION_FAILURE,
-  EMAIL_VERIFICATION_SUCCESS
+  EMAIL_VERIFICATION_SUCCESS,
+  ADD_TO_CART,
+  GET_CART_ITEMS,
+  REMOVE_CART_ITEM,
+  ON_SUCCESS_BUY,
+  SET_PRODUCTS
+
 } from '../_actions/types';
 
 
@@ -16,7 +22,7 @@ const initialState = {
   };
 
 
-const userReducer = function (state = initialState, action) {
+  export default function (state = {}, action) {
   switch (action.type) {
       case LOGIN_USER:
           return { ...state, loginSuccess: action.payload };
@@ -34,9 +40,24 @@ const userReducer = function (state = initialState, action) {
         return { ...state, emailFailure: action.payload, emailSuccess: null };
     case EMAIL_VERIFICATION_SUCCESS:
         return { ...state, emailSuccess: action.payload, emailFailure: null };
+    case ADD_TO_CART:
+        return {...state,userData: {...state.userData,cart: action.payload}};
+    case GET_CART_ITEMS:
+        return { ...state, cartDetail: action.payload };
+    case REMOVE_CART_ITEM:
+        return {...state, cartDetail: action.payload.productInfo,
+                    userData: {
+                        ...state.userData,
+                        cart: action.payload.cart
+                    }
+                };
+    case ON_SUCCESS_BUY:
+        return {...state, cartDetail: action.payload.cartDetail,
+                    userData: {...state.userData, cart: action.payload.cart}
+                };
+    case SET_PRODUCTS:
+        return { ...state, products: action.payload };
       default:
           return state;
   }
-};
-
-export default userReducer;
+}
