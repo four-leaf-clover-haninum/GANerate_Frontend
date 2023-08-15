@@ -1,8 +1,9 @@
 .my-custom-box {
-    width: 100%; /* 원하는 가로 길이로 조정 */
+    width: 100%; /* 박스의 가로 길이를 최대로 설정 */
     margin: 0 auto; /* 가운데 정렬을 위한 margin 설정 */
     /* 다른 스타일도 추가가능 */
 }
+
 
 
 .search-form-container {
