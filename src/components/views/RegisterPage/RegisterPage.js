@@ -162,13 +162,18 @@ function RegisterPage(props) {
 
         <div className="container mt-5">
           <h1 className="text-center mb-3">회원가입</h1>
-          <div className="RegisterPage">
-            <form className="form" onSubmit={onSubmitHandler}>
+
+
+          <div className="RegisterPage" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '75vh' }}>
+  <form className="form" onSubmit={onSubmitHandler}>
+
+            <div style={{ marginTop: 10, width: 400 }}>
               <label>Name</label>
               <input type="text" value={Name} onChange={onNameHandler} />
+              </div>
 
 
-            <div>
+              <div style={{ marginTop: 10, width: 400 }}>
               <label>Email</label>
               <input type="email" value={Email} onChange={onEmailHandler} />
               <button className="button12" type="button" onClick={onEmailVerificationHandler}>
@@ -176,7 +181,7 @@ function RegisterPage(props) {
               </button>
             </div>
             
-            <div style={{ marginTop: 10, width: 200 }}>
+            <div style={{ marginTop: 20, width: 200 }}>
             <Input
               placeholder="번호입력"
               name="user-emailcheck"
@@ -185,8 +190,8 @@ function RegisterPage(props) {
               required
               onChange={onVerificationCodeHandler}
             />
-            <br />
-            <div>
+    
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Button onClick={handleVerifyEmail}>이메일 인증 확인</Button>
               {/* 인증 결과에 따른 메시지 띄우기 */}
               {authDone && <div style={{ color: 'blue' }}>인증 완료되었습니다.</div>}
@@ -194,15 +199,19 @@ function RegisterPage(props) {
             </div>
           </div>
           
-    
+    <div style={{ marginTop: 10, width: 400 }}>
               <label>Password</label>
               <input type="password" value={Password} onChange={onPasswordHandler} />
+              </div>
 
+              <div style={{ marginTop: 5, width: 400 }}>
               <label>Phone Number</label>
               <input type="tel" value={PhoneNumber} onChange={onPhoneNumberHandler} />
+              </div>
 
-              <br />
+              <div style={{ marginTop: 10, width: 400 }}>
               <button type="submit">회원가입</button>
+              </div>
 
             </form>
           </div>

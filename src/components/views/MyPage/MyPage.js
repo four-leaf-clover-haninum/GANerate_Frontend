@@ -48,7 +48,7 @@ function MyPage(props) {
             <div className="col-lg-6">
               <div className="user-info-box p-4 rounded bg-light">
               <h3 className="text-center">회원 정보</h3>
-                <p>나는 옥지얌</p>
+                <p>한이음 회원님</p>
                 <p>Email: john@example.com</p>
                 <div className="edit-item">
   <a href="/edit-profile" className="btn btn-primary d-flex justify-content-center align-items-center" style={{ height: '100%', width: '100%', textDecoration: 'none', color: 'black' }}>

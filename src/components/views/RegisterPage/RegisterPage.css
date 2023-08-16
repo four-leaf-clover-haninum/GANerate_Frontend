@@ -1,96 +1,91 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300');
 
-
 .custom-h1-spacing {
     margin-bottom: 10px;
-  }
+}
 
 .centered-showcase {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 30vh;
-  }
-  
-  /* Smaller box size */
-  .rounded-box {
-    max-width: 1000px; /* Adjust this value to change the box width */
-    width: 100%;
-    margin: 0 ;
-  }
-  
-  
-  .HomePage {
+}
+
+.rounded-box {
+    max-width: 100px;
+    width: 10%;
+    margin: 0;
+}
+
+.HomePage {
     position: absolute;
-    top: 0; /* Positioned at the top */
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
     min-height: 100vh;
-    padding-top: 0px; /* Adding some top padding to create space from the top */
-    width: 100%; /* Setting width to 100% to take up the entire width of the viewport */
-  }
-
+    padding-top: 0px;
+    width: 100%;
+}
 
 .RegisterPage {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  min-height: 100vh;
-  margin-top: 310px; /* You can adjust this value as needed */
-  width: 360px; /* Adjust the width as per your preference */
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-height: 100vh;
+    margin-top: 310px;
+    width: 240px;
 }
 
 .form input {
-  font-family: "Roboto", sans-serif;
-  outline: 0;
-  background: #f2f2f2;
-  width: 100%;
-  border: 0;
-  margin: 0 0 15px;
-  padding: 15px;
-  box-sizing: border-box;
-  font-size: 14px;
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
 }
 
 .form button {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  outline: 0;
-  background: #9a1548;
-  width: 100%;
-  border: 0;
-  padding: 15px;
-  color: #FFFFFF;
-  font-size: 14px;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  cursor: pointer;
+    font-family: "Roboto", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #9a1548;
+    width: 100%;  /* 100% width so that it takes up the whole .RegisterPage width */
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .button12 {
-  /* 원하는 스타일을 여기에 추가합니다. 예시로 배경색과 테두리를 설정합니다. */
-  background-color: #000000;
-  border: 1px solid #000;
-  color: #FFF;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 13px;
+    background-color: #000000;
+    border: 1px solid #000;
+    color: #FFF;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 13px;
 }
 
 .form button:hover,
 .form button:active,
 .form button:focus {
-  background: #7e0e3d;
+    background: #000000;
 }
 
 .form .message {
-  margin: 15px 0 0;
-  color: #b3b3b3;
-  font-size: 12px;
+    margin: 15px 0 0;
+    color: #b3b3b3;
+    font-size: 12px;
 }
 
 .form .message a {
-  color: #9a1548;
-  text-decoration: none;
+    color: #000000;
+    text-decoration: none;
 }
