@@ -11,5 +11,8 @@ export const GET_CART_ITEMS = 'get_cart_items';
 export const REMOVE_CART_ITEM = 'remove_cart_item';
 export const ON_SUCCESS_BUY = 'on_success_buy';
 export const SET_PRODUCTS = 'set_products';
+export const PAYMENT_USER = 'payment_user';
+export const PAYMENT_SUCCESS = 'payment_success';
+export const PAYMENT_FAILURE = 'payment_failure';
 
 

@@ -101,27 +101,29 @@ function RegisterPage(props) {
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
-
+  
     if (!Email || !Name || !userPw || !phoneNum) {
       alert('모든 필드를 입력해주세요.');
       return;
     }
-
+  
     if (!/\S+@\S+\.\S+/.test(Email)) {
       alert('유효한 이메일 주소를 입력해주세요.');
       return;
     }
-
+  
     let body = {
       email: Email,
       name: Name,
       phoneNum: phoneNum,
-      userPw : userPw,
+      userPw: userPw,
       emailAuth: true
     };
+  
+    dispatch(registerUser(body, props.history));
+  };
+ 
 
-    dispatch(registerUser(body, props.history));  // history를 파라미터로 전달
-};
 
 
 

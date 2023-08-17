@@ -11,7 +11,9 @@ import {
   GET_CART_ITEMS,
   REMOVE_CART_ITEM,
   ON_SUCCESS_BUY,
-  SET_PRODUCTS
+  SET_PRODUCTS,
+  PAYMENT_SUCCESS,
+  PAYMENT_FAILURE
 
 } from '../_actions/types';
 
@@ -49,15 +51,21 @@ const initialState = {
                     userData: {
                         ...state.userData,
                         cart: action.payload.cart
-                    }
-                };
+                    }}
+
+    case PAYMENT_SUCCESS:
+        return { ...state, success: true, error: null };
+    case PAYMENT_FAILURE:
+        return { ...state, success: false, error: action.payload };
+
     case ON_SUCCESS_BUY:
         return {...state, cartDetail: action.payload.cartDetail,
                     userData: {...state.userData, cart: action.payload.cart}
                 };
     case SET_PRODUCTS:
         return { ...state, products: action.payload };
+
       default:
           return state;
   }
-}
+  }

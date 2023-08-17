@@ -13,7 +13,10 @@ import {
     GET_CART_ITEMS,
     REMOVE_CART_ITEM,
     ON_SUCCESS_BUY,
-    SET_PRODUCTS
+    SET_PRODUCTS,
+    PAYMENT_USER,
+    PAYMENT_SUCCESS,
+    
 } from './types';
 
 
@@ -103,13 +106,13 @@ export function getUserProfile(userId) {
 
   export const registerUser = (email, name, phoneNum, userPw, emailAuth) => async dispatch => {
     try {
-        const response = await axios.post('/v1/users/sign-up', {
-          email: email,
-          name: name,
-          phoneNum: phoneNum,
-          userPw: userPw,
-         emailAuth: true
-        });
+      const response = await axios.post('/v1/users/sign-up', {
+        email: email,
+        name: name,
+        phoneNum: phoneNum,
+        userPw: userPw,
+        emailAuth: emailAuth // 이 부분을 Boolean 값으로 유지
+      });
         if (response.data.code === 0) {
             alert('가입이 정상적으로 완료되었습니다.');
             dispatch({
@@ -382,4 +385,20 @@ export const searchProducts = (category, priceRange, searchQuery) => {
         console.error(err);
       });
   };
+};
+
+
+export const verifyPayment = (data) => async (dispatch) => {
+  try {
+    const response = await axios.post('http://localhost:8081/v1/payments/verifyIamport', data, {
+      headers: {
+        'Authorization': 'Bearer YOUR_ACCESS_TOKEN_HERE',
+        'Content-Type': 'application/json',
+      },
+    });
+
+    dispatch({ type: 'PAYMENT_SUCCESS', payload: response.data });
+  } catch (error) {
+    dispatch({ type: 'PAYMENT_FAILURE', payload: error.response.data });
+  }
 };
