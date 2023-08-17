@@ -101,16 +101,34 @@ export function getUserProfile(userId) {
   }
 
 
-export function registerUser(dataToSubmit) {
-    const request = axios
-    .post('/v1/users/sign-up', dataToSubmit)
-    .then(response => response.data)
+  export const registerUser = (email, name, phoneNum, userPw, emailAuth) => async dispatch => {
+    try {
+        const response = await axios.post('/v1/users/sign-up', {
+          email: email,
+          name: name,
+          phoneNum: phoneNum,
+          userPw: userPw,
+         emailAuth: true
+        });
+        if (response.data.code === 0) {
+            alert('가입이 정상적으로 완료되었습니다.');
+            dispatch({
+                type: REGISTER_USER,
+                payload: response.data.code
+            });
+        } else {
+            alert(response.data.message);
+        }
+    } catch (error) {
+        if (error.response) {
+            alert(error.response.data.message);
+        } else {
+            alert('서버 오류가 발생했습니다.');
+        }
+    }
+};
 
-    return {
-        type: REGISTER_USER,
-        payload: request
-    };
-}
+
 
 // 이메일 인증 번호 전송 API 처리 함수
 export function sendEmailVerification(email) {
@@ -130,35 +148,77 @@ export function sendEmailVerification(email) {
   };
 }
 
+
+
+
 // 이메일 인증 번호 인증 API 처리 함수
+
 export function verifyEmailVerification(email, certificationNum) {
-  return async (dispatch) => {
+  return async dispatch => {
     try {
-      const requestData = {
+      const response = await axios.post('/v1/users/email/verify', {
         email: email,
-        certificationNum: certificationNum,
-      };
-      const response = await axios.get('/v1/users/email', {
-        params: requestData,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          'Accept': 'application/json',
-        },
+        certificationNum: certificationNum
       });
-      if (response.data.code === 0) {
-        dispatch(emailVerificationSuccess(response.data));
-        console.log('인증번호 확인이 완료되었습니다.');
-        return;
-      } else {
-        dispatch(emailVerificationFailure(response.data));
-        console.log('유효하지 않은 인증번호입니다.');
+      const responseData = response.data;
+
+      if (responseData.code === 0) {
+        dispatch(emailVerificationSuccess(responseData));
+        console.log(responseData);
+        alert('이메일 인증이 완료되었습니다.');
+      } 
+      else {
+        dispatch(emailVerificationFailure(responseData));
+        console.log(responseData);
+        alert('이메일 인증에 실패하였습니다.')
       }
+      
+      return responseData; // 이부분이 중요합니다. responseData를 반환하여 handleVerifyEmail 함수에서 사용합니다.
+
     } catch (error) {
       console.log(error.response);
       dispatch({ type: 'EMAIL_VERIFICATION_FAILURE', payload: error.response });
+      throw error; // 이 부분은 오류가 발생하면 throw를 통해 handleVerifyEmail의 catch로 넘어갑니다.
     }
   };
 }
+
+
+        
+
+// export function verifyEmailVerification(email, certificationNum) {
+//   return async (dispatch) => {
+//     try {
+//       const requestData = {
+//         email: email,
+//         certificationNum: certificationNum,
+//       };
+//       const response = await axios.get('/v1/users/email', {
+//         params: requestData, // 쿼리 파라미터로 데이터 전달
+//         headers: {
+//           'Accept': 'application/json',
+//         },
+//       });
+
+//       const responseData = response.data;
+
+//       if (responseData.code === 0) {
+//         dispatch(emailVerificationSuccess(responseData));
+//         console.log('인증번호 확인이 완료되었습니다.');
+//         return responseData;
+//       } else {
+//         dispatch(emailVerificationFailure(responseData));
+//         console.log('유효하지 않은 인증번호입니다.');
+//         return responseData;
+//       }
+//     } catch (error) {
+//       console.log(error.response);
+//       dispatch({ type: 'EMAIL_VERIFICATION_FAILURE', payload: error.response });
+//       throw error;
+//     }
+//   };
+// }
+
 
   //
   export const emailVerificationFailure = (payload) => ({

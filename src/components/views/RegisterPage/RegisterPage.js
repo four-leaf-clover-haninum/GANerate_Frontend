@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser, sendEmailVerification, verifyEmailVerification } from '../../../_actions/user_action';
+import { registerUser, sendEmailVerification, verifyEmailVerification,emailVerificationSuccess } from '../../../_actions/user_action';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle } from 'react-icons/fa';
 import { Input, Button } from 'antd';
@@ -9,11 +9,11 @@ function RegisterPage(props) {
   const dispatch = useDispatch();
   const [Email, setEmail] = useState('');
   const [Name, setName] = useState('');
-  const [Password, setPassword] = useState('');
-  const [PhoneNumber, setPhoneNumber] = useState('');
+  const [userPw, setuserPw] = useState('');
+  const [phoneNum, setphoneNum] = useState('');
 
   const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [VerificationCode, setVerificationCode] = useState('');
+  const [certificationNum, setcertificationNum] = useState('');
   const [authDone, setAuthDone] = useState(false);
   const [authError, setAuthError] = useState(false);
   const marginTop = { marginTop: '10px' }; 
@@ -33,12 +33,12 @@ function RegisterPage(props) {
     setEmail(event.currentTarget.value);
   };
 
-  const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value);
+  const onuserPwHandler = (event) => {
+    setuserPw(event.currentTarget.value);
   };
 
-  const onPhoneNumberHandler = (event) => {
-    setPhoneNumber(event.currentTarget.value);
+  const onphoneNumHandler = (event) => {
+    setphoneNum(event.currentTarget.value);
   };
 
   const onEmailVerificationHandler = () => {
@@ -55,7 +55,7 @@ function RegisterPage(props) {
       .then(() => {
         alert('인증코드가 발송되었습니다. 이메일을 확인하세요.');
         setIsEmailVerified(true);
-        setVerificationCode(''); // Reset verification code input field
+        setcertificationNum(''); // Reset verification code input field
         localStorage.setItem('isEmailVerified', JSON.stringify(true));
       })
       .catch((error) => {
@@ -67,29 +67,42 @@ function RegisterPage(props) {
       });
   };
 
+
   const handleVerifyEmail = async () => {
     try {
-      await verifyEmailVerification(Email, VerificationCode);
-      // 인증 성공
-      alert('인증번호 확인이 완료되었습니다.');
-      setAuthDone(true);
-      setAuthError(false);
+        const response = await dispatch(verifyEmailVerification(Email, certificationNum));
+        const responseData = response.data;
+
+        if (responseData.code === 0) {
+            setAuthDone(true);  // 인증 성공
+            setAuthError(false);
+            setIsEmailVerified(true);
+            setcertificationNum('');
+            localStorage.setItem('isEmailVerified', JSON.stringify(true));
+        } else {
+            setAuthDone(false);
+            setAuthError(true);  // 인증 실패
+        }
     } catch (error) {
-      // 인증 실패
-      alert('유효하지 않은 인증번호입니다.');
-      setAuthDone(false);
-      setAuthError(true);
+        console.log(error.response);
+        setAuthDone(false);
+        setAuthError(true);  // 서버 오류나 통신 오류 등이 발생한 경우 인증 실패로 판단
     }
+};
+
+  
+
+
+  const oncertificationNumHandler = (event) => {
+    setcertificationNum(event.target.value);
   };
 
-  const onVerificationCodeHandler = (event) => {
-    setVerificationCode(event.target.value);
-  };
 
-  const onSubmitHandler = async (event) => {
+
+  const onSubmitHandler = (event) => {
     event.preventDefault();
 
-    if (!Email || !Name || !Password || !PhoneNumber) {
+    if (!Email || !Name || !userPw || !phoneNum) {
       alert('모든 필드를 입력해주세요.');
       return;
     }
@@ -99,36 +112,20 @@ function RegisterPage(props) {
       return;
     }
 
-    if (!isEmailVerified || !authDone) {
-      alert('이메일 인증 및 인증번호 확인을 먼저 완료해주세요.');
-      return;
-     
-    }
-
-    // 회원가입 요청
     let body = {
       email: Email,
-      userPw: Password,
       name: Name,
-      PhoneNumber: PhoneNumber,
-      emailAuth: VerificationCode,
+      phoneNum: phoneNum,
+      userPw : userPw,
+      emailAuth: true
     };
 
-    try {
-      await dispatch(registerUser(body));
-      alert('가입이 정상적으로 완료되었습니다.');
-      props.history.push('/v1/users/sign-in');
-    } catch (error) {
-      if (error.response) {
-        alert(error.response.data.message);
-      } else {
-        alert('서버 오류가 발생했습니다.');
-      }
-    }
-  };
+    dispatch(registerUser(body, props.history));  // history를 파라미터로 전달
+};
 
 
-  
+
+
   
     return (
         <div className="HomePage d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
@@ -182,31 +179,29 @@ function RegisterPage(props) {
             </div>
             
             <div style={{ marginTop: 20, width: 200 }}>
-            <Input
-              placeholder="번호입력"
-              name="user-emailcheck"
-              type="text"
-              value={VerificationCode}
-              required
-              onChange={onVerificationCodeHandler}
-            />
-    
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Button onClick={handleVerifyEmail}>이메일 인증 확인</Button>
-              {/* 인증 결과에 따른 메시지 띄우기 */}
-              {authDone && <div style={{ color: 'blue' }}>인증 완료되었습니다.</div>}
-              {authError && <div style={{ color: 'red' }}>인증번호가 일치하지 않습니다.</div>}
-            </div>
-          </div>
-          
+  <Input
+    placeholder="번호입력"
+    name="user-emailcheck"
+    type="text"
+    value={certificationNum}
+    onChange={oncertificationNumHandler}
+  />
+
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+  <Button onClick={handleVerifyEmail} disabled={authDone}>이메일 인증 확인</Button>
+</div>
+
+
+</div>
+
     <div style={{ marginTop: 10, width: 400 }}>
-              <label>Password</label>
-              <input type="password" value={Password} onChange={onPasswordHandler} />
+              <label>userPw</label>
+              <input type="userPw" value={userPw} onChange={onuserPwHandler} />
               </div>
 
               <div style={{ marginTop: 5, width: 400 }}>
               <label>Phone Number</label>
-              <input type="tel" value={PhoneNumber} onChange={onPhoneNumberHandler} />
+              <input type="tel" value={phoneNum} onChange={onphoneNumHandler} />
               </div>
 
               <div style={{ marginTop: 10, width: 400 }}>
@@ -220,7 +215,7 @@ function RegisterPage(props) {
       </div>
     </div>
   );
-}
+    }
 
 
 export default RegisterPage;

@@ -81,8 +81,7 @@ function UploadProductPage(props) {
         if (!Title || !Description || !Price || !Continent || Images.length === 0) {
             return alert(" 모든 값을 넣어주셔야 합니다.")
         }
-
-
+        
         //서버에 채운 값들을 request로 보낸다.
 
         const body = {
@@ -95,7 +94,7 @@ function UploadProductPage(props) {
             continents: Continent
         }
 
-        Axios.post('/api/product', body)
+        Axios.post('/v1/data-products/sale/image', body)
             .then(response => {
                 if (response.data.success) {
                     alert('상품 업로드에 성공 했습니다.')
@@ -161,6 +160,7 @@ function UploadProductPage(props) {
                 zip 이미지 파일 업로드
                 </button>
                 </FileUpload>
+
 
 
                 <br />
@@ -230,9 +230,13 @@ function UploadProductPage(props) {
 <br />
                 <br />
                 <div className="button-container">
-        <button type="submit" className="data-create-button">
-            데이터 생성
-        </button>
+
+
+        <button className="data-create-button" type="submit" onClick={submitHandler}>
+             데이터 생성
+              </button>
+
+
     </div>
             </Form>
 

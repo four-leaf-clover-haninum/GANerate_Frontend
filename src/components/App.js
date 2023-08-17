@@ -8,7 +8,8 @@ import HomePage from './views/HomePage/HomePage';
 import MyPage from './views/MyPage/MyPage';
 import CartPage from "./views/CartPage/CartPage";
 import UploadProductPage from './views/UploadProductPage/UploadProductPage';
-import DetailProductPage from './views/DeteilProductPage/DetailProductPage'
+import DetailProductPage from './views/DeteilProductPage/DetailProductPage';
+import PaymentPage from './views/PaymentPage/PaymentPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/v1/data-products" element={<CartPage />} />
         <Route path="/v1/data-products/sale/zip" element={<UploadProductPage />} />
         <Route path="/v1/data-products/1" element={<DetailProductPage />} />
+        <Route path="/v1/orders/{data-product-id}" element={<PaymentPage />} />
       </Routes>
     </div>
   );
