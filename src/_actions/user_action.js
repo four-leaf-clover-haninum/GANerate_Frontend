@@ -104,21 +104,20 @@ export function getUserProfile(userId) {
   }
 
 
-  export const registerUser = (userData, history) => async dispatch => {
+  export const registerUser = (userData) => async (dispatch, getState) => {
     try {
-        const response = await axios.post('/v1/users/sign-up', userData);
-        if (response.data.code === 0) {
-            const responseData = response.data; // 응답 데이터의 내용을 추출
-            console.log(responseData);
-            alert('가입이 정상적으로 완료되었습니다.');
+      const response = await axios.post('/v1/users/sign-up', userData);
+      if (response.data.code === 0) {
+        const responseData = response.data;
+        console.log(responseData);
+        alert('가입이 정상적으로 완료되었습니다.');
 
             // 회원 정보를 전달하도록 payload 수정
             dispatch({
                 type: REGISTER_USER,
                 payload: responseData
             });
-
-            history.push('/v1/users/sign-in'); // 페이지 이동
+            console.log('가입이 정상적으로 완료되었습니다.');
         } else {
             alert(response.data.message);
         }
@@ -129,10 +128,6 @@ export function getUserProfile(userId) {
     }
   
 };
-
-
-
-
 
 
 
@@ -172,6 +167,7 @@ export function verifyEmailVerification(email, certificationNum) {
       if (responseData.code === 0) {
         dispatch(emailVerificationSuccess(responseData));
         console.log(responseData);
+        console.log('이메일 인증이 완료되었습니다.');
         alert('이메일 인증이 완료되었습니다.');
       } 
       else {

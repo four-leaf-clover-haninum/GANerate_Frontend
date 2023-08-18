@@ -5,6 +5,7 @@ import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle } from 'react-icons/fa';
 import { Input, Button } from 'antd';
 
+
 function RegisterPage(props) {
   const dispatch = useDispatch();
   const [Email, setEmail] = useState('');
@@ -99,30 +100,37 @@ function RegisterPage(props) {
 
 
 
+
   // 코드의 나머지 부분은 변경되지 않았으므로 여기서는 수정된 부분만 보여드립니다.
-const onSubmitHandler = (event) => {
-  event.preventDefault();
+  const onSubmitHandler = async (event) => { // 함수에 async 추가
+    event.preventDefault();
 
-  if (!Email || !Name || !userPw || !phoneNum) {
-      alert('모든 필드를 입력해주세요.');
-      return;
-  }
+    if (!Email || !Name || !userPw || !phoneNum) {
+        alert('모든 필드를 입력해주세요.');
+        return;
+    }
 
-  if (!/\S+@\S+\.\S+/.test(Email)) {
-      alert('유효한 이메일 주소를 입력해주세요.');
-      return;
-  }
+    if (!/\S+@\S+\.\S+/.test(Email)) {
+        alert('유효한 이메일 주소를 입력해주세요.');
+        return;
+    }
 
-  const userData = {
-      email: Email,
-      name: Name,
-      phoneNum: phoneNum,
-      userPw: userPw,
-      emailAuth: true
+    const userData = {
+        email: Email,
+        name: Name,
+        phoneNum: phoneNum,
+        userPw: userPw,
+        emailAuth: true
+    };
+
+    await dispatch(registerUser(userData)); // 통신 처리를 action 내부에서 수행
+    props.history.push('/v1/users/sign-in');
   };
 
-  dispatch(registerUser(userData, props.history));
-};
+  
+
+  
+
 
  
 
