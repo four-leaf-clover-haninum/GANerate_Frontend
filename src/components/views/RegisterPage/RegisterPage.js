@@ -99,29 +99,31 @@ function RegisterPage(props) {
 
 
 
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-  
-    if (!Email || !Name || !userPw || !phoneNum) {
+  // 코드의 나머지 부분은 변경되지 않았으므로 여기서는 수정된 부분만 보여드립니다.
+const onSubmitHandler = (event) => {
+  event.preventDefault();
+
+  if (!Email || !Name || !userPw || !phoneNum) {
       alert('모든 필드를 입력해주세요.');
       return;
-    }
-  
-    if (!/\S+@\S+\.\S+/.test(Email)) {
+  }
+
+  if (!/\S+@\S+\.\S+/.test(Email)) {
       alert('유효한 이메일 주소를 입력해주세요.');
       return;
-    }
-  
-    let body = {
+  }
+
+  const userData = {
       email: Email,
       name: Name,
       phoneNum: phoneNum,
       userPw: userPw,
       emailAuth: true
-    };
-  
-    dispatch(registerUser(body, props.history));
   };
+
+  dispatch(registerUser(userData, props.history));
+};
+
  
 
 

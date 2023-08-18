@@ -104,15 +104,9 @@ export function getUserProfile(userId) {
   }
 
 
-  export const registerUser = (email, name, phoneNum, userPw, emailAuth) => async dispatch => {
+  export const registerUser = (userData) => async dispatch => {
     try {
-      const response = await axios.post('/v1/users/sign-up', {
-        email: email,
-        name: name,
-        phoneNum: phoneNum,
-        userPw: userPw,
-        emailAuth: emailAuth // 이 부분을 Boolean 값으로 유지
-      });
+        const response = await axios.post('/v1/users/sign-up', userData);
         if (response.data.code === 0) {
             alert('가입이 정상적으로 완료되었습니다.');
             dispatch({
@@ -128,8 +122,11 @@ export function getUserProfile(userId) {
         } else {
             alert('서버 오류가 발생했습니다.');
         }
+        console.log(userData); // 에러 객체를 콘솔에 출력
     }
 };
+
+
 
 
 
