@@ -104,27 +104,33 @@ export function getUserProfile(userId) {
   }
 
 
-  export const registerUser = (userData) => async dispatch => {
+  export const registerUser = (userData, history) => async dispatch => {
     try {
         const response = await axios.post('/v1/users/sign-up', userData);
         if (response.data.code === 0) {
+          const responseData = response.data; // 응답 데이터의 내용을 추출
+            console.log(responseData);
             alert('가입이 정상적으로 완료되었습니다.');
+
+            // 회원 정보를 전달하도록 payload 수정
             dispatch({
                 type: REGISTER_USER,
-                payload: response.data.code
+                payload: responseData
             });
+
+            history.push('/v1/users/sign-in'); // 페이지 이동
         } else {
             alert(response.data.message);
         }
     } catch (error) {
         if (error.response) {
             alert(error.response.data.message);
-        } else {
-            alert('서버 오류가 발생했습니다.');
-        }
-        console.log(userData); // 에러 객체를 콘솔에 출력
+        } 
+        console.log(error.response); // 에러 객체를 콘솔에 출력
     }
 };
+
+
 
 
 

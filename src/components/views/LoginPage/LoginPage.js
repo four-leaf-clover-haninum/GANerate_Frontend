@@ -30,11 +30,6 @@ function LoginPage(props) {
       return;
     }
 
-    //if (!passwordPattern.test(Password)) {
-      //alert('비밀번호는 숫자와 영문을 혼합하여 8자 이상 입력해주세요.');
-      //return;
-    //}
-
     const dataToSubmit = {
       email: Email,
       userPw: Password
