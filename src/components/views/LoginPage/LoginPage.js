@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser, getUserProfile } from '../../../_actions/user_action';
+import { loginUser, getUserProfile, registerUser } from '../../../_actions/user_action';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import "./LoginPage.css"
 import { FaUserCircle } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+
 
 function LoginPage(props) {
   const dispatch = useDispatch();
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const onEmailHandler = (event) => {
     setEmail(event.currentTarget.value);
@@ -19,12 +22,9 @@ function LoginPage(props) {
   };
 
   const onSubmitHandler = (event) => {
-    event.preventDefault(); //버튼만 누르면 리로드 되는 것을 막고
-    // 이메일 형식과 비밀번호 형식을 체크하는 정규식 패턴
+    event.preventDefault();
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    //const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
-    // 이메일 형식과 비밀번호 형식을 체크
     if (!emailPattern.test(Email)) {
       alert('올바른 이메일 형식을 입력해주세요.');
       return;
@@ -34,16 +34,29 @@ function LoginPage(props) {
       email: Email,
       userPw: Password
     };
-    
+
     dispatch(loginUser(dataToSubmit))
       .then((response) => {
-        // 로그인 성공 시 인증 토큰을 로컬 스토리지에 저장
-        localStorage.setItem('authToken', response.payload.token);
-        const { email } = dataToSubmit;
-        dispatch(getUserProfile(email));
+        if (response) {
+          // 로그인 성공 후 원하는 다른 동작들 수행
+          navigate('/HomePage');  // 예: 로그인 후 메인 페이지로 리디렉션
+        } else {
+          alert("로그인 실패!");
+        }
       });
   };
 
+  const onRegisterHandler = () => {
+    dispatch(registerUser({ email: Email, userPw: Password }))  // 예제로만 추가한 부분
+      .then(response => {
+        if (response) {
+          alert("회원가입 성공!");
+          props.history.push('/login');
+        } else {
+          alert("회원가입 실패!");
+        }
+      });
+  };
 
 
 
@@ -96,7 +109,6 @@ function LoginPage(props) {
             <p className="message">Not registered? <a href="/v1/users/sign-up">Create an account</a></p>
           </form>
         </div>
-
        
 
       <footer className="py-3 bg-dark fixed-bottom">

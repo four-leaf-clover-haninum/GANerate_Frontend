@@ -4,9 +4,12 @@ import { registerUser, sendEmailVerification, verifyEmailVerification,emailVerif
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle } from 'react-icons/fa';
 import { Input, Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 
-function RegisterPage(props) {
+function RegisterPage() {
+  const navigate = useNavigate(); 
+
   const dispatch = useDispatch();
   const [Email, setEmail] = useState('');
   const [Name, setName] = useState('');
@@ -102,7 +105,7 @@ function RegisterPage(props) {
 
 
   // 코드의 나머지 부분은 변경되지 않았으므로 여기서는 수정된 부분만 보여드립니다.
-  const onSubmitHandler = async (event) => { // 함수에 async 추가
+  const onSubmitHandler = async (event) => {
     event.preventDefault();
 
     if (!Email || !Name || !userPw || !phoneNum) {
@@ -123,17 +126,11 @@ function RegisterPage(props) {
         emailAuth: true
     };
 
-    await dispatch(registerUser(userData)); // 통신 처리를 action 내부에서 수행
-    props.history.push('/v1/users/sign-in');
-  };
-
-  
-
-  
-
-
- 
-
+    const isRegistered = await dispatch(registerUser(userData));
+    if (isRegistered) {
+      navigate('/v1/users/sign-in'); // useNavigate Hook을 통해 페이지 이동
+  }
+};
 
 
 
@@ -174,7 +171,10 @@ function RegisterPage(props) {
 
 
           <div className="RegisterPage" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '75vh' }}>
-  <form className="form" onSubmit={onSubmitHandler}>
+  
+  
+  
+          <form className="form" onSubmit={onSubmitHandler}>
 
             <div style={{ marginTop: 10, width: 400 }}>
               <label>Name</label>

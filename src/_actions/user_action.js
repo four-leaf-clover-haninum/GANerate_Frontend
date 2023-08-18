@@ -21,52 +21,40 @@ import {
 
 
 
-export function loginUser(dataToSubmit) {
-    return async (dispatch) => {
-        try {
-            const response = await axios.post('v1/users/sign-in', dataToSubmit);
-            const { code, data } = response.data;
 
-            if (code === 0) {
-                // 로그인 성공 시
-                dispatch({
-                    type: LOGIN_USER,
-                    payload: data
-                });
-            } else if (code === 2201) {
-                // 존재하지 않는 아이디
-                dispatch({
-                    type: LOGIN_USER_FAILURE,
-                    payload: { message: '존재하지 않는 아이디' }
-                });
-            } else if (code === 2202) {
-                // 올바르지 않은 비밀번호
-                dispatch({
-                    type: LOGIN_USER_FAILURE,
-                    payload: { message: '올바르지 않은 비밀번호' }
-                });
-            } else if (code === -1) {
-                // 비밀번호 누락
-                dispatch({
-                    type: LOGIN_USER_FAILURE,
-                    payload: { message: '비밀번호는 필수입니다.' }
-                });
-            } else {
-                // 기타 로그인 실패
-                dispatch({
-                    type: LOGIN_USER_FAILURE,
-                    payload: { message: '로그인 실패' }
-                });
-            }
-        } catch (error) {
-            // 서버 오류 등 요청 실패 시
+export function loginUser(dataToSubmit) {
+  return async (dispatch) => {
+      try {
+          const response = await axios.post('/v1/users/sign-in', dataToSubmit);
+          const { code, data } = response.data;
+
+          if (code === 0) {
+              localStorage.setItem('accessToken', data.accessToken);
+              localStorage.setItem('refreshToken', data.refreshToken);
+
+              console.log(response.data);
+
+            alert('로그인에 성공하였습니다.');
             dispatch({
-                type: LOGIN_USER_FAILURE,
-                payload: { message: '서버 오류: 로그인 실패' }
+                type: LOGIN_USER,
+                payload: data
             });
-        }
-    };
+              
+              console.log("로그인에 성공하였습니다.");  // 로그인 성공 메시지는 개발 도구의 콘솔에만 출력
+              
+              return data;  // dispatch 후 data 반환 (다음 then에서 사용하게 됨)
+          } else {
+              throw new Error("로그인에 실패하였습니다."); // 로그인 실패 처리
+          }
+      } catch (error) {
+          console.error("There was an error logging in:", error);
+          return null; // 로그인 실패 시 null 반환
+      }
+  };
 }
+
+
+
 
 export function getUserProfile(userId) {
     return async (dispatch) => {
@@ -106,28 +94,30 @@ export function getUserProfile(userId) {
 
   export const registerUser = (userData) => async (dispatch, getState) => {
     try {
-      const response = await axios.post('/v1/users/sign-up', userData);
-      if (response.data.code === 0) {
-        const responseData = response.data;
-        console.log(responseData);
-        alert('가입이 정상적으로 완료되었습니다.');
-
-            // 회원 정보를 전달하도록 payload 수정
+        const response = await axios.post('/v1/users/sign-up', userData);
+        if (response.data.code === 0) {
+            const responseData = response.data;
+            console.log(responseData);
+            alert('가입이 정상적으로 완료되었습니다.');
             dispatch({
                 type: REGISTER_USER,
                 payload: responseData
             });
             console.log('가입이 정상적으로 완료되었습니다.');
+            
+            return true;  // 회원가입 성공시 true 반환
         } else {
             alert(response.data.message);
+            return false;  // 실패시 false 반환
         }
     } catch (error) {
         if (error.response) {
             alert(error.response.data.message);
-        } 
+        }
+        return false;  // 실패시 false 반환
     }
-  
 };
+
 
 
 
@@ -392,7 +382,7 @@ export const verifyPayment = (data) => async (dispatch) => {
   try {
     const response = await axios.post('http://localhost:8081/v1/payments/verifyIamport', data, {
       headers: {
-        'Authorization': 'Bearer YOUR_ACCESS_TOKEN_HERE',
+        'Authorization': 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxOCIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2OTIzOTIxNjl9.RVyIBDsT7bPLFNBKuh4FwkaNFlWJZg9olS46d4HvFjk',
         'Content-Type': 'application/json',
       },
     });
