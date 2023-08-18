@@ -108,7 +108,7 @@ export function getUserProfile(userId) {
     try {
         const response = await axios.post('/v1/users/sign-up', userData);
         if (response.data.code === 0) {
-          const responseData = response.data; // 응답 데이터의 내용을 추출
+            const responseData = response.data; // 응답 데이터의 내용을 추출
             console.log(responseData);
             alert('가입이 정상적으로 완료되었습니다.');
 
@@ -126,9 +126,10 @@ export function getUserProfile(userId) {
         if (error.response) {
             alert(error.response.data.message);
         } 
-        console.log(error.response); // 에러 객체를 콘솔에 출력
     }
+  
 };
+
 
 
 
