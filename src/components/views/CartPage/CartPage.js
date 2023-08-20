@@ -8,19 +8,45 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaUserCircle, FaDownload } from 'react-icons/fa';
 import './CartPage.css';
 import { searchProducts, fetchProducts } from '../../../_actions/user_action';
+import { useDispatch } from 'react-redux';
 
 
 function CartPage() {
-    const [Products, setProducts] = useState([]);
+  const dispatch = useDispatch(); // Initialize useDispatch hook
+
+
+  const [Products, setProducts] = useState([]);
     const [Category, setCategory] = useState([]);
     const [PriceRange, setPriceRange] = useState([]);
     const [SearchQuery, setSearchQuery] = useState(''); 
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
-        // 데이터 초기 로딩
-        fetchProducts();
-    }, []);
+      // 데이터 초기 로딩
+      fetchProductData(currentPage);
+    }, [currentPage]);
 
+
+    const fetchProductData = (page) => {
+      // 로컬 스토리지에서 토큰을 가져옵니다.
+      const token = localStorage.getItem("accessToken");
+    
+      if (token) {
+        dispatch(fetchProducts(page, token))
+          .then((response) => {
+            setProducts(response); // Set the products using the response data
+          })
+          .catch((error) => {
+            console.error(error); // Handle the error, if needed
+          });
+      } else {
+        console.error("Token is not available in local storage");
+      }
+    };
+    
+    
+    
+    
 
     const handleCategoryChange = (checkedValues) => {
         // 카테고리 체크박스 선택 시 동작
@@ -35,8 +61,13 @@ function CartPage() {
 
     const handleSearch = () => {
         // 검색 버튼 클릭 시 검색 결과 가져오는 액션 디스패치
+
+        setCurrentPage(0); // 검색 시 페이지 초기화
+        fetchProductData(0); // 검색된 상품 데이터 불러오기
         searchProducts(Category, PriceRange, SearchQuery);
       };
+
+
 
       const handlePriceRangeChange = (checkedValues) => {
         // "직접입력" 체크 시 해당 값만 선택
@@ -73,11 +104,11 @@ function CartPage() {
 
         {/* 링크 추가 및 라우팅 설정 */}
         <Nav className="me-auto">
-            <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>이용 안내</Nav.Link>
-            <Nav.Link href="/v1/data-products/sale/zip" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 생성</Nav.Link>
-            <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 마켓</Nav.Link>
-            <Nav.Link href="/v1/data-products" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 검색</Nav.Link>
-          </Nav>
+        <Nav.Link href="/guide" style={{ fontSize: '22px', padding: '0 60px' }}>이용 안내</Nav.Link>
+        <Nav.Link href="/v1/data-products/sale/zip" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 생성</Nav.Link>
+        <Nav.Link href="/v1/data-products" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 마켓</Nav.Link>
+        <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 판매</Nav.Link>
+      </Nav>
   
           {/* 로그인 및 마이페이지 링크 추가 및 라우팅 설정 */}
           <Nav className="ml-auto">
@@ -113,11 +144,10 @@ function CartPage() {
               <Checkbox value="category5">패션</Checkbox>
               <Checkbox value="category6">건물/랜드마크</Checkbox>
               <Checkbox value="category7">풍경/배경</Checkbox>
-              <Checkbox value="category8">과학, 항공 및 우주</Checkbox>
-              <Checkbox value="category9">경제/비즈니스</Checkbox>
-              <Checkbox value="category10">사물/제품</Checkbox>
-              <Checkbox value="category11">교통/물류</Checkbox>
-              <Checkbox value="category12">스포츠</Checkbox>
+              <Checkbox value="category8">경제/비즈니스</Checkbox>
+              <Checkbox value="category9">사물/제품</Checkbox>
+              <Checkbox value="category10">교통/물류</Checkbox>
+              <Checkbox value="category11">스포츠</Checkbox>
             </Checkbox.Group>
           </div>
 
@@ -169,106 +199,57 @@ function CartPage() {
              </Button>
              </div>
 
+             {fetchProducts()} 
 
-
-
-        <div className="row mt-4">
-          <div className="col-lg-12 offset-lg-0">
-            <Row gutter={[16, 16]}>
-              {Products.map(product => (
-                <Col lg={6} md={8} xs={24} key={product._id}>
-
-                  {/* ProductCard 컴포넌트 */}
-
-                  <ProductCard product={product} />
-                </Col>
-              ))}
-            </Row>
-          </div>
-        </div>
         
 
+{/* 상품 불러오기 */}
+        <div className="row mt-4">
+        <div className="col-lg-12 offset-lg-0">
+        <Row gutter={[16, 16]}>
+          {Products.map(product => (
+            <Col lg={6} md={8} xs={24} key={product._id}>
+            <ProductCard product={product} />
+              <div className="product-box">
+                <img src={product.images[0]} alt={product.title} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
+                <h3 className="product-title">{product.title}</h3>
+                <p className="product-price">${product.price}</p>
+              </div>
+            </Col>
+          ))}
+        </Row>
+        </div>
+        </div>
+
+
+        {/* 페이지네이션 */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
+  <div className="pagination">
+    {[...Array(10).keys()].map((pageIndex) => (
+      <Button
+        key={pageIndex}
+        className={`page-number-button ${currentPage === pageIndex ? 'active' : ''}`}
+        onClick={() => setCurrentPage(pageIndex)}
+        style={{ marginLeft: '5px', marginRight: '5px' }}
+      >
+        {pageIndex + 1}
+      </Button>
+    ))}
+  </div>
+</div>
+
+
+  
+        
+        </div>
     </div>
   </div>
   {/* ... (푸터 등 추가 코드) */}
 </div>
 
 
-      </div>
-
   );
 }
 
 
 export default CartPage;
-
-
-
-
-
-
-
-
-const Users = ({ user }) => {
-    return (
-      <div className="box media">
-        <figure className="image is-96x96 media-left">
-            <img src={user.image} alt={user.name} />
-        </figure>
-        <div className="media-content">
-          <p className="subtitle">{user.name}</p>
-          <p>{user.email}</p>
-        </div>
-      </div>
-    )
-  }
-  
-  class App extends React.Component {
-    state = {
-      users: [],
-      isLoading: true,
-      errors: null
-    };
-  
-    getUsers() {
-      axios
-        .get("https://randomuser.me/api/?results=5")
-        .then(response =>
-          response.data.results.map(user => ({
-            name: `${user.name.first} ${user.name.last}`,
-            username: `${user.login.username}`,
-            email: `${user.email}`,
-            image: `${user.picture.thumbnail}`
-          }))
-        )
-        .then(users => {
-          this.setState({
-            users,
-            isLoading: false
-          });
-        })
-        .catch(error => this.setState({ error, isLoading: false }));
-    }
-  
-    componentDidMount() {
-      this.getUsers();
-    }
-  
-    render() {
-      const { isLoading, users } = this.state;
-      return(
-      <section className="section">
-          <div className="container">
-            {!isLoading ? (
-              users.map(user => {
-                return <Users key={user.username} user={user} />;
-              })
-            ) : (
-              <p>Loading...</p>
-            )}
-          </div>
-      </section>
-      );
-    }
-  }
-  

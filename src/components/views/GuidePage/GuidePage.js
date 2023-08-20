@@ -3,7 +3,7 @@ import { Typography, Button, Form, Input,Checkbox } from 'antd';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import Axios from 'axios';
 import { FaUserCircle, FaDownload } from 'react-icons/fa';
-import './LandingPage.css'
+import './GuidePage.css'
 
 
 function LandingPage(props) {
@@ -24,11 +24,11 @@ function LandingPage(props) {
   
           {/* 링크 추가 및 라우팅 설정 */}
           <Nav className="me-auto">
-            <Nav.Link href="/guide" style={{ fontSize: '22px', padding: '0 60px' }}>이용 안내</Nav.Link>
-            <Nav.Link href="/v1/data-products/sale/zip" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 생성</Nav.Link>
-            <Nav.Link href="/v1/data-products" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 마켓</Nav.Link>
-            <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 판매</Nav.Link>
-          </Nav>
+          <Nav.Link href="/guide" style={{ fontSize: '22px', padding: '0 60px' }}>이용 안내</Nav.Link>
+          <Nav.Link href="/v1/data-products/sale/zip" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 생성</Nav.Link>
+          <Nav.Link href="/v1/data-products" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 마켓</Nav.Link>
+          <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 판매</Nav.Link>
+        </Nav>
   
           {/* 로그인 및 마이페이지 링크 추가 및 라우팅 설정 */}
           <Nav className="ml-auto">
@@ -44,7 +44,16 @@ function LandingPage(props) {
       </React.Fragment>
 
 
-  
+      
+      
+      <div style={{ maxWidth: '700px', margin: '3rem auto' }}>
+      <div className="info-container">
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+              <h1> 이용 안내</h1>
+              <p>GAN:ERATE</p>
+          </div>
+      </div>
+  </div>
 
 
 

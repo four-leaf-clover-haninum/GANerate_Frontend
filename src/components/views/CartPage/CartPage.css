@@ -1,4 +1,25 @@
 
+
+/* Add this to your CSS file */
+.page-number-button {
+  background-color: white;
+  color: #9a1548;
+  border: 1px solid #9a1548;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.page-number-button.active {
+  background-color: #9a1548;
+  color: white;
+  border: 1px solid #9a1548;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+
+
+
 .search-form-box {
     width: 100%; /* 가로 넓이를 100%로 설정하여 가로로 확장 */
   }

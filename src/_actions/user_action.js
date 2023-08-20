@@ -17,9 +17,36 @@ import {
     SET_PRODUCTS,
     PAYMENT_USER,
     PAYMENT_SUCCESS,
+    GET_PRODUCT_DETAIL
     
 } from './types';
 
+
+export function getProductDetail(dataProductId) {
+  const token = localStorage.getItem('accessToken');  // Retrieve access token from local storage
+  const config = {
+      headers: { Authorization: `Bearer ${token}` }
+  };
+
+  const request = axios.get(`/v1/data-products/${dataProductId}`, config)
+      .then(response => {
+          if (response.data.code === 0) {
+              return response.data.product;
+          } else {
+              console.error("Failed to fetch data");
+              return null;
+          }
+      })
+      .catch(error => {
+          console.error("An error occurred: ", error);
+          return null;
+      });
+
+  return {
+      type: GET_PRODUCT_DETAIL,
+      payload: request
+  };
+}
 
 
 
@@ -30,8 +57,7 @@ export function loginUser(dataToSubmit) {
           const { code, data } = response.data;
 
           if (code === 0) {
-              localStorage.setItem('accessToken', data.accessToken);
-              localStorage.setItem('refreshToken', data.refreshToken);
+            localStorage.setItem('authToken', data.accessToken); 
 
               console.log(response.data);
 
@@ -260,12 +286,6 @@ export function verifyEmailVerification(email, certificationNum) {
 
 
 
-
-
-
-
-
-
 export function navbarUser(dataToSubmit) {
     const request = axios.post('/', dataToSubmit)
         .then(response => response.data)
@@ -384,24 +404,37 @@ export const setProducts = (products) => {
 };
 
 // 서버에서 상품 데이터 가져오는 액션
-export const fetchProducts = () => {
+export const fetchProducts = (page, token) => {
   return (dispatch) => {
     // 서버로부터 데이터 가져오는 요청
-    axios.get('/v1/data-products/{data-product-id}')
+    return axios.get(`/v1/data-products?page=${page}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    })
       .then(response => {
-        dispatch(setProducts(response.data));
+        dispatch({
+          type: SET_PRODUCTS,
+          payload: response.data,
+        });
+        return response.data; // Return the data for chaining promises
       })
       .catch(err => {
         console.error(err);
+        throw err; // Rethrow the error to be caught by the caller
       });
   };
 };
+
+
+
 
 // 검색 결과 가져오는 액션
 export const searchProducts = (category, priceRange, searchQuery) => {
   return (dispatch) => {
     // 검색 조건에 맞는 상품 데이터 가져오는 요청
-    axios.get(`/api/product/search?category=${category.join(',')}&price=${priceRange.join(',')}&q=${searchQuery}`)
+    //axios.get(`/v1/data-products/search?category=${category.join(',')}&price=${priceRange.join(',')}&q=${searchQuery}`)
+    axios.get(`/v1/data-products/category/2?page=0`)
       .then(response => {
         dispatch(setProducts(response.data));
       })

@@ -39,3 +39,25 @@
   font-size: 14px;
 }
 
+
+/* 결제하기 버튼 */
+.payment-button {
+  text-align: center;
+}
+
+.payment-btn {
+  text-align: center;
+  background-color: #BB2649;
+  color: white;
+  font-size: 20px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.payment-btn:hover {
+  background-color: #931C3E;
+}
+
+

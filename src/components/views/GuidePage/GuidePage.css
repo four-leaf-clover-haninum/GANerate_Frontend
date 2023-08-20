@@ -1,0 +1,45 @@
+.my-custom-box {
+    width: 100%; /* 박스의 가로 길이를 최대로 설정 */
+    margin: 0 auto; /* 가운데 정렬을 위한 margin 설정 */
+    /* 다른 스타일도 추가가능 */
+  }
+  
+  
+  
+  .search-form-container {
+    display: flex; /* 요소들을 가로로 나열 */
+    flex-wrap: wrap;
+    gap: 10px; /* 요소 사이 간격 설정 */
+    max-width: 4500px;
+    margin-top: 30px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .data-create-button {
+    font-size: 15px;
+    background-color: #9a1548;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .upload-button {
+    background-color: #9a1548; /* Your desired button color */
+    color: white; /* Text color */
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  
+  
+  
+  

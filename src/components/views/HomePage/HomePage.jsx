@@ -20,11 +20,11 @@ function HomePage() {
 
         {/* 링크 추가 및 라우팅 설정 */}
         <Nav className="me-auto">
-            <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>이용 안내</Nav.Link>
-            <Nav.Link href="/v1/data-products/sale/zip" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 생성</Nav.Link>
-            <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 마켓</Nav.Link>
-            <Nav.Link href="/v1/data-products" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 검색</Nav.Link>
-          </Nav>
+        <Nav.Link href="/guide" style={{ fontSize: '22px', padding: '0 60px' }}>이용 안내</Nav.Link>
+        <Nav.Link href="/v1/data-products/sale/zip" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 생성</Nav.Link>
+        <Nav.Link href="/v1/data-products" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 마켓</Nav.Link>
+        <Nav.Link href="/" style={{ fontSize: '22px', padding: '0 60px' }}>데이터 판매</Nav.Link>
+      </Nav>
   
           {/* 로그인 및 마이페이지 링크 추가 및 라우팅 설정 */}
           <Nav className="ml-auto">
@@ -218,7 +218,7 @@ function HomePage() {
                                     <div class="col-lg-3 mb-3">
                                       <div class="rounded-box rounded p-3 bg-light">
                                         <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
-                                          과학, 항공 및 우주
+                                        경제/비즈니스
                                         </a>
                                       </div>
                                     </div>
@@ -230,28 +230,28 @@ function HomePage() {
                                     <div class="col-lg-3 mb-3">
                                       <div class="rounded-box rounded p-3 bg-light">
                                         <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
-                                          경제/비즈니스
+                                        사물/제품
                                         </a>
                                       </div>
                                     </div>
                                     <div class="col-lg-3 mb-3">
                                       <div class="rounded-box rounded p-3 bg-light">
                                         <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
-                                          사물/제품
+                                        교통/물류
                                         </a>
                                       </div>
                                     </div>
                                     <div class="col-lg-3 mb-3">
                                       <div class="rounded-box rounded p-3 bg-light">
                                         <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
-                                          교통/물류
+                                        스포츠
                                         </a>
                                       </div>
                                     </div>
                                     <div class="col-lg-3 mb-3">
                                       <div class="rounded-box rounded p-3 bg-light">
                                         <a class="btn btn-primary btn-lg btn-block custom-btn-size" href="/">
-                                          스포츠
+                                          기타
                                         </a>
                                       </div>
                                     </div>

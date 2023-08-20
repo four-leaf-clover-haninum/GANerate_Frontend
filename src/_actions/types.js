@@ -15,5 +15,5 @@ export const SET_PRODUCTS = 'set_products';
 export const PAYMENT_USER = 'payment_user';
 export const PAYMENT_SUCCESS = 'payment_success';
 export const PAYMENT_FAILURE = 'payment_failure';
-
+export const GET_PRODUCT_DETAIL = 'get_product_detail';
 
