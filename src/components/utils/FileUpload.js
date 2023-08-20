@@ -1,49 +1,52 @@
-import React, { useState } from 'react'
-import Dropzone from 'react-dropzone'
+import React, { useState } from 'react';
+import Dropzone from 'react-dropzone';
 import Icon from '@ant-design/icons';
 import axios from 'axios';
 
-
 function FileUpload(props) {
-
-    const [Images, setImages] = useState([])
+    const [Images, setImages] = useState([]);
 
     const dropHandler = (files) => {
+        const formData = new FormData();
+        formData.append('zipFile', files[0]);
 
-        let formData = new FormData();
-        const config = {
-            header: { 'content-type': 'multipart/fomr-data' }
-        }
-        formData.append("file", files[0])
+        const accessToken = localStorage.getItem('accessToken'); // 로그인 후 받은 토큰
 
-        axios.post('/api/product/image', formData, config)
-            .then(response => {
-                if (response.data.success) {
-                    setImages([...Images, response.data.filePath])
-                    props.refreshFunction([...Images, response.data.filePath])
+        axios.post('http://3.35.255.4/v1/data-products/sale/zip', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${accessToken}` // 토큰을 헤더에 추가
+            }
+        })
 
+        .then(response => {
+            if (response.data.code === 0) { // Assuming 'code' indicates success
+                setImages([...Images, response.data.filePath]);
+                props.refreshFunction([...Images, response.data.filePath]);
 
-                } else {
-                    alert('파일을 저장하는데 실패했습니다.')
-                }
-            })
-    }
-
+                alert('파일 업로드에 성공했습니다.');
+                console.log('파일 업로드에 성공했습니다.');
+            } else {
+                alert('파일 업로드에 실패했습니다.');
+                console.log('파일 업로드에 실패했습니다.');
+            }
+        })
+        .catch(error => {
+            console.log('파일 업로드 오류:', error);
+        });
+    };
 
     const deleteHandler = (image) => {
-        const currentIndex = Images.indexOf(image);
-        let newImages = [...Images]
-        newImages.splice(currentIndex, 1)
-        setImages(newImages)
-        props.refreshFunction(newImages)
-
-
-    }
-
+        const newImages = Images.filter(img => img !== image);
+        setImages(newImages);
+        props.refreshFunction(newImages);
+    };
 
     return (
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Dropzone onDrop={dropHandler}>
+        <Dropzone onDrop={dropHandler} maxSize={10 * 1024 * 1024}>
+
+            
                 {({ getRootProps, getInputProps }) => (
                     <div
                         style={{
@@ -58,21 +61,17 @@ function FileUpload(props) {
             </Dropzone>
 
             <div style={{ display: 'flex', width: '350px', height: '240px', overflowX: 'scroll' }}>
-
                 {Images.map((image, index) => (
                     <div onClick={() => deleteHandler(image)} key={index}>
                         <img style={{ minWidth: '300px', width: '300px', height: '240px' }}
                             src={`http://3.35.255.4/${image}`}
+                            alt={`Uploaded ${index}`}
                         />
                     </div>
                 ))}
-
-
             </div>
-
-
         </div>
-    )
+    );
 }
 
-export default FileUpload
+export default FileUpload;

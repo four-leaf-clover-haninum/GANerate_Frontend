@@ -3,6 +3,7 @@ import axios from '../components/axiosConfig';
 
 import {
     LOGIN_USER,
+    LOGOUT_USER,
     REGISTER_USER,
     LOGIN_USER_FAILURE,
     HOMEPAGE_USER,
@@ -52,6 +53,39 @@ export function loginUser(dataToSubmit) {
       }
   };
 }
+
+export const logoutUser = () => {
+  return async (dispatch) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      const response = await axios.post('/v1/users/logout', {
+        accessToken,
+        refreshToken
+      });
+
+      const { code } = response.data;
+
+      if (code === 0) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+
+        dispatch({
+          type: LOGOUT_USER
+        });
+
+        console.log("로그아웃에 성공하였습니다.");
+        return true;
+      } else {
+        throw new Error("로그아웃에 실패하였습니다.");
+      }
+    } catch (error) {
+      console.error("There was an error logging out:", error);
+      return false;
+    }
+  };
+};
 
 
 

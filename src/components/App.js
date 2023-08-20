@@ -10,6 +10,7 @@ import CartPage from "./views/CartPage/CartPage";
 import UploadProductPage from './views/UploadProductPage/UploadProductPage';
 import DetailProductPage from './views/DeteilProductPage/DetailProductPage';
 import PaymentPage from './views/PaymentPage/PaymentPage';
+import PrivateRoute from './PrivateRoute/PrivateRoute';
 
 function App() {
   return (
@@ -18,15 +19,16 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/v1/users/sign-up" element={<RegisterPage />} />
         <Route path="/v1/users/sign-in" element={<LoginPage />} />
-        <Route path="/HomePage" element={<HomePage />} />
-        <Route path="/MyPage" element={<MyPage />} />
-        <Route path="/v1/data-products" element={<CartPage />} />
-        <Route path="/v1/data-products/sale/zip" element={<UploadProductPage />} />
-        <Route path="/v1/data-products/1" element={<DetailProductPage />} />
-        <Route path="/v1/orders/{data-product-id}" element={<PaymentPage />} />
+          <Route path="/HomePage" element={<HomePage />} />
+          <Route path="/MyPage" element={<MyPage />} />
+          <Route path="/v1/data-products" element={<CartPage />} />
+          <Route path="/v1/data-products/sale/zip" element={<UploadProductPage />} />
+          <Route path="/v1/data-products/1" element={<DetailProductPage />} />
+          <Route path="/v1/orders/{data-product-id}" element={<PaymentPage />} />
       </Routes>
     </div>
   );
 }
+
 
 export default App;

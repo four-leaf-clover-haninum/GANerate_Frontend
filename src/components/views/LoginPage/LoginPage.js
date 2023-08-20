@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUser, getUserProfile, registerUser } from '../../../_actions/user_action';
+import { loginUser, registerUser } from '../../../_actions/user_action';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import "./LoginPage.css"
 import { FaUserCircle } from 'react-icons/fa';
