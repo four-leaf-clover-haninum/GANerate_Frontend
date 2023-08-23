@@ -236,44 +236,6 @@ export function verifyEmailVerification(email, certificationNum) {
   };
 }
 
-
-        
-
-// export function verifyEmailVerification(email, certificationNum) {
-//   return async (dispatch) => {
-//     try {
-//       const requestData = {
-//         email: email,
-//         certificationNum: certificationNum,
-//       };
-//       const response = await axios.get('/v1/users/email', {
-//         params: requestData, // 쿼리 파라미터로 데이터 전달
-//         headers: {
-//           'Accept': 'application/json',
-//         },
-//       });
-
-//       const responseData = response.data;
-
-//       if (responseData.code === 0) {
-//         dispatch(emailVerificationSuccess(responseData));
-//         console.log('인증번호 확인이 완료되었습니다.');
-//         return responseData;
-//       } else {
-//         dispatch(emailVerificationFailure(responseData));
-//         console.log('유효하지 않은 인증번호입니다.');
-//         return responseData;
-//       }
-//     } catch (error) {
-//       console.log(error.response);
-//       dispatch({ type: 'EMAIL_VERIFICATION_FAILURE', payload: error.response });
-//       throw error;
-//     }
-//   };
-// }
-
-
-  //
   export const emailVerificationFailure = (payload) => ({
     type: EMAIL_VERIFICATION_FAILURE,
     payload,
