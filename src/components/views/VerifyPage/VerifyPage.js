@@ -3,47 +3,17 @@ import { useDispatch } from 'react-redux'; // react-redux에서 필요한 부분
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle } from 'react-icons/fa';
 import { Input, Button } from 'antd';
-import './PaymentPage.css';
+import './VerifyPage.css';
 import styled from "styled-components";
 import { getProductDetail, dataProductId, verifyPayment } from '../../../_actions/user_action'
 
 
-function PaymentPage(props) {
+function VerifyPage(props) {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const [data, setData] = useState({}); // Initialize data with an empty object
   const productId = "data-product-id"; // Replace with actual ID from props or route params
 
-
-  useEffect(() => {
-    if (!loaded && !window.IMP) {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
-      script.async = true;
-      script.onload = () => {
-        const IMP = window.IMP;
-        if (IMP) {
-          // Initialize IMP only once
-          if (!IMP.isInitialized()) {
-            //IMP.init("imp31818680"); // Replace with your actual seller code
-          }
-          setLoaded(true);
-        }
-      };
-      document.body.appendChild(script);
-    } else if (loaded && window.IMP) {
-      dispatch(getProductDetail(productId))
-        .then(response => {
-          if (response.payload) {
-            console.log("Received data:", response.payload);
-            setData(response.payload);
-          }
-        })
-        .catch(error => {
-          console.error('Failed to fetch product data.', error);
-        });
-    }
-  }, [dispatch, productId, loaded]);
   
 
   //상품 가져오는 코드
@@ -153,7 +123,7 @@ const requestPay = () => {
             <div style={{ maxWidth: '700px', margin: '3rem auto' }}>
             <div className="info-container">
               <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                <h1>구매하기</h1>
+                <h1 style={{ fontWeight: 'bold', color: '#931C3E'}}>결제완료</h1>
                 <p>GAN:ERATE</p>
 
 
@@ -162,7 +132,7 @@ const requestPay = () => {
               <div className="total-price">
               <h3 style={{ marginRight: 500 }}>구매 상품 이름</h3>
                 <div className="price-box">
-                <div className="Pname" style={{ fontWeight: 'bold', color: '#931C3E', fontSize: '25px' }}>
+                <div className="Pname" style={{ fontWeight: 'bold', color: '#000000', fontSize: '25px' }}>
   {data && data.title ? data.title : "제목 정보 없음"} {/* 상품 제목 */}
 </div>
 
@@ -263,11 +233,7 @@ const requestPay = () => {
                 </div>
                 </div>
 
-                <div style={{ marginBottom: '80px' }}>
-              </div>
-              <div className="payment-button">
-                <button className="payment-btn" onClick={requestPay}>결제하기</button>
-                </div>
+            
 
                 <br/>
     <br/>
@@ -279,7 +245,7 @@ const requestPay = () => {
     );
     }
 
-export default PaymentPage;
+export default VerifyPage;
 
 
 const Table = styled.table`

@@ -19,6 +19,7 @@ import {
     SET_PRODUCTS,
     PAYMENT_USER,
     PAYMENT_SUCCESS,
+    PAYMENT_FAILURE,
     GET_PRODUCT_DETAIL
     
 } from './types';
@@ -434,18 +435,28 @@ export const setProducts = (products) => {
 export const verifyPayment = (data) => async (dispatch) => {
   try {
     const token = localStorage.getItem('accessToken');
-    const response = await axios.post('http://localhost:8081/v1/payments/verifyIamport', data, {
+    const response = await axios.post('/v1/payments/verifyIamport', data, {
       headers: {
-        'Authorization' : `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       withCredentials: true
     });
-    dispatch({ type: 'PAYMENT_SUCCESS', payload: response.data });
+
+    if (response.data.code === 0) {
+      // 인증 성공
+      dispatch({ type: 'PAYMENT_SUCCESS', payload: response.data });
+    } else {
+      // 인증 실패
+      dispatch({ type: 'PAYMENT_FAILURE', payload: response.data });
+    }
   } catch (error) {
-    dispatch({ type: 'PAYMENT_FAILURE', payload: error.response.data });
+    // 네트워크 에러 등으로 실패
+    dispatch({ type: 'PAYMENT_FAILURE', payload: error.response ? error.response.data : 'Network error' });
   }
 };
+
+
 
 
 

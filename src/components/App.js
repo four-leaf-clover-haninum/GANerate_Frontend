@@ -11,6 +11,7 @@ import UploadProductPage from './views/UploadProductPage/UploadProductPage';
 import PaymentPage from './views/PaymentPage/PaymentPage';
 import DetailProductPage from './views/DeteilProductPage/DetailProductPage'
 import GuidePage from './views/GuidePage/GuidePage';
+import VerifyPage from './views/VerifyPage/VerifyPage';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/v1/data-products/sale/zip" element={<UploadProductPage />} />
           <Route path="/v1/data-products/1" element={<DetailProductPage />} />
           <Route path="/v1/orders/1" element={<PaymentPage />} />
+          <Route path="/v1/verify" element={<VerifyPage />} />
       </Routes>
     </div>
   );
