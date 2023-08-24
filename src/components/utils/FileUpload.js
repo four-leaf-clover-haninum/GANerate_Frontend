@@ -11,8 +11,6 @@ function FileUpload(props) {
         formData.append('zipFile', files[0]);
 
         const accessToken = localStorage.getItem('accessToken'); // 로그인 후 받은 토큰
-
-
         axios.post('http://3.35.255.4/v1/data-products/sale/zip', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',

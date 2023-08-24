@@ -35,7 +35,7 @@
   
 
   .search-form-container > div {
-    flex: 0 0 row(33.33% - 10px); 
+    flex: 0 0 row(33.33%  100px); 
 /* 3개의 열로 나누고, 간격을 고려하여 계산 */
     margin-bottom: 10px; /* 아래 여백 추가 */
   }
@@ -45,16 +45,17 @@
   .search-category {
     display: flex; /* 요소들을 가로로 나열 */
     flex-wrap: wrap;
-    gap: 10px; /* 요소 사이 간격 설정 */
+    gap: 40px; /* 요소 사이 간격 설정 */
     max-width: 3000px;
+    margin-top: 30px;
   }
   
   /* 가격 */
   .search-input {
     display: flex; /* 요소들을 가로로 나열 */
     flex-wrap: wrap;
-    gap: 10px; /* 요소 사이 간격 설정 */
-    max-width: 450px;
+    gap: 40px; /* 요소 사이 간격 설정 */
+    max-width: 3000px;
     margin-top: 30px;
   }
 

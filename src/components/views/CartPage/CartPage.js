@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../components/axiosConfig'
 import { Row, Col, Checkbox, Input, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import ProductCard from './Sections/UserCardBlock';
@@ -13,8 +13,6 @@ import { useDispatch } from 'react-redux';
 
 function CartPage() {
   const dispatch = useDispatch(); // Initialize useDispatch hook
-
-
   const [Products, setProducts] = useState([]);
     const [Category, setCategory] = useState([]);
     const [PriceRange, setPriceRange] = useState([]);
@@ -25,19 +23,17 @@ function CartPage() {
       // 데이터 초기 로딩
       fetchProductData(currentPage);
     }, [currentPage]);
-
-
-    const fetchProductData = (page) => {
-      // 로컬 스토리지에서 토큰을 가져옵니다.
-      const token = localStorage.getItem("accessToken");
     
+    const fetchProductData = (page) => {
+      const token = localStorage.getItem("accessToken");
       if (token) {
         dispatch(fetchProducts(page, token))
           .then((response) => {
-            setProducts(response); // Set the products using the response data
+            setProducts(response.data.content);
+            console.log(response.data.content) // content 배열을 사용
           })
           .catch((error) => {
-            console.error('js창에서 상품을 불러오는 코드 에러'); // Handle the error, if needed
+            console.error('상품 데이터를 불러오는 중 에러 발생', error);
           });
       } else {
         console.error("Token is not available in local storage");
@@ -46,12 +42,12 @@ function CartPage() {
     
     
     
-
+  
     const handleCategoryChange = (checkedValues) => {
-        // 카테고리 체크박스 선택 시 동작
-        setCategory(checkedValues);
+      // 카테고리 체크박스 선택 시 동작
+      setCategory(checkedValues);
+      setCurrentPage(0); // 페이지 초기화
     };
-
 
     const handleSearchQueryChange = (e) => {
         // 검색어 입력 시 동작
@@ -65,20 +61,29 @@ function CartPage() {
         searchProducts(Category, PriceRange, SearchQuery);
       };
 
+    //   const handlePriceRangeChange = (checkedValues) => {
+    //     // "직접입력" 체크 시 해당 값만 선택
+    //     if (checkedValues.includes("range4")) {
+    //         setPriceRange(["range4"]);
+    //     } else {
+    //         // 다른 체크박스 선택 시 "직접입력" 체크 해제 후 선택한 값만 선택
+    //         const filteredValues = checkedValues.filter(value => value !== "range4");
+    //         setPriceRange(filteredValues);
+    //     }
+    // };
 
-
-      const handlePriceRangeChange = (checkedValues) => {
-        // "직접입력" 체크 시 해당 값만 선택
-        if (checkedValues.includes("range4")) {
-            setPriceRange(["range4"]);
-        } else {
-            // 다른 체크박스 선택 시 "직접입력" 체크 해제 후 선택한 값만 선택
-            const filteredValues = checkedValues.filter(value => value !== "range4");
-            setPriceRange(filteredValues);
-        }
+    const handlePriceRangeChange = (checkedValues) => {
+      // "직접입력" 체크 시 해당 값만 선택
+      if (checkedValues.includes("range4")) {
+        setPriceRange(["range4"]);
+      } else {
+        // 다른 체크박스 선택 시 "직접입력" 체크 해제 후 선택한 값만 선택
+        const filteredValues = checkedValues.filter(value => value !== "range4");
+        setPriceRange(filteredValues);
+      }
+      setCurrentPage(0); // 페이지 초기화
     };
-
-
+  
     
     
       
@@ -131,34 +136,43 @@ function CartPage() {
         <h3 className="text-center" style={{ marginBottom: '30px' }}>상세 조회</h3>
 
 
-          <div className="search-category">
-            <h4>카테고리</h4>
-            {/* 카테고리 체크박스 */}
-            <Checkbox.Group onChange={handleCategoryChange}>
-              <Checkbox value="category1">보건/의료</Checkbox>
-              <Checkbox value="category2">동물/식물</Checkbox>
-              <Checkbox value="category3">사람</Checkbox>
-              <Checkbox value="category4">추상</Checkbox>
-              <Checkbox value="category5">패션</Checkbox>
-              <Checkbox value="category6">건물/랜드마크</Checkbox>
-              <Checkbox value="category7">풍경/배경</Checkbox>
-              <Checkbox value="category8">경제/비즈니스</Checkbox>
-              <Checkbox value="category9">사물/제품</Checkbox>
-              <Checkbox value="category10">교통/물류</Checkbox>
-              <Checkbox value="category11">스포츠</Checkbox>
-            </Checkbox.Group>
+        <div className="search-category">
+        <h4>카테고리</h4>
+        <Checkbox.Group onChange={handleCategoryChange}>
+          <div>
+            <Checkbox value="category1">보건/의료</Checkbox>
+            <Checkbox value="category2">동물/식물</Checkbox>
+            <Checkbox value="category3">사람</Checkbox>
+            <Checkbox value="category4">추상</Checkbox>
           </div>
+          <div>
+            <Checkbox value="category5">패션</Checkbox>
+            <Checkbox value="category6">건물/랜드마크</Checkbox>
+            <Checkbox value="category7">풍경/배경</Checkbox>
+            <Checkbox value="category8">경제/비즈니스</Checkbox>
+          </div>
+          <div>
+            <Checkbox value="category9">사물/제품</Checkbox>
+            <Checkbox value="category10">교통/물류</Checkbox>
+            <Checkbox value="category11">스포츠</Checkbox>
+            <Checkbox value="category12">기타</Checkbox>
+          </div>
+        </Checkbox.Group>
+      </div>
+      
 
 
           <div className="search-input">
     <h4>가격</h4>
     {/* 가격 범위 체크박스 */}
+    <div>
     <Checkbox.Group value={PriceRange} onChange={handlePriceRangeChange}>
         <Checkbox value="range1">5만원 이하</Checkbox>
         <Checkbox value="range2">5만원 - 10만원</Checkbox>
         <Checkbox value="range3">10만원 - 20만원</Checkbox>
         <Checkbox value="range4">직접입력</Checkbox>
     </Checkbox.Group>
+    </div>
 
     {/* 직접 입력 칸 */}
     {PriceRange.includes("range4") && (
@@ -202,22 +216,34 @@ function CartPage() {
         
 
 {/* 상품 불러오기 */}
-        <div className="row mt-4">
-        <div className="col-lg-12 offset-lg-0">
-        <Row gutter={[16, 16]}>
-          {Products.map(product => (
-            <Col lg={6} md={8} xs={24} key={product._id}>
-            <ProductCard product={product} />
-              <div className="product-box">
-                <img src={product.images[0]} alt={product.title} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
-                <h3 className="product-title">{product.title}</h3>
-                <p className="product-price">${product.price}</p>
-              </div>
-            </Col>
-          ))}
-        </Row>
-        </div>
-        </div>
+ <div className="row mt-4">
+<div className="col-lg-12 offset-lg-0">
+  <Row gutter={[16, 16]}>
+    {Products.map(product => (
+      <Col lg={6} md={8} xs={24} key={product.dataProductId}>
+        <ProductCard product={product} />
+      </Col>
+    ))}
+  </Row>
+</div>
+</div> 
+
+<div>
+
+
+      <div className="product-list">
+        {Products.map(product => (
+          <div key={product.dataProductId} className="product-item">
+            <h3>{product.title}</h3>
+            <p>가격: {product.price}원</p>
+            <p>{product.description}</p>
+            {/* 추가적인 정보나 버튼 등을 표시할 수 있음 */}
+          </div>
+        ))}
+      </div>
+      {/* 페이지네이션 등의 기타 코드 */}
+    </div>
+
 
 
         {/* 페이지네이션 */}
