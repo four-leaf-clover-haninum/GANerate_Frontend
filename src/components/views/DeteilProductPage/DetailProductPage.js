@@ -84,8 +84,13 @@ function DetailProductPage(props) {
 
      <br/>
        <CircleImage>
-       
-       {/* <img src={data.imageUrl[0]} alt="이미지" /> */}
+       {data && data.imageUrl ? (
+        data.imageUrl.map((url, index) => (
+          <img key={index} src={url} alt={`이미지 ${index}`} />
+        ))
+      ) : (
+        <p>이미지 정보 없음</p>
+      )}
        </CircleImage>
 
      </CardRight>
@@ -126,41 +131,73 @@ function DetailProductPage(props) {
  {/* 코드넣어야함 */}
 
  <Container2>
- <Table>
- <tbody>
-  {data && data.categoryNames ? (
-    data.categoryNames.map((item, index) => (
-      <TableRow key={index}>
-        <TableHeader>Category</TableHeader>
-        <TableData>{item}</TableData> {/* Use data.categoryNames here */}
-      </TableRow>
-    ))
-  ) : (
-    <TableRow>
-      <TableData>Loading categories...</TableData>
-    </TableRow>
-  )}
- </tbody>
- </Table>
-
-
- <Table>
- <tbody>
-  {data && data.categoryNames ? (
-    data.categoryNames.map((item, index) => (
-      <TableRow key={index}>
-        <TableHeader>Category</TableHeader>
-        <TableData>{item}</TableData> {/* Use data.categoryNames here */}
-      </TableRow>
-    ))
-  ) : (
-    <TableRow>
-      <TableData>Loading categories...</TableData>
-    </TableRow>
-  )}
- </tbody>
- </Table>
  
+ <Table class="custom-table">
+  <tbody>
+    <TableRow>
+      <td class="inline-row">
+        <h5 class="inline-header">등록일자</h5>
+        <div className="data-text">
+          {data && data.createdAt ? `${data.createdAt}` : "createdAt 정보 없음"}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
+<Table class="custom-table">
+  <tbody>
+    <TableRow>
+      <td class="inline-row">
+      <h5 class="inline-header">카테고리</h5>
+        <div className="data-text">
+          {data && data.categoryNames ? `${data.categoryNames}` : "categoryNames 정보 없음"}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
+<Table class="custom-table">
+  <tbody>
+    <TableRow>
+      <td class="inline-row">
+      <h5 class="inline-header">이미지 수</h5>
+        <div className="data-text">
+          {data && data.dataSize ? `${data.dataSize}` : "dataSize 정보 없음"}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
+
+<Table class="custom-table">
+  <tbody>
+    <TableRow>
+      <td class="inline-row">
+      <h5 class="inline-header">현재까지 구매 수량</h5>
+        <div className="data-text">
+          {data && data.buyCnt ? `${data.buyCnt}` : "buyCn 정보 없음"}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
+<Table class="custom-table">
+  <tbody>
+    <TableRow>
+      <td class="inline-row">
+      <h5 class="inline-header">zip 파일 크기(GB)</h5>
+        <div className="data-text">
+          {data && data.zipfileSize ? `${data.zipfileSize}` : "zipfileSize 정보 없음"}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
  </Container2>
 
  {/* 코드넣어야함 */}
@@ -169,10 +206,14 @@ function DetailProductPage(props) {
 
   {/* 코드넣어야함 */}
  
+
       
     <br/>
     <br/>
 
+    <div className="payment-button">
+    <a href="/v1/orders/{data-product-id}" className="payment-btn">유료 결제 후 다운로드 받기</a>
+    </div>
 
         </div>
         </div>    
