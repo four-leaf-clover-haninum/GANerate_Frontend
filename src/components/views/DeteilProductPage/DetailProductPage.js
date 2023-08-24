@@ -176,7 +176,7 @@ function DetailProductPage(props) {
     <TableRow>
       <td class="inline-row">
       <h5 class="inline-header">현재까지 구매 수량</h5>
-        <div className="data-text">
+      <div className="data-text" style={{ marginLeft: '25px' }}>
           {data && data.buyCnt ? `${data.buyCnt}` : "buyCn 정보 없음"}
         </div>
       </td>
@@ -189,7 +189,7 @@ function DetailProductPage(props) {
     <TableRow>
       <td class="inline-row">
       <h5 class="inline-header">zip 파일 크기(GB)</h5>
-        <div className="data-text">
+      <div className="data-text" style={{ marginLeft: '25px' }}>
           {data && data.zipfileSize ? `${data.zipfileSize}` : "zipfileSize 정보 없음"}
         </div>
       </td>

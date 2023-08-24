@@ -9,24 +9,27 @@ import { getProductDetail, dataProductId, verifyPayment } from '../../../_action
 
 
 
-
 function PaymentPage(props) {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const [data, setData] = useState(null);
   const productId = "data-product-id"; // Replace with actual ID from props or route params
 
+
   useEffect(() => {
-    if (!loaded) {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.iamport.kr/v1/iamport.js';
-      script.async = true;
-      script.onload = () => {
-        setLoaded(true);
-      };
-      document.body.appendChild(script);
-    }
-  }, [loaded]);
+    const IMP = window.IMP;
+    IMP.init("imp31818680");
+    dispatch(getProductDetail(1))
+        .then(data => {
+            // 예: 첫 번째 상품 데이터를 저장 (실제로는 필요한 데이터를 선택하여 저장)
+            setData(data[0]);
+        })
+        .catch(error => {
+            console.error('상품 데이터를 가져오는 데 실패했습니다.', error);
+        });
+}, [dispatch]);
+
+
 
   useEffect(() => {
     dispatch(getProductDetail(productId))
@@ -39,40 +42,25 @@ function PaymentPage(props) {
 
 
 
-    const requestPay = () => {
-        if (loaded) {
-            if (window.IMP) {
-                const IMP = window.IMP;
-                IMP.init("imp31818680");
-    
-                IMP.request_pay(
-                    {
-                        // ... (기존 request_pay 내용 유지)
-                    },
-                    function (rsp) {
-                        if (rsp.success) {
-                            let data = {
-                                amount: rsp.paid_amount,
-                                imp_uid: rsp.imp_uid,
-                                merchant_uid: rsp.merchant_uid,
-                                dataProductId: 1
-                            };
+  const requestPay = () => {
+    if (!data) return;  // 상품 데이터가 없는 경우 리턴
 
-                            dispatch(verifyPayment(data));
-                        } else {
-                            alert("결재 실패");
-                            alert(rsp.error_msg);
-                            console.log(rsp);
-                        }
-                    }
-                );
-            } else {
-                alert("IMP 라이브러리가 로드되지 않았습니다.");
-            }
+    const IMP = window.IMP;
+    IMP.request_pay({
+        pg: "html5_inicis",
+        pay_method: "card",
+        merchant_uid: `order_${Date.now()}`, // 고유 주문번호 생성
+        name: data.title,  // 상품 이름
+        amount: data.price,  // 상품 가격
+        // ... 기타 필요한 데이터를 설정
+    }, response => {
+        if (response.success) {
+            console.log('결제 성공', response);
         } else {
-            alert("스크립트 로드 중입니다. 잠시 후 다시 시도해주세요.");
+            console.error('결제 실패', response);
         }
-    };
+    });
+};
 
     return (
             <div className="HomePage d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
