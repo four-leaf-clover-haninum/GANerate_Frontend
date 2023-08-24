@@ -72,7 +72,6 @@ const requestPay = () => {
   IMP.init("imp31818680")
 
     IMP.request_pay(
-      
       {
       pg: "html5_inicis",
       pay_method: "card",
@@ -85,7 +84,38 @@ const requestPay = () => {
       buyer_tel: null,
       buyer_addr: null,
       buyer_postcode: null
-    })}
+    }, response => {if (response.success) {
+      console.log('결제 성공', response);
+
+      // 결제 검증 및 처리
+      verifyAndProcessPayment(response);
+    } else {
+      console.error('결제 실패', response);
+    }
+  })}
+
+
+    const verifyAndProcessPayment = (response) => {
+      const paymentData = {
+        amount: response.paid_amount,
+        imp_uid: response.imp_uid,
+        merchant_uid: response.merchant_uid,
+        dataProductId: 1 // Modify this as needed
+      };
+  
+      dispatch(verifyPayment(paymentData))
+        .then(response => {
+          if (response.payload) {
+            console.log('결제 검증 및 처리 성공', response.payload);
+            // 성공적으로 검증 및 처리된 경우의 로직 추가
+          }
+        })
+        .catch(error => {
+          console.error('결제 검증 및 처리 실패', error);
+          // 검증 및 처리 실패시의 로직 추가
+        });
+    };
+
 
     return (
 
