@@ -96,6 +96,7 @@ export function getProductDetail(dataProductId) {
   
       } else {
         console.error("Failed");
+        console.log(response.data.data)
         return null;
       }
     })

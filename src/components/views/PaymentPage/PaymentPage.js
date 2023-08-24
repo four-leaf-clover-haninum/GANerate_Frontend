@@ -12,54 +12,82 @@ import { getProductDetail, dataProductId, verifyPayment } from '../../../_action
 function PaymentPage(props) {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({}); // Initialize data with an empty object
   const productId = "data-product-id"; // Replace with actual ID from props or route params
 
-
   useEffect(() => {
-    const IMP = window.IMP;
-    IMP.init("imp31818680");
-    dispatch(getProductDetail(1))
-        .then(data => {
-            // 예: 첫 번째 상품 데이터를 저장 (실제로는 필요한 데이터를 선택하여 저장)
-            setData(data[0]);
+    if (!loaded && !window.IMP) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
+      script.async = true;
+      script.onload = () => {
+        const IMP = window.IMP;
+        if (IMP) {
+          IMP.init("imp31818680");
+          setLoaded(true);
+        }
+      };
+      document.body.appendChild(script);
+    } else if (loaded && window.IMP) {
+      dispatch(getProductDetail(productId))
+        .then(response => {
+          if (response.payload) {
+            console.log("Received data:", response.payload);
+            setData(response.payload);
+          }
         })
         .catch(error => {
-            console.error('상품 데이터를 가져오는 데 실패했습니다.', error);
+          console.error('Failed to fetch product data.', error);
         });
-}, [dispatch]);
+    }
+  }, [dispatch, productId, loaded]);
+  
+  
 
 
-
+  //상품 가져오는 코드
   useEffect(() => {
     dispatch(getProductDetail(productId))
-      .then(response => {
-        if (response.payload) {
-          setData(response.payload);
-        }
-      });
-  }, [dispatch, productId]);
+        .then(response => {
+            if (response.payload) {
+                setData(response.payload);
+            }
+        });
+}, [dispatch, productId]);
 
 
 
-  const requestPay = () => {
-    if (!data) return;  // 상품 데이터가 없는 경우 리턴
+const requestPay = () => {
+  if (!data) return;  // 상품 데이터가 없는 경우 리턴
 
-    const IMP = window.IMP;
+  const timestamp = Date.now();
+  const milliseconds = timestamp % 1000; // Extract milliseconds part
+  const uniqueId = `order_${timestamp}_${milliseconds}`; // Combine timestamp and milliseconds
+  
+  const IMP = window.IMP;
+  if (IMP && IMP.request_pay) {
     IMP.request_pay({
-        pg: "html5_inicis",
-        pay_method: "card",
-        merchant_uid: `order_${Date.now()}`, // 고유 주문번호 생성
-        name: data.title,  // 상품 이름
-        amount: data.price,  // 상품 가격
-        // ... 기타 필요한 데이터를 설정
+      pg: "html5_inicis",
+      pay_method: "card",
+      merchant_uid: uniqueId, // Use the uniqueId here
+      name: data.title,  // 상품 이름
+      amount: data.price,  // 상품 가격
+
+      buyer_email: null,
+      buyer_name: null,
+      buyer_tel: null,
+      buyer_addr: null,
+      buyer_postcode: null
     }, response => {
-        if (response.success) {
-            console.log('결제 성공', response);
-        } else {
-            console.error('결제 실패', response);
-        }
+      if (response.success) {
+        console.log('결제 성공', response);
+      } else {
+        console.error('결제 실패', response);
+      }
     });
+  } else {
+    console.error('IMP object or request_pay function not available.');
+  }
 };
 
     return (
