@@ -8,12 +8,12 @@ import styled from "styled-components";
 import { getProductDetail, dataProductId, verifyPayment } from '../../../_actions/user_action'
 
 
-
 function PaymentPage(props) {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const [data, setData] = useState({}); // Initialize data with an empty object
   const productId = "data-product-id"; // Replace with actual ID from props or route params
+
 
   useEffect(() => {
     if (!loaded && !window.IMP) {
@@ -23,7 +23,10 @@ function PaymentPage(props) {
       script.onload = () => {
         const IMP = window.IMP;
         if (IMP) {
-          IMP.init("imp31818680");
+          // Initialize IMP only once
+          if (!IMP.isInitialized()) {
+            //IMP.init("imp31818680"); // Replace with your actual seller code
+          }
           setLoaded(true);
         }
       };
@@ -42,18 +45,19 @@ function PaymentPage(props) {
     }
   }, [dispatch, productId, loaded]);
   
-  
-
 
   //상품 가져오는 코드
   useEffect(() => {
     dispatch(getProductDetail(productId))
-        .then(response => {
-            if (response.payload) {
-                setData(response.payload);
-            }
-        });
-}, [dispatch, productId]);
+      .then(response => {
+        if (response.payload) {
+          setData(response.payload);
+        }
+      });
+  }, [dispatch, productId]);
+
+
+
 
 
 
@@ -65,8 +69,11 @@ const requestPay = () => {
   const uniqueId = `order_${timestamp}_${milliseconds}`; // Combine timestamp and milliseconds
   
   const IMP = window.IMP;
-  if (IMP && IMP.request_pay) {
-    IMP.request_pay({
+  IMP.init("imp31818680")
+
+    IMP.request_pay(
+      
+      {
       pg: "html5_inicis",
       pay_method: "card",
       merchant_uid: uniqueId, // Use the uniqueId here
@@ -78,19 +85,11 @@ const requestPay = () => {
       buyer_tel: null,
       buyer_addr: null,
       buyer_postcode: null
-    }, response => {
-      if (response.success) {
-        console.log('결제 성공', response);
-      } else {
-        console.error('결제 실패', response);
-      }
-    });
-  } else {
-    console.error('IMP object or request_pay function not available.');
-  }
-};
+    })}
 
     return (
+
+      
             <div className="HomePage d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
             <div style={{ justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         
@@ -125,8 +124,6 @@ const requestPay = () => {
               <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                 <h1>구매하기</h1>
                 <p>GAN:ERATE</p>
-
-
 
 
                 <div style={{ marginBottom: '70px' }}>
