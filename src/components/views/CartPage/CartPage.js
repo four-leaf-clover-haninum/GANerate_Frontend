@@ -37,13 +37,12 @@ function CartPage() {
             setProducts(response); // Set the products using the response data
           })
           .catch((error) => {
-            console.error(error); // Handle the error, if needed
+            console.error('js창에서 상품을 불러오는 코드 에러'); // Handle the error, if needed
           });
       } else {
         console.error("Token is not available in local storage");
       }
     };
-    
     
     
     
@@ -61,7 +60,6 @@ function CartPage() {
 
     const handleSearch = () => {
         // 검색 버튼 클릭 시 검색 결과 가져오는 액션 디스패치
-
         setCurrentPage(0); // 검색 시 페이지 초기화
         fetchProductData(0); // 검색된 상품 데이터 불러오기
         searchProducts(Category, PriceRange, SearchQuery);

@@ -27,13 +27,20 @@ import {
 
 // 서버에서 상품 데이터 가져오는 액션
 export const fetchProducts = (page) => {
-  const token = setAuthorizationToken; 
+  // const token = `${localStorage.getItem('accessToken')}`; // setAuthorizationToken() 함수를 호출해야 함
+  const token = localStorage.getItem('accessToken');
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    withCredentials: true // withCredentials 옵션 추가
+  };
+
+  console.log(config.headers.Authorization)
+
   return (dispatch) => {
-    return axios.get(`/v1/data-products?page=${page}`, {
-      headers: {
-        'Authorization': `Bearer ` + token
-      }
-      })
+    return axios.get(`/v1/data-products?page=${page}`, config)
       .then(response => {
         dispatch({
           type: SET_PRODUCTS,
@@ -42,56 +49,66 @@ export const fetchProducts = (page) => {
         return response.data; // Return the data for chaining promises
       })
       .catch(err => {
-        console.error(err);
+        console.error('통신코드에서 상품데이터를 가져오는 에러' + err);
         throw err; // Rethrow the error to be caught by the caller
+        
       });
   };
 };
 
 
+
+
+
 // 검색 결과 가져오는 액션
 export const searchProducts = (category, priceRange, searchQuery) => {
-  const token = setAuthorizationToken; 
+  const token = setAuthorizationToken(); 
   return (dispatch) => {
     axios.get(`/v1/data-products/category/2?page=1`, {
       headers: {
         'Authorization': `Bearer ` + token
       },
+      withCredentials: true
     })
       .then(response => {
         dispatch(setProducts(response.data));
       })
       .catch(err => {
-        console.error(err);
+        console.error('검색 결과 가져오기 토큰' + token);
       });
   };
 };
 
-
+// 제품 상세 조회
 export function getProductDetail(dataProductId) {
-  const token = setAuthorizationToken;   // setAuthorizationToken() 함수를 호출해야 함
-  const request = axios.get(`/v1/data-products/${dataProductId}`, {
+  const token = localStorage.getItem('accessToken');
+  const request = axios.get(`/v1/data-products/1`, {
     headers: {
-      'Authorization': `Bearer ` + token
+      Authorization: `Bearer ${token}`
     },
-  })  // config 변수를 올바르게 전달해야 함
-      .then(response => {
-          if (response.data.code === 0) {
-              return response.data.product;
-          } else {
-              console.error("Failed");
-              return null;
-          }
-      })
-      .catch(error => {
-          console.error("An error occurred: ", error);
-          return null;
-      });
+    withCredentials: true // withCredentials 옵션 추가
+  })
+
+    .then(response => {
+      if (response.data.code === 0) {
+        console.log(response.data.data)
+        return response.data.data;
+  
+      } else {
+        console.error("Failed");
+        return null;
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      return null;
+    });
   return {
-      type: GET_PRODUCT_DETAIL,
-      payload: request
+    type: GET_PRODUCT_DETAIL,
+    payload: request
   };
 }
+
 
 
 
@@ -100,11 +117,9 @@ export function loginUser(dataToSubmit) {
       try {
           const response = await axios.post('/v1/users/sign-in', dataToSubmit);
           const { code, data } = response.data;
-
           if (code === 0) {
-            localStorage.setItem('authToken', data.accessToken);
-            
-            // 토큰을 헤더에 설정
+
+            localStorage.setItem('accessToken', data.accessToken);
             setAuthorizationToken(data.accessToken);
 
             alert('로그인에 성공하였습니다.');
@@ -112,9 +127,8 @@ export function loginUser(dataToSubmit) {
                 type: LOGIN_USER,
                 payload: data
             });
-              
+
             console.log("로그인에 성공하였습니다.");  // 로그인 성공 메시지는 개발 도구의 콘솔에만 출력
-              
             return data;  // dispatch 후 data 반환 (다음 then에서 사용하게 됨)
           } else {
             throw new Error("로그인에 실패하였습니다."); // 로그인 실패 처리

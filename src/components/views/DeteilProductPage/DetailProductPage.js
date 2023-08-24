@@ -6,28 +6,29 @@ import './DetailProductPage.css'
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { getProductDetail } from '../../../_actions/user_action'
-import '../../axiosConfig'
+import { getProductDetail, dataProductId } from '../../../_actions/user_action'
 
 
 
 function DetailProductPage(props) {
-    const dispatch = useDispatch();
-    const [data, setData] = useState(null);
-    const dataProductId = "data-product-id";  // Replace with actual ID from props or route params
-    
-    useEffect(() => {
-        dispatch(getProductDetail(dataProductId))
-            .then(response => {
-                if (response.payload) {
-                    setData(response.payload);
-                }
-            });
-    }, [dispatch, dataProductId]);  // Added dependencies to the dependency array
+  const dispatch = useDispatch();
+  const [data, setData] = useState(null);
+  const productId = "data-product-id";  // Replace with actual ID from props or route params
+  //const productId = "response.data.data";
+  
+  useEffect(() => {
+      dispatch(getProductDetail(productId))
+          .then(response => {
+              if (response.payload) {
+                  setData(response.payload);
+              }
+          });
+  }, [dispatch, productId]); // Added dependencies to the dependency array
 
-    if (!data) {
-        return <div>Loading...</div>;  // Loading state
-    }
+  // Loading 상태일 때
+  //if (!data) {
+  //    return <div>Loading...</div>;
+  //}
 
 
 
@@ -65,82 +66,79 @@ function DetailProductPage(props) {
       </CustomNavbar>
       </React.Fragment>
 
-
-      
-      
-     <div style={{ maxWidth: '700px', margin: '3rem auto' }}>
+      <div style={{ maxWidth: '700px', margin: '3rem auto' }}>
       <div className="info-container">
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <h1> 상품 상세 조회</h1>
               <p>GAN:ERATE</p>
           </div>
       </div>
-  </div> 
+     </div> 
+     
 
 
 
-  <Container margin="0 auto">
-        <Contents>
-          <CardRight>
+     <Container margin="0 auto">
+   <Contents>
+     <CardRight>
 
-          <br/>
-            <CircleImage>
-            
-            {/* <img src={data.imageUrl[0]} alt="이미지" /> */}
-            </CircleImage>
+     <br/>
+       <CircleImage>
+       
+       {/* <img src={data.imageUrl[0]} alt="이미지" /> */}
+       </CircleImage>
 
-          </CardRight>
-          <CardLeft>
-            <BrandNameArea>
-              <div className="Btn">
-              </div>
-            </BrandNameArea>
-
-            <ProductName>
-            <br/>
-            <div className="Pname">{data.title}</div>
-            </ProductName>
-
-            <priceLine>
-            <br/>
-            <div className="Pprice" style={{ textAlign: 'right', fontSize: '30px' }}>
-                    {data.price}원</div>
-            </priceLine>
+     </CardRight>
+     <CardLeft>
+       <BrandNameArea>
+         <div className="Btn">
+         </div>
+       </BrandNameArea>
 
 
-            <DetailLine>
-            <p>{data.description}</p>
-            </DetailLine>
+       
+       <ProductName>
+       <div className="Pname">
+         {data && data.title ? data.title : "제목 정보 없음"} {/* 상품 제목 */}
+       </div>
+     </ProductName>
 
-          </CardLeft>
-        </Contents>
+     {/* 상품 가격 */}
+     <PriceLine>
+       <div className="Pprice">
+         {data && data.price ? `${data.price}원` : "가격 정보 없음"} {/* 상품 가격 */}
+       </div>
+     </PriceLine>
+
+     {/* 설명 */}
+     <DetailLine>
+       <DescriptionBox>
+         <div className="Pdescription" style={{ fontSize: '20px', color: 'black' }}>
+           {data && data.description ? data.description : "설명 정보 없음"} {/* 설명 */}
+         </div>
+       </DescriptionBox>
+     </DetailLine>
+    
+
+
+
+
+
+       </CardLeft>
+       </Contents>
     </Container>
+    
+ {/* 코드넣어야함 */}
 
 
-    <Container2>
-    <Table>
-    <tbody>
-    {data.categoryNames.map((item, index) => (
-        <TableRow key={index}>
-            <TableHeader>Category</TableHeader>
-            <TableData>{item}</TableData> {/* Use data.categoryNames here */}
-        </TableRow>
-        ))}
-      </tbody>
-    </Table>
-  </Container2>
+
+ {/* 코드넣어야함 */}
 
 
-    <br/>
 
-
-    <div className="payment-button">
-    <a href="/v1/orders/{data-product-id}" className="payment-btn">유료 결제 후 다운로드 받기</a>
-  </div>
-  
-
-    <br/>
-    <br/>
+  {/* 코드넣어야함 */}
+ 
+      
     <br/>
     <br/>
 
@@ -207,7 +205,8 @@ const Container2 = styled.div`
   border-radius: 10px; /* Rounded corners */
 `;
 
-    
+  
+
     const Contents = styled.div`
       display: flex;
       justify-content: center;
@@ -240,20 +239,40 @@ const Container2 = styled.div`
     `;
     
     const ProductName = styled.div`
-      display: flex;
-      justify-content: flex-start;
-      align-items: left;
-      padding: 1rem 0rem;
-      border-bottom: 1px solid #9a9292;
-      margin-bottom: 0.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px; /* Adjust height as needed */
+    border-bottom: 1px solid #9a9292;
+    margin-bottom: 0.6rem;
     
-      .Pname {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-right: 0.5rem;
+    .Pname {
+      font-size: 2.3rem;
+      font-weight: bold;
+      color: #9a1548;
       }
     `;
     
+    const PriceLine = styled.div`
+  margin-top: 10px; /* Adjust margin as needed */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 50px; /* Adjust height as needed */
+  
+  .Pprice {
+    font-size: 24px; /* Adjust font size as needed */
+    font-weight: bold;
+    color: black;
+  }
+`;
+
+const DescriptionBox = styled.div`
+  background-color: #f5f5f5; /* Light gray background color */
+  padding: 15px;
+  border-radius: 10px;
+`;
+
     const BrandNameArea = styled.div`
       display: flex;
       justify-content: flex-start;
