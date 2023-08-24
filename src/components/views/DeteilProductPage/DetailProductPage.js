@@ -113,16 +113,11 @@ function DetailProductPage(props) {
      {/* 설명 */}
      <DetailLine>
        <DescriptionBox>
-         <div className="Pdescription" style={{ fontSize: '20px', color: 'black' }}>
+         <div className="Pdescription" style={{ fontSize: '17px', color: '#000000' }}>
            {data && data.description ? data.description : "설명 정보 없음"} {/* 설명 */}
          </div>
        </DescriptionBox>
      </DetailLine>
-    
-
-
-
-
 
        </CardLeft>
        </Contents>
@@ -130,7 +125,43 @@ function DetailProductPage(props) {
     
  {/* 코드넣어야함 */}
 
+ <Container2>
+ <Table>
+ <tbody>
+  {data && data.categoryNames ? (
+    data.categoryNames.map((item, index) => (
+      <TableRow key={index}>
+        <TableHeader>Category</TableHeader>
+        <TableData>{item}</TableData> {/* Use data.categoryNames here */}
+      </TableRow>
+    ))
+  ) : (
+    <TableRow>
+      <TableData>Loading categories...</TableData>
+    </TableRow>
+  )}
+ </tbody>
+ </Table>
 
+
+ <Table>
+ <tbody>
+  {data && data.categoryNames ? (
+    data.categoryNames.map((item, index) => (
+      <TableRow key={index}>
+        <TableHeader>Category</TableHeader>
+        <TableData>{item}</TableData> {/* Use data.categoryNames here */}
+      </TableRow>
+    ))
+  ) : (
+    <TableRow>
+      <TableData>Loading categories...</TableData>
+    </TableRow>
+  )}
+ </tbody>
+ </Table>
+ 
+ </Container2>
 
  {/* 코드넣어야함 */}
 
@@ -247,14 +278,14 @@ const Container2 = styled.div`
     margin-bottom: 0.6rem;
     
     .Pname {
-      font-size: 2.3rem;
+      font-size: 2.0rem;
       font-weight: bold;
       color: #9a1548;
       }
     `;
     
     const PriceLine = styled.div`
-  margin-top: 10px; /* Adjust margin as needed */
+  margin-top: 5px; /* Adjust margin as needed */
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -268,9 +299,16 @@ const Container2 = styled.div`
 `;
 
 const DescriptionBox = styled.div`
-  background-color: #f5f5f5; /* Light gray background color */
-  padding: 15px;
-  border-radius: 10px;
+
+display: flex;
+justify-content: flex-start;
+width: 1000px; 
+height: 200px;
+border-radius: 70%;
+background: #f5f5f5; /* Light gray background */
+box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+padding: 15px;
+border-radius: 10px;
 `;
 
     const BrandNameArea = styled.div`
