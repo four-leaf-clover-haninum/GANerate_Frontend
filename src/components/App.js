@@ -25,7 +25,7 @@ function App() {
           <Route path="/v1/data-products" element={<CartPage />} />
           <Route path="/v1/data-products/sale/zip" element={<UploadProductPage />} />
           <Route path="/v1/data-products/1" element={<DetailProductPage />} />
-          <Route path="/v1/orders/{data-product-id}" element={<PaymentPage />} />
+          <Route path="/v1/orders/1" element={<PaymentPage />} />
       </Routes>
     </div>
   );

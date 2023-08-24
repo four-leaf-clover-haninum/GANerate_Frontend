@@ -9,7 +9,6 @@ import styled from "styled-components";
 import { getProductDetail, dataProductId } from '../../../_actions/user_action'
 
 
-
 function DetailProductPage(props) {
   const dispatch = useDispatch();
   const [data, setData] = useState(null);
@@ -212,7 +211,7 @@ function DetailProductPage(props) {
     <br/>
 
     <div className="payment-button">
-    <a href="/v1/orders/{data-product-id}" className="payment-btn">유료 결제 후 다운로드 받기</a>
+    <a href="/v1/orders/1" className="payment-btn">유료 결제 후 다운로드 받기</a>
     </div>
 
         </div>

@@ -432,15 +432,18 @@ export const setProducts = (products) => {
 
 export const verifyPayment = (data) => async (dispatch) => {
   try {
+    const token = localStorage.getItem('accessToken');
     const response = await axios.post('http://localhost:8081/v1/payments/verifyIamport', data, {
       headers: {
-        'Authorization': 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxOCIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2OTIzOTIxNjl9.RVyIBDsT7bPLFNBKuh4FwkaNFlWJZg9olS46d4HvFjk',
-        'Content-Type': 'application/json',
+        'Authorization' : `Bearer ${token}`,
+        'Content-Type': 'application/json'
       },
+      withCredentials: true
     });
-
     dispatch({ type: 'PAYMENT_SUCCESS', payload: response.data });
   } catch (error) {
     dispatch({ type: 'PAYMENT_FAILURE', payload: error.response.data });
   }
 };
+
+  

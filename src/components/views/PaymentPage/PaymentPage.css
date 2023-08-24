@@ -43,3 +43,46 @@
     background-color: #931C3E;
   }
   
+
+
+  .custom-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 200px; /* 각 테이블 사이의 간격을 주기 위한 마진 */
+  }
+
+  .custom-table th, .custom-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  /* 왼쪽 정렬 */
+  .custom-table th {
+    text-align: left;
+  }
+
+  /* 데이터 영역 스타일 */
+  .data-cell {
+    display: flex;
+    align-items: center;
+  }
+
+  /* 데이터 텍스트 간격 */
+  .data-text {
+    margin-left: 1px;
+  }
+
+  /* 헤더와 데이터 한 줄로 정렬 */
+  .inline-row {
+    display: flex;
+    align-items: center;
+    margin-top: 15px; /* 테이블 위쪽 간격 */
+    margin-bottom: 10px; /* 줄 간격 조절 */
+  }
+
+  /* 헤더 스타일 */
+  .inline-header {
+    margin-right: 300px; /* 헤더 오른쪽 공백 */
+    flex-shrink: 0; /* 공백이 줄어들지 않도록 설정 */
+  }

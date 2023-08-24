@@ -4,25 +4,40 @@ import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle } from 'react-icons/fa';
 import { Input, Button } from 'antd';
 import './PaymentPage.css';
+import styled from "styled-components";
+import { getProductDetail, dataProductId, verifyPayment } from '../../../_actions/user_action'
 
-// verifyPayment 액션을 import
-import { verifyPayment } from '../../../_actions/user_action';
+
+
 
 function PaymentPage(props) {
-    const [loaded, setLoaded] = useState(false);
-    const dispatch = useDispatch(); // useDispatch 훅을 사용하여 dispatch 함수를 가져옴
+  const [loaded, setLoaded] = useState(false);
+  const dispatch = useDispatch();
+  const [data, setData] = useState(null);
+  const productId = "data-product-id"; // Replace with actual ID from props or route params
 
-    useEffect(() => {
-        if (!loaded) {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.iamport.kr/v1/iamport.js';
-            script.async = true;
-            script.onload = () => {
-                setLoaded(true); // 스크립트 로드 완료 시 상태 변경
-            };
-            document.body.appendChild(script);
+  useEffect(() => {
+    if (!loaded) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.iamport.kr/v1/iamport.js';
+      script.async = true;
+      script.onload = () => {
+        setLoaded(true);
+      };
+      document.body.appendChild(script);
+    }
+  }, [loaded]);
+
+  useEffect(() => {
+    dispatch(getProductDetail(productId))
+      .then(response => {
+        if (response.payload) {
+          setData(response.payload);
         }
-    }, [loaded]);
+      });
+  }, [dispatch, productId]);
+
+
 
     const requestPay = () => {
         if (loaded) {
@@ -97,12 +112,97 @@ function PaymentPage(props) {
 
 
 
+
+                <div style={{ marginBottom: '70px' }}>
+              </div>
+              <div className="total-price">
+              <h3 style={{ marginRight: 500 }}>구매 상품 이름</h3>
+                <div className="price-box">
+                <div className="Pname" style={{ fontWeight: 'bold', color: '#931C3E', fontSize: '25px' }}>
+  {data && data.title ? data.title : "제목 정보 없음"} {/* 상품 제목 */}
+</div>
+
+                </div>
+                </div>
+
+
+
+
+
                 <div style={{ marginBottom: '70px' }}>
                 </div>
                 <div className="product-info">
                 <h3 style={{ marginRight: 500 }}>구매 상품 정보</h3>
                 <div className="product-box">
-                 {/* 구매 상품 통신을 통해 가져온 데이터를 출력 */}
+
+                <Table class="custom-table">
+  <tbody>
+    <TableRow>
+      <td class="inline-row">
+        <h5 class="inline-header">등록일자</h5>
+        <div className="data-text">
+          {data && data.createdAt ? `${data.createdAt}` : "createdAt 정보 없음"}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
+<Table class="custom-table">
+  <tbody>
+    <TableRow>
+      <td class="inline-row">
+      <h5 class="inline-header">카테고리</h5>
+        <div className="data-text">
+          {data && data.categoryNames ? `${data.categoryNames}` : "categoryNames 정보 없음"}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
+<Table class="custom-table">
+  <tbody>
+    <TableRow>
+      <td class="inline-row">
+      <h5 class="inline-header">이미지 수</h5>
+        <div className="data-text">
+          {data && data.dataSize ? `${data.dataSize}` : "dataSize 정보 없음"}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
+
+<Table class="custom-table">
+  <tbody>
+    <TableRow>
+      <td class="inline-row">
+      <h5 class="inline-header">구매 수량</h5>
+        <div className="data-text">
+          {data && data.buyCnt ? `${data.buyCnt}` : "buyCn 정보 없음"}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
+<Table class="custom-table">
+  <tbody>
+    <TableRow>
+      <td class="inline-row">
+        <h5 class="inline-header">zip 파일 크기(GB)</h5>
+        <div className="data-text" style={{ marginLeft: '0px' }}>
+          {data && data.zipfileSize ? `${data.zipfileSize}` : "zipfileSize 정보 없음"}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
+
+              
                  </div>
                 </div>
 
@@ -113,15 +213,20 @@ function PaymentPage(props) {
               <div className="total-price">
               <h3 style={{ marginRight: 500 }}>총 결제 금액</h3>
                 <div className="price-box">
-                  {/* 결제 금액 통신을 통해 가져온 데이터를 출력 */}
+                <div className="Pprice" style={{ fontWeight: 'bold', color: '#931C3E', fontSize: '25px' }}>
+                {data && data.price ? `${data.price}원`: "price 정보 없음"} {/* 상품 제목 */}
+              </div>
                 </div>
                 </div>
 
-                <div style={{ marginBottom: '140px' }}>
+                <div style={{ marginBottom: '80px' }}>
               </div>
               <div className="payment-button">
                 <button className="payment-btn" onClick={requestPay}>결제하기</button>
                 </div>
+
+                <br/>
+    <br/>
               </div>
             </div>
           </div>
@@ -131,3 +236,13 @@ function PaymentPage(props) {
     }
 
 export default PaymentPage;
+
+
+const Table = styled.table`
+width: 100%;
+border-collapse: collapse;
+`;
+
+const TableRow = styled.tr`
+border-bottom: 1px solid #ccc;
+`;
