@@ -432,7 +432,7 @@ export const setProducts = (products) => {
 
 
 
-export const verifyPayment = (data) => async (dispatch) => {
+export const verifyPayment = async (data) => {
   try {
     const token = localStorage.getItem('accessToken');
     const response = await axios.post('/v1/payments/verifyIamport', data, {
@@ -445,16 +445,21 @@ export const verifyPayment = (data) => async (dispatch) => {
 
     if (response.data.code === 0) {
       // 인증 성공
-      dispatch({ type: 'PAYMENT_SUCCESS', payload: response.data });
+      console.log('결제 검증 성공')
+      return { success: true, payload: response.data };
+  
     } else {
       // 인증 실패
-      dispatch({ type: 'PAYMENT_FAILURE', payload: response.data });
+      console.log('결제 검증 실패')
+      return { success: false, payload: response.data };
     }
   } catch (error) {
     // 네트워크 에러 등으로 실패
-    dispatch({ type: 'PAYMENT_FAILURE', payload: error.response ? error.response.data : 'Network error' });
+    console.log()
+    return { success: false, payload: error.response ? error.response.data : 'Network error' };
   }
 };
+
 
 
 

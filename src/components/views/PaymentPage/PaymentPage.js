@@ -56,9 +56,28 @@ function PaymentPage(props) {
       });
   }, [dispatch, productId]);
 
-
-
-
+  const verifyAndProcessPayment = (response) => {
+    const paymentData = {
+      amount: response.amount,
+      imp_uid: response.imp_uid,
+      merchant_uid: response.merchantUid
+    };
+  
+    verifyPayment(paymentData)
+      .then(result => {
+        if (result.success) {
+          console.log('결제 검증 및 처리 성공', result);
+          // 추가적인 로직 처리
+        } else {
+          console.error('결제 검증 및 처리 실패', result);
+        }
+      })
+      .catch(error => {
+        console.error('결제 검증 및 처리 실패', error);
+      });
+  };
+  
+  
 
 
 const requestPay = () => {
@@ -85,37 +104,23 @@ const requestPay = () => {
       buyer_postcode: null
     }, 
     
-    response => {if (response.success) {
-      console.log('결제 성공', response);
-      alert('결제 성공');
-      verifyAndProcessPayment(response);
-      window.location.href = '/v1/payments/verifyIamport';
+    response => {
+      if (response.success) {
 
-  
-    } else {
-      console.error('결제 실패', response);
-    }
-  })
-}
+        verifyAndProcessPayment(response);
 
-    const verifyAndProcessPayment = (response) => {
-      const paymentData = {
-        amount: response.paid_amount,
-        imp_uid: response.imp_uid,
-        merchant_uid: response.merchant_uid,
-        dataProductId: 1 // Modify this as needed
-      };
-  
-      dispatch(verifyPayment(paymentData))
-        .then(response => {
-          if (response.payload) {
-            console.log('결제 검증 및 처리 성공', response.payload);
-          }
-        })
-        .catch(error => {
-          console.error('결제 검증 및 처리 실패', error);
-        });
-    };
+        console.log('결제 성공', response);
+       // alert('결제 성공');
+
+       //  window.location.href = '/v1/verify';
+
+      } else {
+        console.error('결제 실패', response);
+      }
+    });
+  }
+
+
 
 
     return (

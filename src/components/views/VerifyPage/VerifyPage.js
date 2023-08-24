@@ -12,8 +12,38 @@ function VerifyPage(props) {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const [data, setData] = useState({}); // Initialize data with an empty object
-  const productId = "data-product-id"; // Replace with actual ID from props or route params
+  const productId = "data-product-id";
+  const [paymentResult, setPaymentResult] = useState(null); // Replace with actual ID from props or route params
 
+  useEffect(() => {
+    if (!loaded && !window.IMP) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
+      script.async = true;
+      script.onload = () => {
+        const IMP = window.IMP;
+        if (IMP) {
+          // Initialize IMP only once
+          if (!IMP.isInitialized()) {
+            //IMP.init("imp31818680"); // Replace with your actual seller code
+          }
+          setLoaded(true);
+        }
+      };
+      document.body.appendChild(script);
+    } else if (loaded && window.IMP) {
+      dispatch(getProductDetail(productId))
+        .then(response => {
+          if (response.payload) {
+            console.log("Received data:", response.payload);
+            setData(response.payload);
+          }
+        })
+        .catch(error => {
+          console.error('Failed to fetch product data.', error);
+        });
+    }
+  }, [dispatch, productId, loaded]);
   
 
   //상품 가져오는 코드
@@ -59,7 +89,7 @@ const requestPay = () => {
       console.log('결제 성공', response);
       alert('결제 성공');
       verifyAndProcessPayment(response);
-      window.location.href = '/v1/payments/verifyIamport';
+      window.location.href = '/v1/verify';
 
   
     } else {
@@ -68,24 +98,23 @@ const requestPay = () => {
   })
 }
 
-    const verifyAndProcessPayment = (response) => {
-      const paymentData = {
-        amount: response.paid_amount,
-        imp_uid: response.imp_uid,
-        merchant_uid: response.merchant_uid,
-        dataProductId: 1 // Modify this as needed
-      };
-  
-      dispatch(verifyPayment(paymentData))
-        .then(response => {
-          if (response.payload) {
-            console.log('결제 검증 및 처리 성공', response.payload);
-          }
-        })
-        .catch(error => {
-          console.error('결제 검증 및 처리 실패', error);
-        });
+const verifyAndProcessPayment = async (response) => {
+    const paymentData = {
+      amount: response.paid_amount,
+      imp_uid: response.imp_uid,
+      merchant_uid: response.merchant_uid
     };
+
+    try {
+      const verifyResponse = await dispatch(verifyPayment(paymentData));
+      if (verifyResponse.payload) {
+        console.log('결제 검증 및 처리 성공', verifyResponse.payload);
+        setPaymentResult(verifyResponse.payload); // paymentResult 설정]
+      }
+    } catch (error) {
+      console.error('결제 검증 및 처리 실패', error);
+    }
+  };
 
 
     return (
@@ -125,6 +154,9 @@ const requestPay = () => {
               <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                 <h1 style={{ fontWeight: 'bold', color: '#931C3E'}}>결제완료</h1>
                 <p>GAN:ERATE</p>
+
+
+
 
 
                 <div style={{ marginBottom: '70px' }}>
@@ -237,6 +269,19 @@ const requestPay = () => {
 
                 <br/>
     <br/>
+
+    
+
+    <div className="payment-button">
+                <a href="/HomePage" className="payment-btn">HOME</a>
+                </div>
+
+
+
+                <br/>
+    <br/>
+
+    
               </div>
             </div>
           </div>
