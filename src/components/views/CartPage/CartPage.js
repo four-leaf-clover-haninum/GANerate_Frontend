@@ -216,35 +216,41 @@ function CartPage() {
         
 
 {/* 상품 불러오기 */}
-
-
 <div className="row mt-4">
-<div className="col-lg-12 offset-lg-0">
-  <Row gutter={[16, 16]}>
-    {Products.map(product => (
-      <Col lg={6} md={8} xs={24} key={product.dataProductId}>
-        <ProductCard product={product} />
-      </Col>
-    ))}
-  </Row>
-</div>
-</div>
-
-<div>
-
-
-      <div className="product-list">
-        {Products.map(product => (
-          <div key={product.dataProductId} className="product-item">
-            <h3>{product.title}</h3>
-            <p>가격: {product.price}원</p>
-            <p>{product.description}</p>
-            {/* 추가적인 정보나 버튼 등을 표시할 수 있음 */}
-          </div>
-        ))}
+  {Products.map(product => (
+    <div className="col-lg-12 offset-lg-0 product-card" key={product.dataProductId}>
+      <div className="product-image">
+        <img alt="product" src={product.imageUrl} style={{ width: '180px', height: '180px', objectFit: 'cover' }} />
       </div>
-      {/* 페이지네이션 등의 기타 코드 */}
+      <div className="product-details">
+        <div className="category-box">
+          <div className="product-categoryNames">
+            {product && product.categoryNames ? `${product.categoryNames}` : "categoryNames 정보 없음"}
+          </div>
+        </div>
+        <h3 className="product-title">{product.title}</h3>
+        <div className="description-box">
+  <p className="product-description bold-text" style={{ fontSize: '15px', marginTop: '10px' }}>
+    {product.description}
+  </p>
+</div>
+
+        <div className="product-createdAt" style={{ fontSize: '13px', color: '#555555' }}>
+        {product && product.createdAt ? `최초 등록일자 : ${product.createdAt}` : "최초 등록일자 : createdAt 정보 없음"}
+        </div>
+      <div className="product-buyCnt" style={{ display: 'flex', color: '#555555', justifyContent: 'flex-end', alignItems: 'flex-end', fontSize: '13px' }}>
+  현재까지 구매 수량 : {product.buyCnt}
+</div>
+        <div className="product-price" style={{ display: 'flex', fontWeight: 'bold', justifyContent: 'flex-end', alignItems: 'flex-end', fontSize: '19px' }}>
+  {product.price}원
+</div>
+
+
+      </div>
     </div>
+  ))}
+</div>
+
 
 
 
@@ -265,12 +271,25 @@ function CartPage() {
 </div>
 
 
-  
+<br>
+</br>
+<br>
+</br>
+<br>
+</br>
         
         </div>
     </div>
   </div>
   {/* ... (푸터 등 추가 코드) */}
+
+  <br>
+</br>
+<br>
+</br>
+<br>
+</br>
+
 </div>
 
 

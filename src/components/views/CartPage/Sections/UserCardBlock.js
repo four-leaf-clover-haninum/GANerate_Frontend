@@ -7,8 +7,8 @@ function ProductCard(props) {
 
     return (
         <Card
-            cover={<img alt="product" src={imageUrl} style={{ height: '150px', objectFit: 'cover' }} />} // 이미지 URL 직접 사용
-        >
+        cover={<img alt="product" src={imageUrl} style={{ width: '300px', height: '100px', objectFit: 'cover' }} />}
+    >
             <Card.Meta
                 title={title} // API 응답에 맞게 수정
                 description={`${price}` + '원'} // API 응답에 맞게 수정
