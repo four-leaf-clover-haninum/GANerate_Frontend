@@ -216,7 +216,9 @@ function CartPage() {
         
 
 {/* 상품 불러오기 */}
- <div className="row mt-4">
+
+
+<div className="row mt-4">
 <div className="col-lg-12 offset-lg-0">
   <Row gutter={[16, 16]}>
     {Products.map(product => (
@@ -226,7 +228,7 @@ function CartPage() {
     ))}
   </Row>
 </div>
-</div> 
+</div>
 
 <div>
 
