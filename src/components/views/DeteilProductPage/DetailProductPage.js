@@ -15,6 +15,7 @@ function DetailProductPage(props) {
   const [data, setData] = useState(null);
   const { productId } = useParams();  // Replace with actual ID from props or route params
   //const productId = "response.data.data";
+  const isAdditionalImage = data && data.imageUrl && data.imageUrl.length >= 2;
   
   useEffect(() => {
     dispatch(getProductDetail(productId))
@@ -83,14 +84,13 @@ function DetailProductPage(props) {
 
      <br/>
      <CircleImage>
-     {data && data.imageUrl ? (
-       data.imageUrl.map((url, index) => (
-         <img key={index} src={url} alt={`이미지 ${index}`} />
-       ))
-     ) : (
-       <p>이미지 정보 없음</p>
-     )}
-   </CircleImage>
+  {data && data.imageUrl && data.imageUrl.length > 0 ? (
+    <img key={0} src={data.imageUrl[0]} alt={`이미지 0`} />
+  ) : (
+    <p>이미지 정보 없음</p>
+  )}
+</CircleImage>
+
 
      </CardRight>
      <CardLeft>
@@ -129,7 +129,8 @@ function DetailProductPage(props) {
     
  {/* 코드넣어야함 */}
 
- <Container2>
+ <Container2 style={{ height: isAdditionalImage ? '680px' : '540px' }}>
+
  
  <Table class="custom-table">
   <tbody>
@@ -197,6 +198,31 @@ function DetailProductPage(props) {
   </tbody>
 </Table>
 
+<Table className="custom-table">
+  <tbody>
+    <TableRow>
+      <td className="inline-row">
+        <h5 className="inline-header">추가적인 예시 이미지</h5>
+        <div className="data-text" style={{ marginLeft: '0px' }}>
+          {data && data.imageUrl && data.imageUrl.length >= 2 ? (
+            data.imageUrl.slice(1).map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`추가 이미지 ${index + 1}`}
+                style={{ width: '180px', height: '180px', objectFit: 'cover', marginRight: '10px' }}
+              />
+            ))
+          ) : (
+            <p>이미지 정보 없음</p>
+          )}
+        </div>
+      </td>
+    </TableRow>
+  </tbody>
+</Table>
+
+
  </Container2>
       
     <br/>
@@ -244,6 +270,9 @@ const data = [
   { label: '저작권 라이선스', value: '{value}' },
 ];
 
+
+
+
     const Container = styled.div`
   width: 1000px; 
   height: 400px;
@@ -259,7 +288,7 @@ const data = [
 
 const Container2 = styled.div`
   width: 1000px;
-  height: 350px; /* Taller height */
+  height: 520px; /* Taller height */
   padding: 2rem;
   margin: 5% auto;
   text-align: center;
