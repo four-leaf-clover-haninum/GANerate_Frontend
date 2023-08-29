@@ -6,13 +6,16 @@ import { Input, Button } from 'antd';
 import './PaymentPage.css';
 import styled from "styled-components";
 import { getProductDetail, dataProductId, verifyPayment } from '../../../_actions/user_action'
+import { Link, useParams } from 'react-router-dom';
 
 
 function PaymentPage(props) {
   const [loaded, setLoaded] = useState(false);
   const dispatch = useDispatch();
   const [data, setData] = useState({}); // Initialize data with an empty object
-  const productId = "data-product-id"; // Replace with actual ID from props or route params
+  //const productId = "data-product-id"; // Replace with actual ID from props or route params
+
+  const { productId } = useParams();
 
 
   useEffect(() => {

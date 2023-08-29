@@ -83,7 +83,7 @@ export const searchProducts = (category, priceRange, searchQuery) => {
 // 제품 상세 조회
 export function getProductDetail(dataProductId) {
   const token = localStorage.getItem('accessToken');
-  const request = axios.get(`/v1/data-products/1`, {
+  const request = axios.get(`/v1/data-products/${dataProductId}`, {
     headers: {
       Authorization: `Bearer ${token}`
     },
