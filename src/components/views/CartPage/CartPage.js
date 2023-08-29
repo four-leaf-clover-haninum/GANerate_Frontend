@@ -9,6 +9,9 @@ import { FaUserCircle, FaDownload } from 'react-icons/fa';
 import './CartPage.css';
 import { searchProducts, fetchProducts } from '../../../_actions/user_action';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import '../DeteilProductPage/DetailProductPage';
+
 
 
 function CartPage() {
@@ -218,7 +221,9 @@ function CartPage() {
 {/* 상품 불러오기 */}
 <div className="row mt-4">
   {Products.map(product => (
-    <div className="col-lg-12 offset-lg-0 product-card" key={product.dataProductId}>
+    <Link to={`/v1/data-products/${product.dataProductId}`} key={product.dataProductId} className="link-no-underline">
+      <div className="col-lg-12 offset-lg-0 product-card">
+
       <div className="product-image">
         <img alt="product" src={product.imageUrl} style={{ width: '180px', height: '180px', objectFit: 'cover' }} />
       </div>
@@ -234,7 +239,6 @@ function CartPage() {
     {product.description}
   </p>
 </div>
-
         <div className="product-createdAt" style={{ fontSize: '13px', color: '#555555' }}>
         {product && product.createdAt ? `최초 등록일자 : ${product.createdAt}` : "최초 등록일자 : createdAt 정보 없음"}
         </div>
@@ -244,10 +248,9 @@ function CartPage() {
         <div className="product-price" style={{ display: 'flex', fontWeight: 'bold', justifyContent: 'flex-end', alignItems: 'flex-end', fontSize: '19px' }}>
   {product.price}원
 </div>
-
-
       </div>
     </div>
+    </Link>
   ))}
 </div>
 

@@ -7,23 +7,23 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { getProductDetail, dataProductId } from '../../../_actions/user_action'
+import { Link, useParams } from 'react-router-dom';
 
 
 function DetailProductPage(props) {
   const dispatch = useDispatch();
   const [data, setData] = useState(null);
-  const productId = "data-product-id";  // Replace with actual ID from props or route params
+  const { productId } = useParams();  // Replace with actual ID from props or route params
   //const productId = "response.data.data";
   
   useEffect(() => {
-      dispatch(getProductDetail(productId))
-          .then(response => {
-              if (response.payload) {
-                  setData(response.payload);
-              }
-          });
-  }, [dispatch, productId]); // Added dependencies to the dependency array
-
+    dispatch(getProductDetail(productId))
+      .then(response => {
+        if (response.payload) {
+          setData(response.payload);
+        }
+      });
+  }, [dispatch, productId]);
   // Loading 상태일 때
   //if (!data) {
   //    return <div>Loading...</div>;
@@ -82,15 +82,15 @@ function DetailProductPage(props) {
      <CardRight>
 
      <br/>
-       <CircleImage>
-       {data && data.imageUrl ? (
-        data.imageUrl.map((url, index) => (
-          <img key={index} src={url} alt={`이미지 ${index}`} />
-        ))
-      ) : (
-        <p>이미지 정보 없음</p>
-      )}
-       </CircleImage>
+     <CircleImage>
+     {data && data.imageUrl ? (
+       data.imageUrl.map((url, index) => (
+         <img key={index} src={url} alt={`이미지 ${index}`} />
+       ))
+     ) : (
+       <p>이미지 정보 없음</p>
+     )}
+   </CircleImage>
 
      </CardRight>
      <CardLeft>
@@ -133,14 +133,14 @@ function DetailProductPage(props) {
  
  <Table class="custom-table">
   <tbody>
-    <TableRow>
-      <td class="inline-row">
-        <h5 class="inline-header">등록일자</h5>
-        <div className="data-text">
-          {data && data.createdAt ? `${data.createdAt}` : "createdAt 정보 없음"}
-        </div>
-      </td>
-    </TableRow>
+  <TableRow>
+  <td class="inline-row">
+    <h5 class="inline-header">등록일자</h5>
+    <div className="data-text">
+      {data && data.createdAt ? `${data.createdAt}` : "createdAt 정보 없음"}
+    </div>
+  </td>
+</TableRow>
   </tbody>
 </Table>
 
@@ -198,21 +198,15 @@ function DetailProductPage(props) {
 </Table>
 
  </Container2>
-
- {/* 코드넣어야함 */}
-
-
-
-  {/* 코드넣어야함 */}
- 
-
       
     <br/>
     <br/>
 
     <div className="payment-button">
-    <a href="/v1/orders/1" className="payment-btn">유료 결제 후 다운로드 받기</a>
-    </div>
+  <Link to={`/v1/orders/${productId}`} className="payment-btn">
+    유료 결제 후 다운로드 받기
+  </Link>
+</div>
 
         </div>
         </div>    

@@ -5,6 +5,11 @@
   align-items: center; /* Vertically align contents */
 }
 
+.link-no-underline {
+  text-decoration: none;
+}
+
+
 .product-image {
   margin-right: 16px; /* Add margin for spacing */
 }
