@@ -1,18 +1,18 @@
+import '../MyPage.css';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'; // react-redux에서 필요한 부분만 import
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle, FaDownload } from 'react-icons/fa';
 import { Input, Button } from 'antd';
-import './MyPage.css';
 import styled from "styled-components";
-import { token, getUserPoints, getUserHearts, getUserOrders, downloadOrderFile } from '../../../_actions/user_action'
+import { token, getUserPoints, getUserHearts, getUserOrders, downloadOrderFile } from '../../../../_actions/user_action'
 import { Link, useParams } from 'react-router-dom';
 import { IoPersonSharp, IoMailSharp, IoStarOutline } from 'react-icons/io5';
 import { FaDollarSign } from 'react-icons/fa';
 
 
 
-function MyPage(props) {
+function DownloadPage(props) {
   const dispatch = useDispatch();
   const [userPoints, setUserPoints] = useState([]);
   const [userHearts, setUserHearts] = useState([]);
@@ -166,4 +166,4 @@ function MyPage(props) {
   );
 }
 
-export default MyPage;
+export default DownloadPage;

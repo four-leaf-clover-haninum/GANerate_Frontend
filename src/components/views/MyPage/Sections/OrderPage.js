@@ -1,18 +1,17 @@
+import '../MyPage.css';
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'; // react-redux에서 필요한 부분만 import
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle, FaDownload } from 'react-icons/fa';
 import { Input, Button } from 'antd';
-import './MyPage.css';
 import styled from "styled-components";
-import { token, getUserPoints, getUserHearts, getUserOrders, downloadOrderFile } from '../../../_actions/user_action'
+import { token, getUserPoints, getUserHearts, getUserOrders, downloadOrderFile } from '../../../../_actions/user_action'
 import { Link, useParams } from 'react-router-dom';
 import { IoPersonSharp, IoMailSharp, IoStarOutline } from 'react-icons/io5';
 import { FaDollarSign } from 'react-icons/fa';
 
 
-
-function MyPage(props) {
+function OrderPage(props) {
   const dispatch = useDispatch();
   const [userPoints, setUserPoints] = useState([]);
   const [userHearts, setUserHearts] = useState([]);
@@ -160,10 +159,51 @@ function MyPage(props) {
         </div>
         </div>
       </div>
+
+
+
+
+      <div
+      style={{
+        backgroundColor: 'white', // Set the background color
+        padding: '20px',
+        borderRadius: '10px',
+        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+        marginTop: '70px',
+        marginLeft : '134px',
+        maxWidth: '1000px' // Add a box shadow
+      }}
+    >
+      <h3 style={{ marginBottom: '20px' }}>주문 내역</h3>
+      {userOrders.length === 0 ? (
+        <p>주문한 상품이 없습니다.</p>
+      ) : (
+        <ul>
+  {userOrders.map(order => (
+    <li key={order.dataProductId}>
+      {/* Display order information */}
+      <p>주문 상품 ID: {order.dataProductId}</p>
+      <p>상품명: {order.title}</p> {/* Add this line */}
+      <p>가격: {order.price}</p> {/* Add this line */}
+      {/* Add a button to download the order file */}
+      <Button onClick={() => handleDownloadOrder(order.dataProductId)}>
+        <FaDownload style={{ marginRight: '5px' }} /> 다운로드
+      </Button>
+    </li>
+  ))}
+</ul>
+
+      )}
+    </div>
+    
+
+
     </div>
     </div>
 
+
+    
   );
 }
 
-export default MyPage;
+export default OrderPage;

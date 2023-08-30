@@ -12,6 +12,10 @@ import PaymentPage from './views/PaymentPage/PaymentPage';
 import DetailProductPage from './views/DeteilProductPage/DetailProductPage'
 import GuidePage from './views/GuidePage/GuidePage';
 import VerifyPage from './views/VerifyPage/VerifyPage';
+import DownloadPage from './views/MyPage/Sections/DownloadPage'
+import EditPage from './views/MyPage/Sections/EditPage'
+import HeartPage from './views/MyPage/Sections/HeartPage'
+import OrderPage from './views/MyPage/Sections/OrderPage'
 
 function App() {
   return (
@@ -28,6 +32,10 @@ function App() {
           <Route path="/v1/data-products/:productId" element={<DetailProductPage />} />
           <Route path="/v1/orders/:productId" element={<PaymentPage />} />
           <Route path="/v1/verify" element={<VerifyPage />} />
+          <Route path="/Download" element={<DownloadPage />} />
+          <Route path="/Edit" element={<EditPage />} />
+          <Route path="/Heart" element={<HeartPage />} />
+          <Route path="/Order" element={<OrderPage />} />
       </Routes>
     </div>
   );
