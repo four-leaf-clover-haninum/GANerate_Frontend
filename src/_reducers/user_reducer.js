@@ -17,7 +17,8 @@ import {
   FETCH_PRODUCTS_SUCCESS,
   GET_USER_POINTS_SUCCESS,
   GET_USER_HEARTS_SUCCESS,
-  GET_USER_ORDERS_SUCCESS
+  GET_USER_ORDERS_SUCCESS,
+ GET_USER_ORDERS_FAILURE 
 
 
 
@@ -90,6 +91,9 @@ const initialState = {
         ...state,
         userOrders: action.payload,
       };
+      case GET_USER_ORDERS_FAILURE:
+        return { ...state, success: false, error: action.payload };
+      
 
       default:
           return state;

@@ -61,60 +61,60 @@ function VerifyPage(props) {
 
 
 
-const requestPay = () => {
-  if (!data) return;  // 상품 데이터가 없는 경우 리턴
+// const requestPay = () => {
+//   if (!data) return;  // 상품 데이터가 없는 경우 리턴
 
-  const timestamp = Date.now();
-  const milliseconds = timestamp % 1000; // Extract milliseconds part
-  const uniqueId = `order_${timestamp}_${milliseconds}`; // Combine timestamp and milliseconds
+//   const timestamp = Date.now();
+//   const milliseconds = timestamp % 1000; // Extract milliseconds part
+//   const uniqueId = `order_${timestamp}_${milliseconds}`; // Combine timestamp and milliseconds
   
-  const IMP = window.IMP;
-  IMP.init("imp31818680")
-    IMP.request_pay(
-      {
-      pg: "html5_inicis",
-      pay_method: "card",
-      merchant_uid: uniqueId, // Use the uniqueId here
-      name: data.title,  // 상품 이름
-      amount: data.price,  // 상품 가격
+//   const IMP = window.IMP;
+//   IMP.init("imp31818680")
+//     IMP.request_pay(
+//       {
+//       pg: "html5_inicis",
+//       pay_method: "card",
+//       merchant_uid: uniqueId, // Use the uniqueId here
+//       name: data.title,  // 상품 이름
+//       amount: data.price,  // 상품 가격
 
-      buyer_email: null,
-      buyer_name: null,
-      buyer_tel: null,
-      buyer_addr: null,
-      buyer_postcode: null
-    }, 
+//       buyer_email: null,
+//       buyer_name: null,
+//       buyer_tel: null,
+//       buyer_addr: null,
+//       buyer_postcode: null
+//     }, 
     
-    response => {if (response.success) {
-      console.log('결제 성공', response);
-      alert('결제 성공');
-      verifyAndProcessPayment(response);
-      window.location.href = '/v1/verify';
+//     response => {if (response.success) {
+//       console.log('결제 성공', response);
+//       alert('결제 성공');
+//       verifyAndProcessPayment(response);
+//       window.location.href = '/v1/verify';
 
   
-    } else {
-      console.error('결제 실패', response);
-    }
-  })
-}
+//     } else {
+//       console.error('결제 실패', response);
+//     }
+//   })
+// }
 
-const verifyAndProcessPayment = async (response) => {
-    const paymentData = {
-      amount: response.paid_amount,
-      imp_uid: response.imp_uid,
-      merchant_uid: response.merchant_uid
-    };
+// const verifyAndProcessPayment = async (response) => {
+//     const paymentData = {
+//       amount: response.paid_amount,
+//       imp_uid: response.imp_uid,
+//       merchant_uid: response.merchant_uid
+//     };
 
-    try {
-      const verifyResponse = await dispatch(verifyPayment(paymentData));
-      if (verifyResponse.payload) {
-        console.log('결제 검증 및 처리 성공', verifyResponse.payload);
-        setPaymentResult(verifyResponse.payload); // paymentResult 설정]
-      }
-    } catch (error) {
-      console.error('결제 검증 및 처리 실패', error);
-    }
-  };
+//     try {
+//       const verifyResponse = await dispatch(verifyPayment(paymentData));
+//       if (verifyResponse.payload) {
+//         console.log('결제 검증 및 처리 성공', verifyResponse.payload);
+//         setPaymentResult(verifyResponse.payload); // paymentResult 설정]
+//       }
+//     } catch (error) {
+//       console.error('결제 검증 및 처리 실패', error);
+//     }
+//   };
 
 
     return (

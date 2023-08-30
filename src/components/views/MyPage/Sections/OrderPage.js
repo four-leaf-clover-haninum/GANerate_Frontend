@@ -6,7 +6,7 @@ import { FaUserCircle, FaDownload } from 'react-icons/fa';
 import { Input, Button } from 'antd';
 import styled from "styled-components";
 import { token, getUserPoints, getUserHearts, getUserOrders, downloadOrderFile } from '../../../../_actions/user_action'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { IoPersonSharp, IoMailSharp, IoStarOutline } from 'react-icons/io5';
 import { FaDollarSign } from 'react-icons/fa';
 
@@ -17,6 +17,11 @@ function OrderPage(props) {
   const [userHearts, setUserHearts] = useState([]);
   const [userOrders, setUserOrders] = useState([]);
   const token = props.token;
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const productId = queryParams.get('productId');
+
+
 
   useEffect(() => {
     dispatch(getUserPoints(token))
@@ -48,6 +53,7 @@ function OrderPage(props) {
     dispatch(downloadOrderFile(token, orderId))
       .then(response => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
+        console.log(response.data)
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', `order-${orderId}.pdf`);
@@ -55,6 +61,7 @@ function OrderPage(props) {
         link.click();
       })
       .catch(error => {
+        console.log(error.message)
         console.error('Error downloading order file:', error.message);
       });
   };
@@ -162,39 +169,36 @@ function OrderPage(props) {
 
 
 
-
       <div
       style={{
-        backgroundColor: 'white', // Set the background color
+        backgroundColor: 'white',
         padding: '20px',
         borderRadius: '10px',
         boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
         marginTop: '70px',
-        marginLeft : '134px',
-        maxWidth: '1000px' // Add a box shadow
+        marginLeft: '134px',
+        maxWidth: '1000px'
       }}
     >
       <h3 style={{ marginBottom: '20px' }}>주문 내역</h3>
-      {userOrders.length === 0 ? (
-        <p>주문한 상품이 없습니다.</p>
-      ) : (
+      {Array.isArray(userOrders) && userOrders.length > 0 ? (
         <ul>
-  {userOrders.map(order => (
-    <li key={order.dataProductId}>
-      {/* Display order information */}
-      <p>주문 상품 ID: {order.dataProductId}</p>
-      <p>상품명: {order.title}</p> {/* Add this line */}
-      <p>가격: {order.price}</p> {/* Add this line */}
-      {/* Add a button to download the order file */}
-      <Button onClick={() => handleDownloadOrder(order.dataProductId)}>
-        <FaDownload style={{ marginRight: '5px' }} /> 다운로드
-      </Button>
-    </li>
-  ))}
-</ul>
-
+          {userOrders.map(order => (
+            <li key={order.orderId}>
+              <p>주문 상품 ID: {order.dataProductId || "ID 정보 없음"}</p>
+              <p>상품명: {order.title || "상품명 정보 없음"}</p>
+              <p>가격: {order.price || "가격 정보 없음"}</p>
+              <Button onClick={() => handleDownloadOrder(order.dataProductId)}>
+                <FaDownload style={{ marginRight: '5px' }} /> 다운로드
+              </Button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>주문한 상품이 없습니다.</p>
       )}
     </div>
+    
     
 
 

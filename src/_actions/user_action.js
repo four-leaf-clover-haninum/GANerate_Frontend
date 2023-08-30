@@ -24,7 +24,8 @@ import {
     FETCH_PRODUCTS_SUCCESS,
     GET_USER_POINTS_SUCCESS,
   GET_USER_HEARTS_SUCCESS,
-  GET_USER_ORDERS_SUCCESS
+  GET_USER_ORDERS_SUCCESS,
+  GET_USER_ORDERS_FAILURE
     
 } from './types';
 
@@ -34,7 +35,6 @@ import {
 export const fetchProducts = (page) => {
   // const token = `${localStorage.getItem('accessToken')}`; // setAuthorizationToken() 함수를 호출해야 함
   const token = localStorage.getItem('accessToken');
-
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
@@ -429,34 +429,34 @@ export const setProducts = (products) => {
 };
 
 
-
-export const verifyPayment = async (data) => {
+export const verifyPayment = async (paymentDataMap) => {
   try {
     const token = localStorage.getItem('accessToken');
-    const response = await axios.post('/v1/payments/verifyIamport', data, {
+    const response = await axios.post('/v1/payments/verifyIamport', Object.fromEntries(paymentDataMap), {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`
       },
       withCredentials: true
     });
-
     if (response.data.code === 0) {
-      // 인증 성공
-      console.log('결제 검증 성공')
+      console.log('결제 검증 성공');
+      console.log(paymentDataMap)
       return { success: true, payload: response.data };
-  
     } else {
-      // 인증 실패
-      console.log('결제 검증 실패')
+      console.log('결제 검증 실패');
+      console.log(paymentDataMap)
+      console.log(Object.fromEntries(Map))
+      console.log(response);
       return { success: false, payload: response.data };
     }
   } catch (error) {
-    // 네트워크 에러 등으로 실패
-    console.log()
+    console.error('결제 검증 실패', error);
+    console.log(paymentDataMap);
+    console.log(Object.fromEntries(Map))
     return { success: false, payload: error.response ? error.response.data : 'Network error' };
   }
 };
+
 
 
 
@@ -508,10 +508,12 @@ export const downloadOrderFile = (token, orderId) => {
     if (response.data.code === 0) {
       return response; // 성공 시 응답 전체 반환
     } else {
+      console.log(response.data.message);
       throw new Error(response.data.message); // 에러 처리
     }
   })
   .catch(error => {
+    console.log(error);
     throw error; // 에러를 다시 throw하여 컴포넌트에서 처리
   });
 };
@@ -538,27 +540,6 @@ export const getUserHearts = (token) => {
   });
 };
 
-export const getUserOrders = (token) => {
-  return axios.get('/v1/users/orders', {
-    headers: {
-      'Authorization': `Bearer ${token}`
-    },
-    withCredentials: true
-  })
-  .then(response => {
-    if (response.data.code === 0) {
-      return {
-        type: GET_USER_ORDERS_SUCCESS,
-        payload: response.data.data
-      };
-    } else {
-      throw new Error(response.data.message);
-    }
-  })
-  .catch(error => {
-    throw error;
-  });
-};
 
 export const getUserPoints = (token) => {
   return axios.get('/v1/users/points', {
@@ -581,4 +562,46 @@ export const getUserPoints = (token) => {
     throw error;
   });
 };
+
+export const getUserOrdersSuccess = data => ({
+  type: GET_USER_ORDERS_SUCCESS,
+  payload: data,
+});
+
+export const getUserOrdersFailure = error => ({
+  type: GET_USER_ORDERS_FAILURE,
+  payload: error,
+});
+
+
+
+export const getUserOrders = () => dispatch => {
+  const token = localStorage.getItem('accessToken');
+  console.log('Token:', token);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    withCredentials: true
+  };
+
+  return axios.get('/v1/users/orders', config)
+  .then(response => {
+    if (response.data.code === 0) {
+      const ordersData = response.data.data || []; // 데이터가 없을 경우 빈 배열 할당
+      dispatch(getUserOrdersSuccess(ordersData));
+      console.log(ordersData);
+    } else {
+      dispatch(getUserOrdersFailure(response.data.message));
+      console.log(response.data.message);
+    }
+  })
+
+    .catch(error => {
+      dispatch(getUserOrdersFailure(error.message));
+      console.log(error.message);
+    });
+};
+
 

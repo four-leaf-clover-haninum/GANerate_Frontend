@@ -59,30 +59,6 @@ function PaymentPage(props) {
       });
   }, [dispatch, productId]);
 
-  const verifyAndProcessPayment = (response) => {
-    const paymentData = {
-      amount: response.amount,
-      imp_uid: response.imp_uid,
-      merchant_uid: response.merchantUid
-    };
-  
-    verifyPayment(paymentData)
-      .then(result => {
-        if (result.success) {
-          console.log('결제 검증 및 처리 성공', result);
-          // 추가적인 로직 처리
-        } else {
-          console.error('결제 검증 및 처리 실패', result);
-        }
-      })
-      .catch(error => {
-        console.error('결제 검증 및 처리 실패', error);
-      });
-  };
-  
-  
-
-
 const requestPay = () => {
   if (!data) return;  // 상품 데이터가 없는 경우 리턴
 
@@ -105,18 +81,10 @@ const requestPay = () => {
       buyer_tel: null,
       buyer_addr: null,
       buyer_postcode: null
-    }, 
-    
-    response => {
+    }, response => {
       if (response.success) {
-
-        verifyAndProcessPayment(response);
-
+        verifyAndProcessPayment(response, productId);
         console.log('결제 성공', response);
-       // alert('결제 성공');
-
-       //  window.location.href = '/v1/verify';
-
       } else {
         console.error('결제 실패', response);
       }
@@ -125,6 +93,28 @@ const requestPay = () => {
 
 
 
+
+  const verifyAndProcessPayment = (response, productId) => {
+    const paymentDataMap = new Map([
+      ['amount', `${response.paid_amount}`],
+      ['dataProductId', `${productId}`],
+      ['imp_uid', `${response.imp_uid}`],
+    ]);
+
+    verifyPayment(paymentDataMap)
+      .then(result => {
+        if (result.success) {
+          console.log('결제 검증 및 처리 성공', result);
+          // 추가적인 로직 처리
+        } else {
+          console.error('결제 검증 및 처리 실패', result);
+        }
+      })
+      .catch(error => {
+       // console.error('결제 검증 및 처리 실패', error);
+      });
+  };
+  
 
     return (
 
