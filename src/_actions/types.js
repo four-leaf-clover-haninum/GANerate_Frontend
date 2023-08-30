@@ -16,4 +16,8 @@ export const PAYMENT_USER = 'payment_user';
 export const PAYMENT_SUCCESS = 'payment_success';
 export const PAYMENT_FAILURE = 'payment_failure';
 export const GET_PRODUCT_DETAIL = 'get_product_detail';
+export const FETCH_PRODUCTS_SUCCESS = 'fetch_products_success';
+export const GET_USER_POINTS_SUCCESS = 'get_user_points_success';
+export const GET_USER_HEARTS_SUCCESS = 'get_user_heart_success';
+export const GET_USER_ORDERS_SUCCESS = 'get_user_orders_success';
 

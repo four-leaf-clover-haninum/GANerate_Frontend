@@ -13,14 +13,21 @@ import {
   ON_SUCCESS_BUY,
   SET_PRODUCTS,
   PAYMENT_SUCCESS,
-  PAYMENT_FAILURE
+  PAYMENT_FAILURE,
+  FETCH_PRODUCTS_SUCCESS,
+  GET_USER_POINTS_SUCCESS,
+  GET_USER_HEARTS_SUCCESS,
+  GET_USER_ORDERS_SUCCESS
+
+
 
 } from '../_actions/types';
 
 
 const initialState = {
     emailFailure: null,
-    emailSuccess: null
+    emailSuccess: null,
+    userOrders: []
   };
 
 
@@ -65,7 +72,27 @@ const initialState = {
     case SET_PRODUCTS:
         return { ...state, products: action.payload };
 
+        case FETCH_PRODUCTS_SUCCESS:
+            return { ...state, success: true, error: null };
+
+    case GET_USER_POINTS_SUCCESS:
+      return {
+        ...state,
+        userPoints: action.payload,
+      };
+    case GET_USER_HEARTS_SUCCESS:
+      return {
+        ...state,
+        userHearts: action.payload,
+      };
+    case GET_USER_ORDERS_SUCCESS:
+      return {
+        ...state,
+        userOrders: action.payload,
+      };
+
       default:
           return state;
-  }
+  };
+  
   }

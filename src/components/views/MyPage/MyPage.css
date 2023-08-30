@@ -1,6 +1,45 @@
 /* MyPage.css */
 @import url('https://fonts.googleapis.com/css?family=Roboto:300');
 
+
+.left-sidebar {
+  width: 180px; /* 원하는 가로 너비로 조정하세요 */
+  background-color: #f4f4f4;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  overflow-y: auto; /* 필요한 경우 스크롤 가능하도록 설정 */
+}
+
+.sidebar-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* 사이드바 목록 스타일 */
+.sidebar-list li {
+  margin-bottom: 10px;
+  padding: 3px;
+}
+
+.sidebar-list a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  padding: 5px;
+  display: inline-block;
+}
+
+
+.sidebar-list a:hover {
+  color: #BB2649; /* Change to your desired hover color */
+}
+
+
+
+
 .centered-showcase {
     display: flex;
     justify-content: center;

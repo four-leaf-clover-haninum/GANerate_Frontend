@@ -20,7 +20,11 @@ import {
     PAYMENT_USER,
     PAYMENT_SUCCESS,
     PAYMENT_FAILURE,
-    GET_PRODUCT_DETAIL
+    GET_PRODUCT_DETAIL,
+    FETCH_PRODUCTS_SUCCESS,
+    GET_USER_POINTS_SUCCESS,
+  GET_USER_HEARTS_SUCCESS,
+  GET_USER_ORDERS_SUCCESS
     
 } from './types';
 
@@ -37,9 +41,6 @@ export const fetchProducts = (page) => {
     },
     withCredentials: true // withCredentials 옵션 추가
   };
-
-  console.log(config.headers.Authorization)
-
   return (dispatch) => {
     return axios.get(`/v1/data-products?page=${page}`, config)
       .then(response => {
@@ -364,9 +365,6 @@ export function getCartItems(cartItems, userCart) {
 
   const request = axios.get(`/api/product/products_by_id?id=${cartItems}&type=array`)
       .then(response => {
-          // CartItem들에 해당하는 정보들을  
-          // Product Collection에서 가져온후에 
-          // Quantity 정보를 넣어 준다.
           userCart.forEach(cartItem => {
               response.data.forEach((productDetail, index) => {
                   if (cartItem.id === productDetail._id) {
@@ -462,7 +460,125 @@ export const verifyPayment = async (data) => {
 
 
 
+// user_actions.js
+
+export const fetchProductsByCategory = (categoryIds, page, token) => {
+  return (dispatch) => { // 이 부분이 수정되었습니다.
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    };
+
+    // 여러 카테고리 조회 시 쿼리스트링으로 전달
+    const queryString = categoryIds.map(categoryId => `categoryId=${categoryId}`).join('&');
+
+    axios
+      .get(`/v1/data-products/category?${queryString}&page=${page}`, config)
+      .then((response) => {
+        dispatch({
+          type: 'FETCH_PRODUCTS_SUCCESS',
+          payload: response.data.content,
+        });
+      })
+      .catch((error) => {
+        // 에러를 별도의 액션으로 전달하여 처리
+        dispatch({
+          type: 'FETCH_PRODUCTS_FAILURE',
+          payload: error,
+        });
+      });
+  };
+};
 
 
 
-  
+
+
+export const downloadOrderFile = (token, orderId) => {
+  return axios.post(`/v1/users/orders/${orderId}`, null, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    withCredentials: true,
+    responseType: 'blob'
+  })
+  .then(response => {
+    if (response.data.code === 0) {
+      return response; // 성공 시 응답 전체 반환
+    } else {
+      throw new Error(response.data.message); // 에러 처리
+    }
+  })
+  .catch(error => {
+    throw error; // 에러를 다시 throw하여 컴포넌트에서 처리
+  });
+};
+
+export const getUserHearts = (token) => {
+  return axios.get('/v1/users/hearts', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    withCredentials: true
+  })
+  .then(response => {
+    if (response.data.code === 0) {
+      return {
+        type: GET_USER_HEARTS_SUCCESS,
+        payload: response.data.data
+      };
+    } else {
+      throw new Error(response.data.message);
+    }
+  })
+  .catch(error => {
+    throw error;
+  });
+};
+
+export const getUserOrders = (token) => {
+  return axios.get('/v1/users/orders', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    withCredentials: true
+  })
+  .then(response => {
+    if (response.data.code === 0) {
+      return {
+        type: GET_USER_ORDERS_SUCCESS,
+        payload: response.data.data
+      };
+    } else {
+      throw new Error(response.data.message);
+    }
+  })
+  .catch(error => {
+    throw error;
+  });
+};
+
+export const getUserPoints = (token) => {
+  return axios.get('/v1/users/points', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    withCredentials: true
+  })
+  .then(response => {
+    if (response.data.code === 0) {
+      return {
+        type: GET_USER_POINTS_SUCCESS,
+        payload: response.data.data.point
+      };
+    } else {
+      throw new Error(response.data.message);
+    }
+  })
+  .catch(error => {
+    throw error;
+  });
+};
+

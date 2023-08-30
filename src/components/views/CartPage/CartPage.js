@@ -7,8 +7,8 @@ import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaUserCircle, FaDownload } from 'react-icons/fa';
 import './CartPage.css';
-import { searchProducts, fetchProducts } from '../../../_actions/user_action';
-import { useDispatch } from 'react-redux';
+import { searchProducts, fetchProducts, fetchProductsByCategory } from '../../../_actions/user_action';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import '../DeteilProductPage/DetailProductPage';
 
@@ -16,6 +16,7 @@ import '../DeteilProductPage/DetailProductPage';
 
 function CartPage() {
   const dispatch = useDispatch(); // Initialize useDispatch hook
+  const products = useSelector(state => state.user.products);
   const [Products, setProducts] = useState([]);
     const [Category, setCategory] = useState([]);
     const [PriceRange, setPriceRange] = useState([]);
@@ -58,11 +59,21 @@ function CartPage() {
     };
 
     const handleSearch = () => {
-        // 검색 버튼 클릭 시 검색 결과 가져오는 액션 디스패치
-        setCurrentPage(0); // 검색 시 페이지 초기화
-        fetchProductData(0); // 검색된 상품 데이터 불러오기
-        searchProducts(Category, PriceRange, SearchQuery);
-      };
+      // 검색 버튼 클릭 시 검색 결과 가져오는 액션 디스패치
+      setCurrentPage(0); // 검색 시 페이지 초기화
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        dispatch(fetchProductsByCategory("categoryId", 0, token))
+          .catch((error) => {
+            console.error('상품 데이터를 불러오는 중 에러 발생', error);
+          });
+      } else {
+        console.error("Token is not available in local storage");
+      }
+    };
+
+
+
 
     //   const handlePriceRangeChange = (checkedValues) => {
     //     // "직접입력" 체크 시 해당 값만 선택
@@ -207,11 +218,9 @@ function CartPage() {
 
 
             {/* 최종 검색 */}
-             <Button className="search-button" onClick={handleSearch} style={{ display: 'block',
-             margin: '20px auto',
-             fontSize: '17px' }}>
-                검색
-             </Button>
+            <Button className="search-button" onClick={handleSearch} style={{ display: 'block', margin: '20px auto', fontSize: '17px' }}>
+            검색
+          </Button>
              </div>
 
              {fetchProducts()} 
