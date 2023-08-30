@@ -105,9 +105,12 @@ const requestPay = () => {
       .then(result => {
         if (result.success) {
           console.log('결제 검증 및 처리 성공', result);
+
+          alert('결제 검증 및 처리 성공')
           // 추가적인 로직 처리
         } else {
           console.error('결제 검증 및 처리 실패', result);
+          window.location.href = '/Order';
         }
       })
       .catch(error => {

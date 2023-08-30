@@ -5,6 +5,7 @@ import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import Axios from 'axios';
 import { FaUserCircle, FaDownload } from 'react-icons/fa';
 import './UploadProductPage.css'
+import {createDataProduct} from '../../../_actions/user_action'
 
 const { TextArea } = Input;
 
@@ -75,35 +76,40 @@ function UploadProductPage(props) {
     };
 
 
-    const submitHandler = (event) => {
+    const submitHandler = async (event) => {
         event.preventDefault();
 
         if (!Title || !Description || !Price || !Continent || Images.length === 0) {
-            return alert(" 모든 값을 넣어주셔야 합니다.")
+            return alert("모든 값을 넣어주셔야 합니다.");
         }
-        
-        //서버에 채운 값들을 request로 보낸다.
 
         const body = {
-            //로그인 된 사람의 ID 
             writer: props.user.userData._id,
             title: Title,
             description: Description,
             price: Price,
             images: Images,
             continents: Continent
-        }
+        };
 
-        Axios.post('/v1/data-products/sale/image', body)
-            .then(response => {
-                if (response.data.success) {
-                    alert('상품 업로드에 성공 했습니다.')
-                    props.history.push('/')
-                } else {
-                    alert('상품 업로드에 실패 했습니다.')
-                }
-            })
-    }
+        try {
+            const token = localStorage.getItem('accessToken'); // Replace with your actual authentication token
+            const response = await createDataProduct(body, token);
+
+            if (response.code === 0) {
+                // Success handling
+                console.log("Data created successfully:", response.data);
+                // You can add further UI actions or redirects here
+            } else {
+                // Error handling
+                console.error("Data creation failed:", response.message);
+                // You can show an error message to the user
+            }
+        } catch (error) {
+            console.error("API request failed:", error);
+            // Handle API request error, show error message to the user, etc.
+        }
+    };
 
 
     return (

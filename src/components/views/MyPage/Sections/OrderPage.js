@@ -40,8 +40,9 @@ function OrderPage(props) {
         console.error('Error fetching user hearts:', error.message);
       });
 
-    dispatch(getUserOrders(token))
+      dispatch(getUserOrders(token))
       .then(data => {
+        console.log('Data from getUserOrders:', data); // 확인해보기
         setUserOrders(data);
       })
       .catch(error => {
@@ -49,20 +50,23 @@ function OrderPage(props) {
       });
   }, [dispatch, token]);
 
+
+
+
+
   const handleDownloadOrder = (orderId) => {
     dispatch(downloadOrderFile(token, orderId))
       .then(response => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
-        console.log(response.data)
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', `order-${orderId}.pdf`);
         document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link); // 클릭 후에는 링크 삭제
       })
       .catch(error => {
-        console.log(error.message)
-        console.error('Error downloading order file:', error.message);
+       // console.error('Error downloading order file:', error.message);
       });
   };
 
@@ -169,34 +173,26 @@ function OrderPage(props) {
 
 
 
-      <div
-      style={{
-        backgroundColor: 'white',
-        padding: '20px',
-        borderRadius: '10px',
-        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-        marginTop: '70px',
-        marginLeft: '134px',
-        maxWidth: '1000px'
-      }}
-    >
-      <h3 style={{ marginBottom: '20px' }}>주문 내역</h3>
-      {Array.isArray(userOrders) && userOrders.length > 0 ? (
-        <ul>
-          {userOrders.map(order => (
-            <li key={order.orderId}>
-              <p>주문 상품 ID: {order.dataProductId || "ID 정보 없음"}</p>
-              <p>상품명: {order.title || "상품명 정보 없음"}</p>
-              <p>가격: {order.price || "가격 정보 없음"}</p>
-              <Button onClick={() => handleDownloadOrder(order.dataProductId)}>
-                <FaDownload style={{ marginRight: '5px' }} /> 다운로드
-              </Button>
-            </li>
-          ))}
-        </ul>
-      ) : (
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', marginTop: '70px', marginLeft: '134px', maxWidth: '1000px' }}>
+          <h3 style={{ marginBottom: '20px' }}>주문 내역</h3>
+          {Array.isArray(userOrders) && userOrders.length > 0 ? (
+            <ul>
+              {userOrders.map(order => (
+                <li key={order.dataProductId}>
+                  <p>주문 상품 ID: {order.dataProductId || "ID 정보 없음"}</p>
+                  <p>상품명: {order.title || "상품명 정보 없음"}</p>
+                  <p>가격: {order.price || "가격 정보 없음"}</p>
+                  <img src={order.imageUrl} alt={order.title} style={{ maxWidth: '200px', maxHeight: '200px' }} />
+                  <Button onClick={() => handleDownloadOrder(order.orderId)}> {/* orderId로 수정 */}
+                  <FaDownload style={{ marginRight: '5px' }} /> 다운로드
+                </Button>
+                </li>
+              ))}
+            </ul>
+          ) : (
         <p>주문한 상품이 없습니다.</p>
       )}
+    
     </div>
     
     

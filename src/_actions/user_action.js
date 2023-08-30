@@ -1,6 +1,9 @@
 
 import axios from '../components/axiosConfig';
 import setAuthorizationToken from '../components/utils/setAuthorizationToken';
+import JSZip from 'jszip';
+import FileSaver from 'file-saver';
+
 
 
 import {
@@ -496,28 +499,6 @@ export const fetchProductsByCategory = (categoryIds, page, token) => {
 
 
 
-export const downloadOrderFile = (token, orderId) => {
-  return axios.post(`/v1/users/orders/${orderId}`, null, {
-    headers: {
-      'Authorization': `Bearer ${token}`
-    },
-    withCredentials: true,
-    responseType: 'blob'
-  })
-  .then(response => {
-    if (response.data.code === 0) {
-      return response; // 성공 시 응답 전체 반환
-    } else {
-      console.log(response.data.message);
-      throw new Error(response.data.message); // 에러 처리
-    }
-  })
-  .catch(error => {
-    console.log(error);
-    throw error; // 에러를 다시 throw하여 컴포넌트에서 처리
-  });
-};
-
 export const getUserHearts = (token) => {
   return axios.get('/v1/users/hearts', {
     headers: {
@@ -587,21 +568,94 @@ export const getUserOrders = () => dispatch => {
   };
 
   return axios.get('/v1/users/orders', config)
-  .then(response => {
-    if (response.data.code === 0) {
-      const ordersData = response.data.data || []; // 데이터가 없을 경우 빈 배열 할당
-      dispatch(getUserOrdersSuccess(ordersData));
-      console.log(ordersData);
-    } else {
-      dispatch(getUserOrdersFailure(response.data.message));
-      console.log(response.data.message);
-    }
-  })
+    .then(response => {
+      if (response.data.code === 0) {
+        const ordersData = response.data.data || []; // 데이터가 없을 경우 빈 배열 할당
+        dispatch(getUserOrdersSuccess(ordersData));
+        console.log(ordersData);
 
+        // title과 price 출력
+        ordersData.forEach(order => {
+          console.log('Title:', order.title);
+          console.log('Price:', order.price);
+        });
+
+        return ordersData; // ordersData 반환
+      } else {
+        dispatch(getUserOrdersFailure(response.data.message));
+        console.log(response.data.message);
+      }
+    })
     .catch(error => {
       dispatch(getUserOrdersFailure(error.message));
       console.log(error.message);
     });
 };
 
+
+
+
+
+export const createDataProduct = async (data, token) => {
+  try {
+      const config = {
+          headers: {
+              Authorization: `Bearer ${token}`
+          },
+          withCredentials: true
+      };
+
+      const response = await axios.post(`/v1/data-products`, data, config);
+
+      if (response.data.code === 0) {
+          // Success handling
+          console.log("Data created successfully:", response.data);
+          // You can add further UI actions or redirects here
+          return response.data; // Return the successful response for potential further processing
+      } else {
+          // Error handling
+          console.error("Data creation failed:", response.data.message);
+          throw new Error(response.data.message); // Throw an error for the caller to handle
+      }
+  } catch (error) {
+      console.error("API request failed:", error);
+      throw error; // Re-throw the error for the caller to handle
+  }
+};
+
+
+
+
+export const downloadOrderFile = (token, orderId) => {
+  return axios.post(`/v1/users/orders/${orderId}`, null, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    withCredentials: true,
+    responseType: 'arraybuffer' // 요청에 대한 응답을 배열 버퍼로 받음
+  })
+  .then(response => {
+    if (response.data.code === 0) {
+      const zip = new JSZip();
+      const fileName = `order-${orderId}.zip`;
+
+      // Add a file to the zip with the received data
+      zip.file(fileName, response.data, { binary: true });
+
+      // Generate the zip content
+      return zip.generateAsync({ type: 'blob' });
+    } else {
+      console.log(response.data.message);
+      throw new Error(response.data.message); // 에러 처리
+    }
+  })
+  .then(zipBlob => {
+    // Save the generated zip blob to the user's computer
+    FileSaver.saveAs(zipBlob, `order-${orderId}.zip`);
+  })
+  .catch(error => {
+    console.log(error);
+    throw error; // 에러를 다시 throw하여 컴포넌트에서 처리
+  });
+};
 
