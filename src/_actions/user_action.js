@@ -184,7 +184,6 @@ export const logoutUser = () => {
 
 
 
-
 export function getUserProfile(userId) {
     return async (dispatch) => {
       try {
@@ -227,7 +226,7 @@ export function getUserProfile(userId) {
         if (response.data.code === 0) {
             const responseData = response.data;
             console.log(responseData);
-            alert('가입이 정상적으로 완료되었습니다.');
+            alert('가입이 정상적으로 완료되었어요.');
             dispatch({
                 type: REGISTER_USER,
                 payload: responseData
