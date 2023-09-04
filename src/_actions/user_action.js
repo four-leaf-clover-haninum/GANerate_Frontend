@@ -555,7 +555,8 @@ export const getUserOrdersFailure = error => ({
 
 
 
-export const getUserOrders = () => dispatch => {
+// your action file (e.g., user_action.js)
+export const getUserOrders = () => async (dispatch) => {
   const token = localStorage.getItem('accessToken');
   console.log('Token:', token);
 
@@ -566,30 +567,30 @@ export const getUserOrders = () => dispatch => {
     withCredentials: true
   };
 
-  return axios.get('/v1/users/orders', config)
-    .then(response => {
-      if (response.data.code === 0) {
-        const ordersData = response.data.data || []; // 데이터가 없을 경우 빈 배열 할당
-        dispatch(getUserOrdersSuccess(ordersData));
-        console.log(ordersData);
+  try {
+    const response = await axios.get('/v1/users/orders', config);
 
-        // title과 price 출력
-        ordersData.forEach(order => {
-          console.log('Title:', order.title);
-          console.log('Price:', order.price);
-        });
+    if (response.data.code === 0) {
+      const ordersData = response.data.data || [];
+      dispatch(getUserOrdersSuccess(ordersData));
 
-        return ordersData; // ordersData 반환
-      } else {
-        dispatch(getUserOrdersFailure(response.data.message));
-        console.log(response.data.message);
-      }
-    })
-    .catch(error => {
-      dispatch(getUserOrdersFailure(error.message));
-      console.log(error.message);
-    });
+      // title과 price 출력
+      ordersData.forEach(order => {
+        console.log('Title:', order.title);
+        console.log('Price:', order.price);
+      });
+
+      return ordersData;
+    } else {
+      dispatch(getUserOrdersFailure(response.data.message));
+      throw new Error(response.data.message);
+    }
+  } catch (error) {
+    dispatch(getUserOrdersFailure(error.message));
+    throw error;
+  }
 };
+
 
 
 
@@ -624,37 +625,50 @@ export const createDataProduct = async (data, token) => {
 
 
 
-
 export const downloadOrderFile = (token, orderId) => {
   return axios.post(`/v1/users/orders/${orderId}`, null, {
     headers: {
       'Authorization': `Bearer ${token}`
     },
     withCredentials: true,
-    responseType: 'arraybuffer' // 요청에 대한 응답을 배열 버퍼로 받음
+    responseType: 'json'
   })
   .then(response => {
     if (response.data.code === 0) {
+
+      console.log(response.data)
+      console.log('상품 다운로드에 성공했습니다.')
+
       const zip = new JSZip();
-      const fileName = `order-${orderId}.zip`;
+      
+      // Promise를 이용해 모든 파일을 순차적으로 다운로드
+      const promises = response.data.data.map((file) => {
+        
+        // fetch API를 이용해 blob 객체를 가져옴
+        return fetch(file.s3Url)
+          .then(response => response.blob())
+          .then(blob => {
+            zip.file(file.originalZipName, blob, { binary: true });
+          })
+          .catch(error => {
+            console.error('Error fetching S3 file:', error);
+            throw error;
+          });
+      });
 
-      // Add a file to the zip with the received data
-      zip.file(fileName, response.data, { binary: true });
-
-      // Generate the zip content
-      return zip.generateAsync({ type: 'blob' });
+      // 모든 프로미스가 완료될 때까지 대기
+      return Promise.all(promises).then(() => zip.generateAsync({ type: 'blob' }));
+      
     } else {
       console.log(response.data.message);
-      throw new Error(response.data.message); // 에러 처리
+      throw new Error(response.data.message);
     }
   })
   .then(zipBlob => {
-    // Save the generated zip blob to the user's computer
     FileSaver.saveAs(zipBlob, `order-${orderId}.zip`);
   })
   .catch(error => {
     console.log(error);
-    throw error; // 에러를 다시 throw하여 컴포넌트에서 처리
+    throw error;
   });
 };
-

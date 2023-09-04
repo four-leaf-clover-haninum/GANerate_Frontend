@@ -51,6 +51,24 @@ function OrderPage(props) {
   }, [dispatch, token]);
 
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const pointsData = await dispatch(getUserPoints(token));
+        setUserPoints(pointsData);
+  
+        const heartsData = await dispatch(getUserHearts(token));
+        setUserHearts(heartsData);
+  
+        const ordersData = await dispatch(getUserOrders(token));
+        setUserOrders(ordersData);
+      } catch (error) {
+        console.error('Error fetching user data:', error.message);
+      }
+    };
+  
+    fetchData();
+  }, [dispatch, token]);
 
 
 
@@ -177,8 +195,8 @@ function OrderPage(props) {
           <h3 style={{ marginBottom: '20px' }}>주문 내역</h3>
           {Array.isArray(userOrders) && userOrders.length > 0 ? (
             <ul>
-              {userOrders.map(order => (
-                <li key={order.dataProductId}>
+              {userOrders.map((order, index) => ( // index를 추가하여 key 값으로 사용
+                <li key={index}>
                   <p>주문 상품 ID: {order.dataProductId || "ID 정보 없음"}</p>
                   <p>상품명: {order.title || "상품명 정보 없음"}</p>
                   <p>가격: {order.price || "가격 정보 없음"}</p>
