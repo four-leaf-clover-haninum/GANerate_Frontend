@@ -623,50 +623,137 @@ export const generateProduct = (productInfo) => {
 
 
 
+
 // 서버에서 상품 데이터 가져오는 액션
-export const fetchProducts = (page, categoryId) => {
+export const fetchProducts = (page) => {
+  // const token = `${localStorage.getItem('accessToken')}`; // setAuthorizationToken() 함수를 호출해야 함
   const token = localStorage.getItem('accessToken');
   const config = {
     headers: {
       Authorization: `Bearer ${token}`
     },
-    withCredentials: true
+    withCredentials: true // withCredentials 옵션 추가
   };
   return (dispatch) => {
-    return axios.get(`/v1/data-products?categoryId=${categoryId}&page=${page}`, config)
+    return axios.get(`/v1/data-products?page=${page}`, config)
       .then(response => {
         dispatch({
           type: SET_PRODUCTS,
           payload: response.data,
+          
         });
-        return response.data;
+        console.log(response.data)
+        return response.data; // Return the data for chaining promises
+        
       })
       .catch(err => {
         console.error('통신코드에서 상품데이터를 가져오는 에러' + err);
-        throw err;
+        throw err; // Rethrow the error to be caught by the caller
+        
       });
   };
 };
 
 
+
+
+
 // 검색 결과 가져오는 액션
-export const searchProducts = (categoryId, page = 0) =>  {
-  const token = localStorage.getItem('accessToken');
+export const searchProducts = (category, priceRange, searchQuery) => {
+  const token = setAuthorizationToken(); 
   return (dispatch) => {
-    axios.get(`/v1/data-products/category/${categoryId}?page=${page}`, {
+    axios.get(`/v1/data-products/category/2?page=1`, {
       headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ` + token
       },
       withCredentials: true
     })
-    .then(response => {
-      dispatch(setProducts(response.data));
-    })
-    .catch(err => {
-      console.error('Error occurred while fetching search results:', err);
-    });
+      .then(response => {
+        dispatch(setProducts(response.data));
+      })
+      .catch(error => {
+        console.error('검색 결과 가져오기 토큰' + token);
+      });
   };
 };
+
+
+export const fetchProductsByCategory = (categoryIds, page, token) => {
+  return (dispatch) => { // 이 부분이 수정되었습니다.
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    };
+
+    // 여러 카테고리 조회 시 쿼리스트링으로 전달
+    const queryString = categoryIds.map(categoryId => `categoryId=${categoryId}`).join('&');
+
+    axios
+      .get(`/v1/data-products/category?${queryString}&page=${page}`, config)
+      .then((response) => {
+        dispatch({
+          type: 'FETCH_PRODUCTS_SUCCESS',
+          payload: response.data.content,
+        });
+      })
+      .catch((error) => {
+        // 에러를 별도의 액션으로 전달하여 처리
+        dispatch({
+          type: 'FETCH_PRODUCTS_FAILURE',
+          payload: error,
+        });
+      });
+  };
+};
+// // 서버에서 상품 데이터 가져오는 액션
+// export const fetchProducts = (page, categoryId) => {
+//   const token = localStorage.getItem('accessToken');
+//   const config = {
+//     headers: {
+//       Authorization: `Bearer ${token}`
+//     },
+//     withCredentials: true
+//   };
+//   return (dispatch) => {
+//     return axios.get(`/v1/data-products?categoryId=${categoryId}&page=${page}`, config)
+//       .then(response => {
+//         dispatch({
+//           type: SET_PRODUCTS,
+//           payload: response.data,
+//         });
+//         return response.data;
+//       })
+//       .catch(err => {
+//         console.error('통신코드에서 상품데이터를 가져오는 에러' + err);
+//         throw err;
+//       });
+//   };
+// };
+
+
+
+
+// // 검색 결과 가져오는 액션
+// export const searchProducts = (categoryId, page = 0) =>  {
+//   const token = localStorage.getItem('accessToken');
+//   return (dispatch) => {
+//     axios.get(`/v1/data-products/category/${categoryId}?page=${page}`, {
+//       headers: {
+//         'Authorization': `Bearer ${token}`
+//       },
+//       withCredentials: true
+//     })
+
+//     .then(response => {
+//       dispatch(setProducts(response.data));
+//     })
+//     .catch(err => {
+//       console.error('Error occurred while fetching search results:', err);
+//     });
+//   };
+// };
 
 
 
@@ -713,6 +800,8 @@ export const productbox = async (token, title, description, dataSize, categoryId
     const response = await axios.post('/v1/data-products/before', requestBody, config);
     if (response.data.code === 0) {
       console.log("상품이 정상적으로 업로드 되었습니다.")
+      alert(("상품이 정상적으로 업로드 되었습니다."))
+      alert(("결제버튼을 클릭해주세요."))
       return response.data;
     } else {
       console.error("Server responded with an issue:", response.data.message);

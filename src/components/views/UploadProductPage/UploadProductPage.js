@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,  useEffect} from 'react'
 import { Typography, Button, Form, Input,Checkbox } from 'antd';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle} from 'react-icons/fa';
@@ -6,6 +6,9 @@ import './UploadProductPage.css'
 import {createDataProduct, productbox} from '../../../_actions/user_action'
 
 function UploadProductPage(props) {
+
+const [isUploadSuccessful, setIsUploadSuccessful] = useState(false);
+const [data, setData] = useState(null); // 초기에는 null로 설정
 
 const { TextArea } = Input;
 
@@ -32,6 +35,45 @@ const categoryIds = [
     { key: 13, value: "기타" }
 ];
 
+
+useEffect(() => {
+    const savedData = localStorage.getItem('uploadedData');
+    if (savedData) {
+      setData(JSON.parse(savedData));
+    }
+  }, []);
+
+
+const handlePayment = () => {
+    if (!data) return;  // 상품 데이터가 없는 경우 리턴
+ 
+    const timestamp = Date.now();
+    const milliseconds = timestamp % 1000; // 밀리초 부분 추출
+    const uniqueId = `order_${timestamp}_${milliseconds}`; // 타임스탬프와 밀리초를 결합
+  
+    const IMP = window.IMP;
+    IMP.init("imp31818680");
+    IMP.request_pay({
+      pg: "html5_inicis",
+      pay_method: "card",
+      merchant_uid: uniqueId, // uniqueId를 사용
+      name: data.title,  // 상품 이름
+      amount: data.price * 1/100,  // 상품 가격을 사용
+      buyer_email: data.userEmail, // 유저 이메일 정보 사용
+      buyer_name: data.userName, // 유저 이름 정보 사용
+      buyer_tel: null, // 유저 전화번호 정보 (필요시 추가)
+      buyer_addr: null, // 유저 주소 정보 (필요시 추가)
+      buyer_postcode: null // 유저 우편번호 정보 (필요시 추가)
+    }, response => {
+      if (response.success) {
+  //      verifyAndProcessPayment(response, data.dataProductId); // dataProductId 사용
+        console.log('결제 성공', response);
+      } else {
+        console.error('결제 실패', response);
+      }
+    });
+  };
+  
 
 
     const [Title, setTitle] = useState('');
@@ -67,21 +109,25 @@ const categoryIds = [
         ) {
           return alert('모든 값을 넣어주셔야 합니다.');
         }
-    
         try {
-          const token = localStorage.getItem('accessToken');
-          const response = await productbox(token, Title, Description, Datasize, Category);
-          if (response.code === 0) {
-            console.log('Data created successfully:', response.data);
-            // 여기에서 원하는 작업을 수행할 수 있습니다.
-          } else {
-            console.error('Data creation failed:', response.message);
+            const token = localStorage.getItem('accessToken');
+            const response = await productbox(token, Title, Description, Datasize, Category);
+            if (response.code === 0) {
+              console.log('Data created successfully:', response.data);
+      
+              // 업로드 성공 시 데이터 저장
+              localStorage.setItem('uploadedData', JSON.stringify(response.data));
+      
+              setIsUploadSuccessful(true);
+              // 여기에서 원하는 작업을 수행할 수 있습니다.
+            } else {
+              console.error('Data creation failed:', response.message);
+            }
+          } catch (error) {
+            console.error('API request failed:', error);
           }
-        } catch (error) {
-          console.error('API request failed:', error);
-        }
-      };
-    
+        };
+      
 
 
     return (
@@ -195,12 +241,20 @@ const categoryIds = [
 </div>
 <br />
                 <br />
-                 <div className="button-container">
-                 <button className="data-create-button" type="submit" onClick={submitHandler}>
-                 데이터 생성
+                <div className="button-container">
+                {!isUploadSuccessful && (
+                  <button className="data-create-button" type="submit" onClick={submitHandler}>
+                    데이터 생성
                   </button>
-    
-  </div>
+                )}
+                {isUploadSuccessful && (
+                  <button className="payment-button" onClick={handlePayment}>
+                    결제하기
+                  </button>
+                )}
+              </div>
+              
+
             </Form>
 
 

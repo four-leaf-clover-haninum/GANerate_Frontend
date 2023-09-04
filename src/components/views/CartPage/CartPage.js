@@ -29,7 +29,7 @@ function CartPage() {
     }, [currentPage]);
     
     const fetchProductData = (page) => {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem('accessToken');
       if (token) {
         dispatch(fetchProducts(page, token))
           .then((response) => {
@@ -63,7 +63,7 @@ function CartPage() {
       setCurrentPage(0); // 검색 시 페이지 초기화
       const token = localStorage.getItem("accessToken");
       if (token) {
-        dispatch(searchProducts("categoryId", 0, token))
+        dispatch(fetchProductsByCategory("categoryId", 0, token))
           .catch((error) => {
             console.error('상품 데이터를 불러오는 중 에러 발생', error);
           });
@@ -219,9 +219,8 @@ function CartPage() {
 
             {/* 최종 검색 */}
             <Button className="search-button" onClick={handleSearch} style={{ display: 'block', margin: '20px auto', fontSize: '17px' }}>
-  검색
-</Button>
-
+            검색
+          </Button>
              </div>
 
              {fetchProducts()} 
