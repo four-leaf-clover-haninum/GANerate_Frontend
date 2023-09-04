@@ -93,7 +93,6 @@ const requestPay = () => {
 
 
 
-
   const verifyAndProcessPayment = (response, productId) => {
     const paymentDataMap = new Map([
       ['amount', `${response.paid_amount}`],

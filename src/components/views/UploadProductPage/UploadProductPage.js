@@ -248,7 +248,7 @@ const handlePayment = () => {
                   </button>
                 )}
                 {isUploadSuccessful && (
-                  <button className="payment-button" onClick={handlePayment}>
+                  <button className="payment-btn" onClick={handlePayment}>
                     결제하기
                   </button>
                 )}
