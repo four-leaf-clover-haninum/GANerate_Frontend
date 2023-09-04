@@ -4,6 +4,9 @@ import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle} from 'react-icons/fa';
 import './UploadProductPage.css'
 import {createDataProduct, productbox} from '../../../_actions/user_action'
+
+function UploadProductPage(props) {
+
 const { TextArea } = Input;
 
 const DataSizeOptions = [
@@ -26,47 +29,59 @@ const categoryIds = [
     { key: 10, value: "사물/제품" },
     { key: 11, value: "교통/물류" },
     { key: 12, value: "스포츠" },
-    { key: 13, value: "기타" },
-    // 다른 카테고리 항목 추가
+    { key: 13, value: "기타" }
 ];
 
-function UploadProductPage(props) {
-    const [SelectedFiles, setSelectedFiles] = useState(null);
+
+
     const [Title, setTitle] = useState('');
     const [Description, setDescription] = useState('');
-    const [Datasize, setDatasize] = useState([]); // 체크박스 선택
-    const [Category, setCategory] = useState([]); // 체크박스 선택
+    const [Datasize, setDatasize] = useState([]);
+    const [Category, setCategory] = useState([]);
+    const [SelectedFiles, setSelectedFiles] = useState(null);
     const [CustomCategory, setCustomCategory] = useState("");
+    const onFileChange = (event) => { setSelectedFiles(event.target.files); };
 
 
-    const onFileChange = (event) => {setSelectedFiles(event.target.files);};
-    const titleChangeHandler = (event) => {setTitle(event.currentTarget.value)}
-    const descriptionChangeHandler = (event) => {setDescription(event.currentTarget.value)}
-    const DatasizeChangeHandler = (checkedValues) => {setDatasize(checkedValues);};
+    const titleChangeHandler = (event) => {
+        setTitle(event.currentTarget.value);
+      };
+      
+      const descriptionChangeHandler = (event) => {
+        setDescription(event.currentTarget.value);
+      };
+      
+      const DatasizeChangeHandler = (checkedValues) => {setDatasize(checkedValues);};
     const categoryChangeHandler = (checkedValues) => {setCategory(checkedValues);};
-    const customCategoryChangeHandler = (event) => {setCustomCategory(event.currentTarget.value);};
+      const customCategoryChangeHandler = (event) => { setCustomCategory(event.currentTarget.value); };
 
-    const submitHandler = async (event) => {event.preventDefault();
-        if (!Title || !Description || !Datasize || !Category || SelectedFiles.length === 0) {
-            return alert("모든 값을 넣어주셔야 합니다.");}
-        const body = {
-            title: Title,
-            description: Description,
-            dataSize : Datasize,
-            categoryIds: Category};
-        try {
-            const token = localStorage.getItem('accessToken'); 
-            const response = await productbox(body, token);
-            if (response.code === 0) {
-                console.log("Data created successfully:", response.data);
-            } else {
-                console.error("Data creation failed:", response.message);
-            }
-        } catch (error) {
-            console.error("API request failed:", error);
+      const submitHandler = async (event) => {
+        event.preventDefault();
+        if (
+          !Title ||
+          !Description ||
+          !Datasize ||
+          !Category ||
+          !SelectedFiles ||
+          SelectedFiles.length === 0
+        ) {
+          return alert('모든 값을 넣어주셔야 합니다.');
         }
-    };
-
+    
+        try {
+          const token = localStorage.getItem('accessToken');
+          const response = await productbox(token, Title, Description, Datasize, Category);
+          if (response.code === 0) {
+            console.log('Data created successfully:', response.data);
+            // 여기에서 원하는 작업을 수행할 수 있습니다.
+          } else {
+            console.error('Data creation failed:', response.message);
+          }
+        } catch (error) {
+          console.error('API request failed:', error);
+        }
+      };
+    
 
 
     return (
@@ -115,7 +130,10 @@ function UploadProductPage(props) {
     <div className="col-lg-12 offset-lg-0">
         <div className="search-form-box my-custom-box p-4 rounded bg-light">
 
-            <Form onSubmit={submitHandler}>
+
+
+
+        <Form onSubmit={submitHandler}>
                 <h5>zip 이미지 파일 업로드</h5>
                 <input 
                 type="file" 
@@ -177,17 +195,12 @@ function UploadProductPage(props) {
 </div>
 <br />
                 <br />
-                <div className="button-container">
-
-
-        <button className="data-create-button" type="submit" onClick={submitHandler}>
-             데이터 생성
-              </button>
-
-              
-
-
-    </div>
+                 <div className="button-container">
+                 <button className="data-create-button" type="submit" onClick={submitHandler}>
+                 데이터 생성
+                  </button>
+    
+  </div>
             </Form>
 
 

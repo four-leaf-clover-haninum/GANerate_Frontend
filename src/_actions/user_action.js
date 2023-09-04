@@ -669,27 +669,58 @@ export const searchProducts = (categoryId, page = 0) =>  {
 };
 
 
+
+
 //productbox로 담고있는 함수 로직
-export const productbox = async (formData, token) => {
+export const productbox = async (token, title, description, dataSize, categoryIds) => {
   const config = {
     headers: {
       'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/x-www-form-urlencoded' // 폼 데이터 전송을 위한 설정
+      'Content-Type': 'application/json;charset=UTF-8',
     },
     withCredentials: true
   };
 
+  const categoryMappings = {
+    "보건/의료": 1,
+    "동물/식물": 2,
+    "사람": 3,
+    "추상" : 4,
+    "패션" : 5,
+    "건물/랜드마크" : 6,
+    "풍경/배경" : 7,
+    "과학, 항공 및 우주" : 8,
+    "경제/비즈니스" : 9,
+    "사물/제품" : 10,
+    "교통/물류"  : 11,
+    "스포츠" : 12,
+    "기타" : 13
+  };
+
+  const categoryIdsArray = categoryIds.map(category => categoryMappings[category]);
+
+  const requestBody = {
+    title: title,
+    description: description,
+    dataSize: parseInt(dataSize),
+    categoryIds: categoryIdsArray
+  };
+
+  console.log(token);
+  console.log(requestBody);
+
   try {
-    const response = await axios.post('/v1/data-products/before', qs.stringify(formData), config); // qs 라이브러리를 사용해서 객체를 쿼리 문자열로 변환
-    if (response.status === 200 && response.data.code === 0) {
+    const response = await axios.post('/v1/data-products/before', requestBody, config);
+    if (response.data.code === 0) {
+      console.log("상품이 정상적으로 업로드 되었습니다.")
       return response.data;
     } else {
       console.error("Server responded with an issue:", response.data.message);
       throw new Error(response.data.message);
     }
-
   } catch (error) {
     console.error("Error uploading data", error);
     throw error;
   }
 };
+
