@@ -3,6 +3,8 @@ import axios from '../components/axiosConfig';
 import setAuthorizationToken from '../components/utils/setAuthorizationToken';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
+import qs from 'qs';
+
 
 
 
@@ -668,14 +670,26 @@ export const searchProducts = (categoryId, page = 0) =>  {
 
 
 //productbox로 담고있는 함수 로직
-export const productbox = () => {
-  const token = localStorage.getItem('accessToken');
+export const productbox = async (formData, token) => {
   const config = {
     headers: {
-      Authorization: `Bearer ${token}`
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/x-www-form-urlencoded' // 폼 데이터 전송을 위한 설정
     },
     withCredentials: true
   };
-  return (dispatch) => {
-    return axios.get(`/v1/data-products/before`, config)}
-}
+
+  try {
+    const response = await axios.post('/v1/data-products/before', qs.stringify(formData), config); // qs 라이브러리를 사용해서 객체를 쿼리 문자열로 변환
+    if (response.status === 200 && response.data.code === 0) {
+      return response.data;
+    } else {
+      console.error("Server responded with an issue:", response.data.message);
+      throw new Error(response.data.message);
+    }
+
+  } catch (error) {
+    console.error("Error uploading data", error);
+    throw error;
+  }
+};

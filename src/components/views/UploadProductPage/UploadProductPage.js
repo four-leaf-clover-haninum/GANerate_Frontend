@@ -1,16 +1,12 @@
 import React, { useState } from 'react'
 import { Typography, Button, Form, Input,Checkbox } from 'antd';
-import FileUpload from '../../utils/FileUpload';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
-import Axios from 'axios';
-import { FaUserCircle, FaDownload } from 'react-icons/fa';
+import { FaUserCircle} from 'react-icons/fa';
 import './UploadProductPage.css'
-import {createDataProduct} from '../../../_actions/user_action'
-
+import {createDataProduct, productbox} from '../../../_actions/user_action'
 const { TextArea } = Input;
 
-
-const Datasize = [
+const DataSizeOptions = [
     { key: 1, value: "100장" },
     { key: 2, value: "500장" },
     { key: 3, value: "1000장" },
@@ -35,81 +31,42 @@ const categoryIds = [
 ];
 
 function UploadProductPage(props) {
-    const [Category, setCategory] = useState([]); // Selected Datasize state
+    const [SelectedFiles, setSelectedFiles] = useState(null);
     const [Title, setTitle] = useState('');
     const [Description, setDescription] = useState('');
-    const [Price, setPrice] = useState(0);
-    const [Continent, setContinent] = useState([]); // Selected categoryIds state
-    const [Images, setImages] = useState([]);
-    // Rest of your component code
-
-    const categoryChangeHandler = (checkedValues) => {
-        setCategory(checkedValues);
-    };
-
-    const continentChangeHandler = (checkedValues) => {
-        setContinent(checkedValues);
-    };
+    const [Datasize, setDatasize] = useState([]); // 체크박스 선택
+    const [Category, setCategory] = useState([]); // 체크박스 선택
+    const [CustomCategory, setCustomCategory] = useState("");
 
 
-    const titleChangeHandler = (event) => {
-        setTitle(event.currentTarget.value)
-    }
+    const onFileChange = (event) => {setSelectedFiles(event.target.files);};
+    const titleChangeHandler = (event) => {setTitle(event.currentTarget.value)}
+    const descriptionChangeHandler = (event) => {setDescription(event.currentTarget.value)}
+    const DatasizeChangeHandler = (checkedValues) => {setDatasize(checkedValues);};
+    const categoryChangeHandler = (checkedValues) => {setCategory(checkedValues);};
+    const customCategoryChangeHandler = (event) => {setCustomCategory(event.currentTarget.value);};
 
-    const descriptionChangeHandler = (event) => {
-        setDescription(event.currentTarget.value)
-    }
-
-    const priceChangeHandler = (event) => {
-        setPrice(event.currentTarget.value)
-    }
-
-    const updateImages = (newImages) => {
-        setImages(newImages)
-    }
-
-    const [CustomCategory, setCustomCategory] = useState(""); // Custom category input
-
-
-    const customCategoryChangeHandler = (event) => {
-        setCustomCategory(event.currentTarget.value);
-    };
-
-
-    const submitHandler = async (event) => {
-        event.preventDefault();
-
-        if (!Title || !Description || !Price || !Continent || Images.length === 0) {
-            return alert("모든 값을 넣어주셔야 합니다.");
-        }
-
+    const submitHandler = async (event) => {event.preventDefault();
+        if (!Title || !Description || !Datasize || !Category || SelectedFiles.length === 0) {
+            return alert("모든 값을 넣어주셔야 합니다.");}
         const body = {
-            writer: props.user.userData._id,
             title: Title,
             description: Description,
-            price: Price,
-            images: Images,
-            categoryIds: Continent
-        };
-
+            dataSize : Datasize,
+            categoryIds: Category};
         try {
-            const token = localStorage.getItem('accessToken'); // Replace with your actual authentication token
-            const response = await createDataProduct(body, token);
-
+            const token = localStorage.getItem('accessToken'); 
+            const response = await productbox(body, token);
             if (response.code === 0) {
-                // Success handling
                 console.log("Data created successfully:", response.data);
-                // You can add further UI actions or redirects here
             } else {
-                // Error handling
                 console.error("Data creation failed:", response.message);
-                // You can show an error message to the user
             }
         } catch (error) {
             console.error("API request failed:", error);
-            // Handle API request error, show error message to the user, etc.
         }
     };
+
 
 
     return (
@@ -148,10 +105,9 @@ function UploadProductPage(props) {
 
 
       
-      
         <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                <h1> 상품 생성</h1>
+                <h1> 상품 등록 </h1>
             </div>
 
 
@@ -161,11 +117,13 @@ function UploadProductPage(props) {
 
             <Form onSubmit={submitHandler}>
                 <h5>zip 이미지 파일 업로드</h5>
-                <FileUpload refreshFunction={updateImages}>
-                <button className="upload-button">
-                zip 이미지 파일 업로드
-                </button>
-                </FileUpload>
+                <input 
+                type="file" 
+                className="upload-button" 
+                accept=".zip" 
+                onChange={onFileChange} 
+            />
+
 
 
 
@@ -184,47 +142,31 @@ function UploadProductPage(props) {
                 <br />
                 <br />
 
-                <br />
-<div style={{ display: 'flex', alignItems: 'center' }}>
-    <h5 style={{ marginRight: '10px' }}>태그</h5>
-    <span style={{ fontSize: '12px', color: '#9a1548', marginRight: '5px' }}>
-        *이미지를 나타내는 대표 문구 3가지를 작성해주세요
-    </span>
-</div>
-<div style={{ display: 'flex' }}>
-    <Input style={{ flex: 1, marginRight: '5px' }} placeholder="태그 1" />
-    <Input style={{ flex: 1, marginRight: '5px' }} placeholder="태그 2" />
-    <Input style={{ flex: 1 }} placeholder="태그 3" />
-</div>
-<br />
-<br />
-
 
                 <div className="search-category">
     <h5 style={{ marginRight: '10px', marginBottom: 0 }}>생성 데이터 수</h5>
-    <Checkbox.Group onChange={categoryChangeHandler} value={Category}>
-                {Datasize.map(item => (
-                    <Checkbox key={item.key} value={item.value}>
-                        {item.value}
-                    </Checkbox>
-                ))}
-            </Checkbox.Group>
-            {Category.includes("직접입력") && (
-                <Input
-                    placeholder="숫자로 입력해주세요"
-                    style={{ marginTop: "10px" }}
-                    value={CustomCategory}
-                    onChange={customCategoryChangeHandler}
-                />
+    <Checkbox.Group onChange={DatasizeChangeHandler} value={Datasize}>
+        {DataSizeOptions.map(item => (
+            <Checkbox key={item.key} value={item.value}>
+                {item.value}
+            </Checkbox>
+        ))}
+    </Checkbox.Group>
+    {Datasize.includes("직접입력") && (
+        <Input
+            placeholder="숫자로 입력해주세요"
+            style={{ marginTop: "10px" }}
+            value={Datasize}
+            onChange={DatasizeChangeHandler}
+        />
     )}
 </div>
-<br />
-
 
 <br />
+
 <div className="search-category">
     <h5 style={{ marginRight: '10px', marginBottom: 0 }}>카테고리</h5>
-    <Checkbox.Group onChange={continentChangeHandler} value={Continent}>
+    <Checkbox.Group onChange={categoryChangeHandler} value={Category}>
                 {categoryIds.map(item => (
                     <Checkbox key={item.key} value={item.value}>
                         {item.value}
@@ -241,6 +183,8 @@ function UploadProductPage(props) {
         <button className="data-create-button" type="submit" onClick={submitHandler}>
              데이터 생성
               </button>
+
+              
 
 
     </div>
