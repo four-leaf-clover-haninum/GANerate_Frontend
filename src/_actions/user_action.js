@@ -231,7 +231,7 @@ export function getUserProfile(userId) {
                 type: REGISTER_USER,
                 payload: responseData
             });
-            console.log('가입이 정상적으로 완료되었습니다.');
+            console.log('가입이 정상적으로 완료되었어요');
             
             return true;  // 회원가입 성공시 true 반환
         } else {
