@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import Icon from '@ant-design/icons';
 import axios from 'axios';
+import { generateProduct } from '../../_actions/user_action'
 
 function FileUpload(props) {
     const [Images, setImages] = useState([]);
@@ -35,6 +36,9 @@ function FileUpload(props) {
         });
     };
 
+
+
+    
     const deleteHandler = (image) => {
         const newImages = Images.filter(img => img !== image);
         setImages(newImages);

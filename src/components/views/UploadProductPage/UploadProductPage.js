@@ -10,14 +10,14 @@ import {createDataProduct} from '../../../_actions/user_action'
 const { TextArea } = Input;
 
 
-const Categories = [
+const Datasize = [
     { key: 1, value: "100장" },
     { key: 2, value: "500장" },
     { key: 3, value: "1000장" },
     { key: 4, value: "직접입력" }
 ]
 
-const Continents = [
+const categoryIds = [
     { key: 1, value: "보건/의료" },
     { key: 2, value: "동물/식물" },
     { key: 3, value: "사람" },
@@ -35,11 +35,11 @@ const Continents = [
 ];
 
 function UploadProductPage(props) {
-    const [Category, setCategory] = useState([]); // Selected categories state
+    const [Category, setCategory] = useState([]); // Selected Datasize state
     const [Title, setTitle] = useState('');
     const [Description, setDescription] = useState('');
     const [Price, setPrice] = useState(0);
-    const [Continent, setContinent] = useState([]); // Selected continents state
+    const [Continent, setContinent] = useState([]); // Selected categoryIds state
     const [Images, setImages] = useState([]);
     // Rest of your component code
 
@@ -89,7 +89,7 @@ function UploadProductPage(props) {
             description: Description,
             price: Price,
             images: Images,
-            continents: Continent
+            categoryIds: Continent
         };
 
         try {
@@ -151,7 +151,7 @@ function UploadProductPage(props) {
       
         <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                <h1> 상품 업로드</h1>
+                <h1> 상품 생성</h1>
             </div>
 
 
@@ -203,7 +203,7 @@ function UploadProductPage(props) {
                 <div className="search-category">
     <h5 style={{ marginRight: '10px', marginBottom: 0 }}>생성 데이터 수</h5>
     <Checkbox.Group onChange={categoryChangeHandler} value={Category}>
-                {Categories.map(item => (
+                {Datasize.map(item => (
                     <Checkbox key={item.key} value={item.value}>
                         {item.value}
                     </Checkbox>
@@ -225,7 +225,7 @@ function UploadProductPage(props) {
 <div className="search-category">
     <h5 style={{ marginRight: '10px', marginBottom: 0 }}>카테고리</h5>
     <Checkbox.Group onChange={continentChangeHandler} value={Continent}>
-                {Continents.map(item => (
+                {categoryIds.map(item => (
                     <Checkbox key={item.key} value={item.value}>
                         {item.value}
                     </Checkbox>
