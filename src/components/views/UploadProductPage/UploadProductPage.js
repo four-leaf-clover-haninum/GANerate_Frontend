@@ -3,7 +3,9 @@ import { Typography, Button, Form, Input,Checkbox } from 'antd';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle} from 'react-icons/fa';
 import './UploadProductPage.css'
-import {createDataProduct, productbox} from '../../../_actions/user_action'
+import {createDataProduct, productbox, verifyPayment1} from '../../../_actions/user_action'
+
+
 
 function UploadProductPage(props) {
 
@@ -58,7 +60,7 @@ const handlePayment = () => {
       pay_method: "card",
       merchant_uid: uniqueId, // uniqueId를 사용
       name: data.title,  // 상품 이름
-      amount: data.price * 1/100,  // 상품 가격을 사용
+      amount: data.price ,  // 상품 가격을 사용
       buyer_email: data.userEmail, // 유저 이메일 정보 사용
       buyer_name: data.userName, // 유저 이름 정보 사용
       buyer_tel: null, // 유저 전화번호 정보 (필요시 추가)
@@ -66,16 +68,42 @@ const handlePayment = () => {
       buyer_postcode: null // 유저 우편번호 정보 (필요시 추가)
     }, response => {
       if (response.success) {
-  //      verifyAndProcessPayment(response, data.dataProductId); // dataProductId 사용
+   verifyAndProcessPayment(response, data.dataProductId); // dataProductId 사용
         console.log('결제 성공', response);
       } else {
         console.error('결제 실패', response);
       }
     });
   };
+
   
 
-
+// verifyAndProcessPayment 함수 내에서의 수정
+// verifyAndProcessPayment function
+const verifyAndProcessPayment = (response, productId) => {
+    const paymentDataObject = {
+      amount: `${response.paid_amount}`,
+      dataProductId: `${productId}`,
+      imp_uid: `${response.imp_uid}`,
+    };
+  
+    verifyPayment1(paymentDataObject) // Use paymentDataObject directly
+      .then(result => {
+        if (result.success) {
+          console.log('결제 검증 및 처리 성공', result);
+          alert('결제 검증 및 처리 성공');
+          window.location.href = '/Order';
+        } else {
+          console.error('결제 검증 및 처리 실패', result);
+          alert('결제 검증 및 처리 실패');
+        }
+      })
+      .catch(error => {
+        console.error('결제 검증 및 처리 실패', error);
+        alert('결제 검증 및 처리 실패');
+      });
+  };
+  
     const [Title, setTitle] = useState('');
     const [Description, setDescription] = useState('');
     const [Datasize, setDatasize] = useState([]);
@@ -248,7 +276,7 @@ const handlePayment = () => {
                   </button>
                 )}
                 {isUploadSuccessful && (
-                  <button className="payment-btn" onClick={handlePayment}>
+                  <button className="data-create-button" onClick={handlePayment}>
                     결제하기
                   </button>
                 )}

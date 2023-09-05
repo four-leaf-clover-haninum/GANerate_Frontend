@@ -4,6 +4,7 @@ import setAuthorizationToken from '../components/utils/setAuthorizationToken';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
 import qs from 'qs';
+import paymentDataObject from '../components/views/UploadProductPage/UploadProductPage'
 
 
 
@@ -408,7 +409,7 @@ export const verifyPayment = async (paymentDataMap) => {
       return { success: false, payload: response.data };
     }
   } catch (error) {
-    console.error('결제 검증 실패', error);
+    console.error('결제 검증 실패 에러', error);
     console.log(paymentDataMap);
     console.log(Object.fromEntries(Map))
     return { success: false, payload: error.response ? error.response.data : 'Network error' };
@@ -416,6 +417,37 @@ export const verifyPayment = async (paymentDataMap) => {
 };
 
 
+
+
+// 함수 정의 부분에서 이름 변경
+export const verifyPayment1 = async (paymentDataObject) => {
+  try {
+    const token = localStorage.getItem('accessToken');
+
+    const response = await axios.post('/v1/payments/verifyIamport', paymentDataObject, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      withCredentials: true
+    });
+    if (response.data.code === 0) {
+      console.log('결제 검증 성공');
+      console.log(paymentDataObject); // 수정: paymentDataMap 대신 paymentDataObject 사용
+      return { success: true, payload: response.data };
+    } else {
+      console.log('결제 검증 실패');
+      console.log(paymentDataObject); // 수정: paymentDataMap 대신 paymentDataObject 사용
+      console.log(Object.fromEntries(Map)); // 이 부분은 필요 없어 보입니다.
+      console.log(response);
+      return { success: false, payload: response.data };
+    }
+  } catch (error) {
+    console.error('결제 검증 실패 에러', error);
+    console.log(paymentDataObject); // 수정: paymentDataMap 대신 paymentDataObject 사용
+    // console.log(Object.fromEntries(Map)); // 이 부분은 필요 없어 보입니다.
+    return { success: false, payload: error.response ? error.response.data : 'Network error' };
+  }
+};
 
 
 
