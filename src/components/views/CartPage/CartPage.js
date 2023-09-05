@@ -63,7 +63,19 @@ function CartPage() {
       setCurrentPage(0); // 검색 시 페이지 초기화
       const token = localStorage.getItem("accessToken");
       if (token) {
-        dispatch(fetchProductsByCategory("categoryId", 0, token))
+        // 이 부분에서 검색어와 카테고리, 가격 범위를 서버에 전달하도록 설정
+        const searchData = {
+          category: Category,       // 카테고리 배열
+          priceRange: PriceRange,   // 가격 범위 배열
+          searchQuery: SearchQuery  // 검색어
+        };
+    
+        // searchProducts 함수가 Promise를 반환하도록 수정
+        dispatch(searchProducts(searchData, token))
+          .then((response) => {
+            setProducts(response.data.content);
+            console.log(response.data.content); // content 배열을 사용
+          })
           .catch((error) => {
             console.error('상품 데이터를 불러오는 중 에러 발생', error);
           });
@@ -71,7 +83,7 @@ function CartPage() {
         console.error("Token is not available in local storage");
       }
     };
-
+    
 
 
 

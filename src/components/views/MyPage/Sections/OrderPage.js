@@ -212,15 +212,8 @@ function OrderPage(props) {
       )}
     
     </div>
-    
-    
-
-
     </div>
     </div>
-
-
-    
   );
 }
 

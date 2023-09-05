@@ -39,7 +39,59 @@
     font-size: 14px;
   }
   
+  /* LandingPage.css */
+
+/* 페이지 전체 스타일링 */
+
+
+/* 이용안내 콘텐츠 스타일링 */
+.landing-content {
+  background-color: #F2F2F2;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  margin: 20px;
+}
+
+/* 박스 스타일링 */
+.guide-box {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* 버튼 스타일링 */
+.ant-btn-primary {
+  background-color: #BB2649;
+  border-color: #BB2649;
+  font-weight: bold;
+  margin-top: 20px;
+}
+.ant-btn-primary:hover {
+  background-color: #FF416C;
+  border-color: #FF416C;
+}
+
+/* 타이틀 스타일링 */
+h2 {
+  color: #BB2649;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+h3 {
+  font-size: 24px;
+  margin-top: 20px;
+  color: #333;
+}
+
   
   
   
   
+
+
+
