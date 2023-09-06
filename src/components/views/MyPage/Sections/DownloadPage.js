@@ -160,10 +160,40 @@ function DownloadPage(props) {
         </div>
         </div>
       </div>
-    </div>
-    </div>
 
+
+
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', marginTop: '70px', marginLeft: '134px', maxWidth: '1000px' }}>
+          <h3 style={{ marginBottom: '20px' }}>주문 내역</h3>
+          {Array.isArray(userOrders) && userOrders.length > 0 ? (
+            <ul>
+              {userOrders.map((order, index) => ( // index를 추가하여 key 값으로 사용
+                <li key={index}>
+                  <p>주문 상품 ID: {order.dataProductId || "ID 정보 없음"}</p>
+                  <p>상품명: {order.title || "상품명 정보 없음"}</p>
+                  <p>가격: {order.price || "가격 정보 없음"}</p>
+                  <img src={order.imageUrl} alt={order.title} style={{ maxWidth: '200px', maxHeight: '200px' }} />
+                  
+                  <br/>
+                  <br/>
+                  <Button onClick={() => handleDownloadOrder(order.orderId)}> {/* orderId로 수정 */}
+                  <FaDownload style={{ marginRight: '5px' }} />
+                  다운로드
+                </Button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+        <p>주문한 상품이 없습니다.</p>
+      )}
+    
+    </div>
+    </div>
+    </div>
   );
 }
+
+
+
 
 export default DownloadPage;

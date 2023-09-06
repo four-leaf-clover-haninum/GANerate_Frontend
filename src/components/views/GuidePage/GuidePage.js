@@ -2,11 +2,15 @@ import React, { useState } from 'react'
 import { Typography, Button, Form, Input,Checkbox } from 'antd';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import Axios from 'axios';
-import { FaUserCircle, FaDownload } from 'react-icons/fa';
+import { FaDatabase, FaShoppingCart, FaUpload, FaUserCircle, FaDownload } from 'react-icons/fa';
 import './GuidePage.css'
+import 'font-awesome/css/font-awesome.min.css';
+
+
 
 
 function LandingPage(props) {
+  const iconSize = '48px'; // 아이콘 크기 설정
 
 
     return (
@@ -55,67 +59,93 @@ function LandingPage(props) {
       </div>
   </div>
 
-  <br/>
 
-  
+
+ {/* 
 
   <div className="landing-content">
- <Typography.Title level={2}>GAN:ERATE</Typography.Title>
- <Typography.Paragraph>
- 웹 기반 이미지 데이터 유통 플랫폼
- </Typography.Paragraph>
+  <Typography.Title level={2}>GAN:ERATE</Typography.Title>
+  <Typography.Paragraph>
+    웹 기반 이미지 데이터 유통 플랫폼
+  </Typography.Paragraph>
+
+  <div className="guide-box" style={{ fontSize: '15px',  color: '#9a1548', lineHeight: '1.8' }}>
+    본 플랫폼은 GAN 알고리즘을 활용하여 입력이미지 데이터와 유사한 이미지 데이터를 다량으로 제공하는 웹 기반 데이터 유통 플랫폼입니다. <br/>
+    GAN:ERATE를 통해 회원분께서 보유한 이미지를 기반으로 유사한 이미지 데이터 생성 및 거래가 가능합니다. 
+  </div>
+</div>
+
+ */}
 
 
-
-
- 
-
- {/* 예시 설명 */}
- <div className="guide-box" style={{ fontSize: '18px', lineHeight: '1.8' }}>
-
-   본 플랫폼은 GAN 알고리즘을 활용하여 입력이미지 데이터와 유사한 이미지 데이터를 다량으로 제공하는 웹 기반 데이터 유통 플랫폼입니다. <br/>
-   GAN:ERATE를 통해 회원분께서 보유한 이미지를 기반으로 유사한 이미지 데이터 생성 및 거래가 가능합니다. 
-
- </div>
- </div>
-
-
- <br/>
  <br/>
  {/* 이용안내 콘텐츠 */}
+ 
+ 
  <div className="landing-content">
- <Typography.Title level={2}>플랫폼 이용 안내</Typography.Title>
- <Typography.Paragraph>
-   플랫폼의 활용 방법을 알고싶다면, 플랫폼을 사용하기 전에 아래 내용을 확인하세요.
- </Typography.Paragraph>
+      <Typography.Title level={2} style={{ fontSize: '30px',  color: '#9a1548' }}>GAN:ERATE</Typography.Title>
+      <Typography.Paragraph>
+        플랫폼의 활용 방법을 알고싶다면, 플랫폼을 사용하기 전에 아래 내용을 확인하세요.
+      </Typography.Paragraph>
 
- {/* 예시 설명 */}
- <div className="guide-box">
-   <Typography.Title level={3}>회원 가입</Typography.Title>
-   <Typography.Paragraph>
-     먼저, 회원 가입을 해야합니다. 회원 가입을 완료하면 플랫폼의 다양한 기능을 이용할 수 있습니다.
-   </Typography.Paragraph>
- </div>
+      {/* 데이터 생성 */}
+      <div className="guide-box">
+        <Typography.Title level={3}>
+          <FaDatabase style={{ fontSize: iconSize, verticalAlign: 'middle' }} />{' '}<br/><br/>데이터 생성
+        </Typography.Title>
+        <div style={{ fontSize: '15px', color: '#333', lineHeight: '1.8' }}>
+          AI 기반, gan 알고리즘을 통해 본인이 원하는 이미지 데이터를 대량으로 생성할 수 있어요.
+          <br/>
+          획득하고자 하는 이미지를 INPUT 데이터에 업로드한 후 몇 분만 기다리시면 유사 이미지가 다량 제공됩니다.
+        </div>
+      </div>
 
- <div className="guide-box">
-   <Typography.Title level={3}>데이터 생성</Typography.Title>
-   <Typography.Paragraph>
-     데이터 생성 페이지에서 원하는 데이터를 생성하세요. 다양한 데이터 생성 옵션을 사용할 수 있습니다.
-   </Typography.Paragraph>
- </div>
+      {/* 데이터 마켓 */}
+      <div className="guide-box">
+        <Typography.Title level={3}>
+          <FaShoppingCart style={{ fontSize: iconSize, verticalAlign: 'middle' }} />{' '}<br/><br/>데이터 마켓
+        </Typography.Title>
+        <Typography.Paragraph>
+          구매하고자 하는 상품을 카테고리별로 상세 조회하여 확인할 수 있어요.
+        </Typography.Paragraph>
+      </div>
 
- <div className="guide-box">
-   <Typography.Title level={3}>데이터 마켓</Typography.Title>
-   <Typography.Paragraph>
-     데이터 마켓에서 다른 사용자가 생성한 데이터를 구매하거나 판매하세요. 다양한 데이터 상품을 확인할 수 있습니다.
-   </Typography.Paragraph>
- </div>
+      {/* 데이터 판매 */}
+      <div className="guide-box">
+        <Typography.Title level={3}>
+          <FaUpload style={{ fontSize: iconSize, verticalAlign: 'middle' }} />{' '}<br/> <br/>데이터 판매
+        </Typography.Title>
+        <Typography.Paragraph>
+          본인이 이미지 파일을 zip 형태로 업로드하여, 이미지 데이터를 직접 판매할 수 있어요.
+        </Typography.Paragraph>
+      </div>
 
- {/* 추가 요소 */}
- <Button type="primary" size="large" style={{ marginTop: '20px' }}>더 알아보기</Button>
+      {/* 데이터 다운로드 */}
+      <div className="guide-box">
+        <Typography.Title level={3}>
+        <FaDownload style={{ fontSize: iconSize, verticalAlign: 'middle' }} />{' '}<br/><br/>데이터 다운로드
+        </Typography.Title>
+        <Typography.Paragraph>
+          [MYPAGE]의 '구매한 상품 다운로드' 목록에서 구매한 상품을 다운로드 받을 수 있어요.
+        </Typography.Paragraph>
+      </div>
+    </div>
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+
 </div>
+
+
+
 </div>
-</div>
+
+
+
 );
 }
 
