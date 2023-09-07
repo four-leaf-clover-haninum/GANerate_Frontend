@@ -16,6 +16,7 @@ import DownloadPage from './views/MyPage/Sections/DownloadPage'
 import EditPage from './views/MyPage/Sections/EditPage'
 import HeartPage from './views/MyPage/Sections/HeartPage'
 import OrderPage from './views/MyPage/Sections/OrderPage'
+import PreparePage from './views/PreparePage/PreparePage'
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/Edit" element={<EditPage />} />
           <Route path="/Heart" element={<HeartPage />} />
           <Route path="/Order" element={<OrderPage />} />
+          <Route path="/prepare" element={<PreparePage />} />
       </Routes>
     </div>
   );

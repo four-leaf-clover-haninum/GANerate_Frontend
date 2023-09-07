@@ -201,10 +201,10 @@ function OrderPage(props) {
                   <p>상품명: {order.title || "상품명 정보 없음"}</p>
                   <p>가격: {order.price || "가격 정보 없음"}</p>
                   <img src={order.imageUrl} alt={order.title} style={{ maxWidth: '200px', maxHeight: '200px' }} />
-                  
-                  <br/>
-                  <br/>
-                
+                  <Button onClick={() => handleDownloadOrder(order.orderId)}> {/* orderId로 수정 */}
+                  <FaDownload style={{ marginRight: '5px' }} />
+                  다운로드
+                </Button>
                 </li>
               ))}
             </ul>

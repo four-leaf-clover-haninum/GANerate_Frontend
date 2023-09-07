@@ -1,13 +1,49 @@
 import React, { useState,  useEffect} from 'react'
 import { Typography, Button, Form, Input,Checkbox } from 'antd';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
+import { FcNeutralTrading} from 'react-icons/fc';
 import { FaUserCircle} from 'react-icons/fa';
-import './UploadProductPage.css'
-import {createDataProduct, productbox, verifyPayment1} from '../../../_actions/user_action'
+import './PreparePage.css'
+import {after, verifyPayment1, productbox} from '../../../_actions/user_action'
 
 
 
-function UploadProductPage(props) {
+function PreparePage(props) {
+
+const [isCreatingProduct, setIsCreatingProduct] = useState(false);
+const token = localStorage.getItem('accessToken');
+const zipFileData = null; // ZIP 파일 데이터를 여기에 설정
+const requestBody = productbox(
+    data.title,
+    Description,
+     parseInt(Datasize),
+     Category
+  );
+
+const handleCreateProductClick = () => {
+    setIsCreatingProduct(true);
+    after(token, zipFileData, requestBody)
+      .then(response => {
+        setIsCreatingProduct(false);
+        console.log('상품 생성 요청이 완료되었습니다.', response);
+      })
+      .catch(error => {
+        setIsCreatingProduct(false);
+        console.error('상품 생성 요청 중 오류 발생:', error);
+      });
+  };
+
+
+
+
+
+
+
+
+
+
+
+
 
 const [isUploadSuccessful, setIsUploadSuccessful] = useState(false);
 const [data, setData] = useState(null); // 초기에는 null로 설정
@@ -59,7 +95,7 @@ const handlePayment = () => {
       pg: "html5_inicis",
       pay_method: "card",
       merchant_uid: uniqueId, // uniqueId를 사용
-      name:Title,
+      name: data.title,  // 상품 이름
       amount: data.price ,  // 상품 가격을 사용
       buyer_email: data.userEmail, // 유저 이메일 정보 사용
       buyer_name: data.userName, // 유저 이름 정보 사용
@@ -92,7 +128,7 @@ const verifyAndProcessPayment = (response, productId) => {
         if (result.success) {
           console.log('결제 검증 및 처리 성공', result);
           alert('결제 검증 및 처리 성공');
-          window.location.href = '/Order';
+          window.location.href = '/prepare';
         } else {
           console.error('결제 검증 및 처리 실패', result);
           alert('결제 검증 및 처리 실패');
@@ -158,6 +194,7 @@ const verifyAndProcessPayment = (response, productId) => {
       
 
 
+        
     return (
 
         <div className="HomePage d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
@@ -195,106 +232,31 @@ const verifyAndProcessPayment = (response, productId) => {
 
       
         <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ textAlign: 'center' }}>
                 <h1> 상품 등록 </h1>
+                <br/>
             </div>
-
-
-           <div className="row mt-4">
-    <div className="col-lg-12 offset-lg-0">
+            <div className="row mt-4">
+      <div className="col-lg-12 offset-lg-0">
         <div className="search-form-box my-custom-box p-4 rounded bg-light">
+          <p className="centered-text"><FcNeutralTrading style={{ fontSize: '10rem' }} /><br/> <strong>상품이 생성을 시작하겠습니다.
+          <br/> 예상 소요시간은 15-20분 입니다. </strong>  </p>
 
-
-
-
-        <Form onSubmit={submitHandler}>
-                <h5>zip 이미지 파일 업로드</h5>
-                <input 
-                type="file" 
-                className="upload-button" 
-                accept=".zip" 
-                onChange={onFileChange} 
-            />
-
-
-
-
-                <br />
-
-                <br />
-                <h5 style={{ marginRight: '10px' }}>파일명</h5>
-                <Input placeholder="생성하고자 하는 이미지 데이터 파일의 이름을 입력해주세요" onChange={titleChangeHandler} value={Title} />
-
-                <br />
-                <br />
-
-                <br />
-                <h5 style={{ marginRight: '10px' }}>설명</h5>
-                <TextArea placeholder="생성하고자 하는 이미지 데이터 파일을 3줄 이상 설명해주세요" onChange={descriptionChangeHandler} value={Description} />
-                <br />
-                <br />
-
-
-                <div className="search-category">
-    <h5 style={{ marginRight: '10px', marginBottom: 0 }}>생성 데이터 수</h5>
-    <Checkbox.Group onChange={DatasizeChangeHandler} value={Datasize}>
-        {DataSizeOptions.map(item => (
-            <Checkbox key={item.key} value={item.value}>
-                {item.value}
-            </Checkbox>
-        ))}
-    </Checkbox.Group>
-    {Datasize.includes("직접입력") && (
-        <Input
-            placeholder="숫자로 입력해주세요"
-            style={{ marginTop: "10px" }}
-            value={Datasize}
-            onChange={DatasizeChangeHandler}
-        />
-    )}
-</div>
-
-<br />
-
-<div className="search-category">
-    <h5 style={{ marginRight: '10px', marginBottom: 0 }}>카테고리</h5>
-    <Checkbox.Group onChange={categoryChangeHandler} value={Category}>
-                {categoryIds.map(item => (
-                    <Checkbox key={item.key} value={item.value}>
-                        {item.value}
-                    </Checkbox>
-                ))}
-            </Checkbox.Group>
-
-</div>
-<br />
-                <br />
-                <div className="button-container">
-                {!isUploadSuccessful && (
-                  <button className="data-create-button" type="submit" onClick={submitHandler}>
-                    데이터 생성
-                  </button>
-                )}
-                {isUploadSuccessful && (
-                  <button className="data-create-button" onClick={handlePayment}>
-                    결제하기
-                  </button>
-                )}
-              </div>
-              
-
-            </Form>
-
-
+          <br/> 
+          <button
+          className="btn btn-primary"
+          onClick={handleCreateProductClick}
+          disabled={isCreatingProduct}
+        >
+          {isCreatingProduct ? '상품 생성 중...' : '상품 생성하기'}
+        </button>
 
         </div>
-        </div>
-
-
-        </div>
-
-
+      </div>
+    </div>
         
+
+
 
         </div>
         </div>
@@ -304,4 +266,4 @@ const verifyAndProcessPayment = (response, productId) => {
 }
 
 
-export default UploadProductPage
+export default PreparePage;

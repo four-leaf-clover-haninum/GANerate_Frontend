@@ -739,53 +739,8 @@ export const fetchProductsByCategory = (categoryIds, page, token) => {
       });
   };
 };
-// // 서버에서 상품 데이터 가져오는 액션
-// export const fetchProducts = (page, categoryId) => {
-//   const token = localStorage.getItem('accessToken');
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${token}`
-//     },
-//     withCredentials: true
-//   };
-//   return (dispatch) => {
-//     return axios.get(`/v1/data-products?categoryId=${categoryId}&page=${page}`, config)
-//       .then(response => {
-//         dispatch({
-//           type: SET_PRODUCTS,
-//           payload: response.data,
-//         });
-//         return response.data;
-//       })
-//       .catch(err => {
-//         console.error('통신코드에서 상품데이터를 가져오는 에러' + err);
-//         throw err;
-//       });
-//   };
-// };
 
 
-
-
-// // 검색 결과 가져오는 액션
-// export const searchProducts = (categoryId, page = 0) =>  {
-//   const token = localStorage.getItem('accessToken');
-//   return (dispatch) => {
-//     axios.get(`/v1/data-products/category/${categoryId}?page=${page}`, {
-//       headers: {
-//         'Authorization': `Bearer ${token}`
-//       },
-//       withCredentials: true
-//     })
-
-//     .then(response => {
-//       dispatch(setProducts(response.data));
-//     })
-//     .catch(err => {
-//       console.error('Error occurred while fetching search results:', err);
-//     });
-//   };
-// };
 
 
 
@@ -844,4 +799,45 @@ export const productbox = async (token, title, description, dataSize, categoryId
     throw error;
   }
 };
+
+
+
+
+
+
+// `after` 함수 정의
+export function after(token, zipFileData, requestBody) {
+  // API 엔드포인트 URL
+  const apiUrl = '/v1/data-products/after';
+
+  // 요청 헤더 설정
+  const headers = {
+    'Content-Type': 'multipart/mixed; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm',
+    Authorization: `Bearer ${token}`,
+  };
+
+  // 폼 데이터 생성
+  const formData = new FormData();
+  formData.append('zipFile', zipFileData, 'test.zip');
+  formData.append('request', JSON.stringify(requestBody));
+
+  // axios를 사용한 HTTP POST 요청 보내기
+  return axios.post(apiUrl, formData, {
+    headers,
+    withCredentials: true,
+  })
+  .then(response => {
+    const responseData = response.data;
+    if (responseData.code === 0) {
+      console.log('API 요청 성공:', responseData.message);
+    } else {
+      console.error('API 요청 실패:', responseData.message);
+    }
+    return responseData;
+  })
+  .catch(error => {
+    console.error('API 요청 오류:', error);
+    throw error; // 오류 처리
+  });
+}
 
