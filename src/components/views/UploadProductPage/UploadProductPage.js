@@ -53,7 +53,7 @@ const handlePayment = () => {
     const milliseconds = timestamp % 1000; // 밀리초 부분 추출
     const uniqueId = `order_${timestamp}_${milliseconds}`; // 타임스탬프와 밀리초를 결합
   
-    const IMP = window.IMP;
+    // const IMP = window.IMP;
     IMP.init("imp31818680");
     IMP.request_pay({
       pg: "html5_inicis",
