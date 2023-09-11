@@ -3,13 +3,14 @@ import { Typography, Button, Form, Input,Checkbox } from 'antd';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle} from 'react-icons/fa';
 import './UploadProductPage.css'
-import {createDataProduct, productbox, verifyPayment1} from '../../../_actions/user_action'
+import {createDataProduct, productbox, after, verifyPayment1} from '../../../_actions/user_action'
 
 
 
 function UploadProductPage(props) {
 
 const [isUploadSuccessful, setIsUploadSuccessful] = useState(false);
+const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
 const [data, setData] = useState(null); // 초기에는 null로 설정
 
 const { TextArea } = Input;
@@ -53,7 +54,7 @@ const handlePayment = () => {
     const milliseconds = timestamp % 1000; // 밀리초 부분 추출
     const uniqueId = `order_${timestamp}_${milliseconds}`; // 타임스탬프와 밀리초를 결합
   
-    // const IMP = window.IMP;
+const IMP = window.IMP;
     IMP.init("imp31818680");
     IMP.request_pay({
       pg: "html5_inicis",
@@ -92,7 +93,41 @@ const verifyAndProcessPayment = (response, productId) => {
         if (result.success) {
           console.log('결제 검증 및 처리 성공', result);
           alert('결제 검증 및 처리 성공');
-          window.location.href = '/Order';
+
+          setIsPaymentSuccessful(true); // 상태를 true로 변경
+          
+          
+          const token = localStorage.getItem('accessToken');
+          const requestBody = {
+            title: Title,
+            description: Description,
+            dataSize: parseInt(Datasize),
+            categoryIds: Category
+          };
+
+
+          after(token, zipFileData, requestBody)
+
+          
+            .then(afterResponse => {
+              // after 함수의 응답에 따라 작업 수행
+              if (afterResponse.code === 0) {
+                console.log('after 함수 성공:', afterResponse.message);
+    
+                // 여기에서 원하는 작업 수행
+              } else {
+                console.error('after 함수 실패:', afterResponse.message);
+                // 실패 처리
+              }
+            })
+            .catch(error => {
+              console.error('after 함수 오류:', error);
+              //console.error(afterResponse)
+              // 오류 처리
+            });
+
+
+        //  window.location.href = '/Order';
         } else {
           console.error('결제 검증 및 처리 실패', result);
           alert('결제 검증 및 처리 실패');
@@ -108,9 +143,17 @@ const verifyAndProcessPayment = (response, productId) => {
     const [Description, setDescription] = useState('');
     const [Datasize, setDatasize] = useState([]);
     const [Category, setCategory] = useState([]);
-    const [SelectedFiles, setSelectedFiles] = useState(null);
+    const [SelectedFiles, setSelectedFiles] = useState([]);
+
     const [CustomCategory, setCustomCategory] = useState("");
-    const onFileChange = (event) => { setSelectedFiles(event.target.files); };
+    const [zipFileData, setZipFileData] = useState(null);
+    const onFileChange = (event) => {
+      const file = event.target.files[0];
+      console.log(file); // 파일이 올바르게 선택되었는지 확인
+      setZipFileData(file);
+      setSelectedFiles(file);
+    };
+
 
 
     const titleChangeHandler = (event) => {
@@ -137,6 +180,8 @@ const verifyAndProcessPayment = (response, productId) => {
         ) {
           return alert('모든 값을 넣어주셔야 합니다.');
         }
+
+
         try {
             const token = localStorage.getItem('accessToken');
             const response = await productbox(token, Title, Description, Datasize, Category);
@@ -208,14 +253,13 @@ const verifyAndProcessPayment = (response, productId) => {
 
 
         <Form onSubmit={submitHandler}>
-                <h5>zip 이미지 파일 업로드</h5>
-                <input 
-                type="file" 
-                className="upload-button" 
-                accept=".zip" 
-                onChange={onFileChange} 
-            />
-
+  <h5>zip 이미지 파일 업로드</h5>
+  <input 
+    type="file" 
+    className="upload-button" 
+    accept=".zip" 
+    onChange={onFileChange} // 파일 선택 시 실행되는 함수
+  />
 
 
 

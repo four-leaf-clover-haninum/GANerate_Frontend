@@ -805,14 +805,52 @@ export const productbox = async (token, title, description, dataSize, categoryId
 
 
 
-// `after` 함수 정의
+// // `after` 함수 정의
+// export function after(token, zipFileData, requestBody) {
+//   // API 엔드포인트 URL
+//   const apiUrl = '/v1/data-products/after';
+
+//   // 요청 헤더 설정
+//   const headers = {
+//     'Content-Type': 'multipart/mixed; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm',
+//     Authorization: `Bearer ${token}`,
+//   };
+
+//   // 폼 데이터 생성
+//   const formData = new FormData();
+//   formData.append('zipFile', zipFileData, 'test.zip');
+//   formData.append('request', JSON.stringify(requestBody));
+
+//   // axios를 사용한 HTTP POST 요청 보내기
+//   return axios.post(apiUrl, formData, {
+//     headers,
+//     withCredentials: true,
+//   })
+//   .then(response => {
+//     const responseData = response.data;
+//     if (responseData.code === 0) {
+//       console.log('API 요청 성공:', responseData.message);
+//     } else {
+//       console.error('API 요청 실패:', responseData.message);
+//     }
+//     return responseData;
+//   })
+//   .catch(error => {
+//     console.error('API 요청 오류:', error);
+//     throw error; // 오류 처리
+//   });
+// }
+
+
+
+
+
 export function after(token, zipFileData, requestBody) {
   // API 엔드포인트 URL
   const apiUrl = '/v1/data-products/after';
 
   // 요청 헤더 설정
   const headers = {
-    'Content-Type': 'multipart/mixed; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm',
     Authorization: `Bearer ${token}`,
   };
 
@@ -820,6 +858,9 @@ export function after(token, zipFileData, requestBody) {
   const formData = new FormData();
   formData.append('zipFile', zipFileData, 'test.zip');
   formData.append('request', JSON.stringify(requestBody));
+
+  // Content-Type 설정 _ 콘텐트 타입 일시 제거
+  //headers['Content-Type'] = `multipart/form-data; boundary=${formData._boundary}`;
 
   // axios를 사용한 HTTP POST 요청 보내기
   return axios.post(apiUrl, formData, {
@@ -840,4 +881,3 @@ export function after(token, zipFileData, requestBody) {
     throw error; // 오류 처리
   });
 }
-
