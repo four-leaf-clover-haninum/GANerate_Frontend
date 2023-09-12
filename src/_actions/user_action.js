@@ -845,39 +845,69 @@ export const productbox = async (token, title, description, dataSize, categoryId
 
 
 
+// export function after(token, zipFileData, requestBody) {
+//   const apiUrl = '/v1/data-products/after';
+//   const headers = {
+//     Authorization: `Bearer ${token}`,
+//     'Content-Type': 'application/json'
+//   };
+
+//   const formData = new FormData();
+//   formData.append('zipFile', zipFileData, 'test.zip');
+//   formData.append('request', JSON.stringify(requestBody));
+
+//   return axios.post(apiUrl, formData, {
+//     headers,
+//     withCredentials: true,
+//   })
+//   .then(response => {
+//     const responseData = response.data;
+//     console.log(responseData)
+//     if (responseData.code === 0) {
+//       console.log('API 요청 성공:', responseData.message);
+//     } else {
+//       console.error('API 요청 실패:', responseData.message);
+//     }
+//     return responseData;
+//   })
+//   .catch(error => {
+//     console.error('API 요청 오류:', error);
+//     throw error; // 오류 처리
+//   });
+// }
+
+
 export function after(token, zipFileData, requestBody) {
-  // API 엔드포인트 URL
   const apiUrl = '/v1/data-products/after';
 
-  // 요청 헤더 설정
-  const headers = {
+  // application/json 헤더 설정
+  const jsonHeaders = {
     Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json', // application/json 헤더 설정
   };
 
-  // 폼 데이터 생성
+  // multipart/form-data로 파일 설정
   const formData = new FormData();
   formData.append('zipFile', zipFileData, 'test.zip');
+  
+  // JSON 데이터를 별도의 요청 파트로 추가
   formData.append('request', JSON.stringify(requestBody));
 
-  // Content-Type 설정 _ 콘텐트 타입 일시 제거
-  //headers['Content-Type'] = `multipart/form-data; boundary=${formData._boundary}`;
+  // axios.all을 사용하여 두 개의 요청을 병렬로 보낼 수 있습니다.
+  return axios.all([
+    axios.post(apiUrl, formData, { headers: { ...jsonHeaders, 'Content-Type': 'multipart/form-data' }, withCredentials: true }),
+  ])
+    .then(axios.spread((response1) => {
+      // 요청에 대한 응답을 처리합니다.
+      const responseData1 = response1.data;
+      console.log(responseData1);
 
-  // axios를 사용한 HTTP POST 요청 보내기
-  return axios.post(apiUrl, formData, {
-    headers,
-    withCredentials: true,
-  })
-  .then(response => {
-    const responseData = response.data;
-    if (responseData.code === 0) {
-      console.log('API 요청 성공:', responseData.message);
-    } else {
-      console.error('API 요청 실패:', responseData.message);
-    }
-    return responseData;
-  })
-  .catch(error => {
-    console.error('API 요청 오류:', error);
-    throw error; // 오류 처리
-  });
+      // 필요한 처리를 수행합니다.
+
+      return { responseData1 };
+    }))
+    .catch(error => {
+      console.error('API 요청 오류:', error);
+      throw error; // 오류 처리
+    });
 }

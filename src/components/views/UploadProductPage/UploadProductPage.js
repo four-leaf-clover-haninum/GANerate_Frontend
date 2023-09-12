@@ -96,24 +96,17 @@ const verifyAndProcessPayment = (response, productId) => {
 
           setIsPaymentSuccessful(true); // 상태를 true로 변경
           
-          
           const token = localStorage.getItem('accessToken');
           const requestBody = {
-            title: Title,
-            description: Description,
-            dataSize: parseInt(Datasize),
-            categoryIds: Category
+            orderId: `${response.imp_uid}`,
+            dataProductId: `${productId}`
           };
-
-
-          after(token, zipFileData, requestBody)
-
           
+          after(token, zipFileData, requestBody)
             .then(afterResponse => {
               // after 함수의 응답에 따라 작업 수행
               if (afterResponse.code === 0) {
                 console.log('after 함수 성공:', afterResponse.message);
-    
                 // 여기에서 원하는 작업 수행
               } else {
                 console.error('after 함수 실패:', afterResponse.message);
