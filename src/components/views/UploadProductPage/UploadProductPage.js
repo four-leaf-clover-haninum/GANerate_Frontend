@@ -4,7 +4,7 @@ import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle} from 'react-icons/fa';
 import './UploadProductPage.css'
 import {createDataProduct, productbox, after, verifyPayment1} from '../../../_actions/user_action'
-
+import axios from '../../axiosConfig'
 
 
 function UploadProductPage(props) {
@@ -81,73 +81,168 @@ const IMP = window.IMP;
 
 // verifyAndProcessPayment 함수 내에서의 수정
 // verifyAndProcessPayment function
+
+
 const verifyAndProcessPayment = (response, productId) => {
-    const paymentDataObject = {
-      amount: `${response.paid_amount}`,
-      dataProductId: `${productId}`,
-      imp_uid: `${response.imp_uid}`,
-    };
-  
-    verifyPayment1(paymentDataObject) // Use paymentDataObject directly
-      .then(result => {
-        if (result.success) {
-          console.log('결제 검증 및 처리 성공', result);
-          alert('결제 검증 및 처리 성공');
-
-          setIsPaymentSuccessful(true); // 상태를 true로 변경
-          
-          const token = localStorage.getItem('accessToken');
-          const requestBody = {
-            orderId: `${response.imp_uid}`,
-            dataProductId: `${productId}`
-          };
-          
-          after(token, zipFileData, requestBody)
-            .then(afterResponse => {
-              // after 함수의 응답에 따라 작업 수행
-              if (afterResponse.code === 0) {
-                console.log('after 함수 성공:', afterResponse.message);
-                // 여기에서 원하는 작업 수행
-              } else {
-                console.error('after 함수 실패:', afterResponse.message);
-                // 실패 처리
-              }
-            })
-            .catch(error => {
-              console.error('after 함수 오류:', error);
-              //console.error(afterResponse)
-              // 오류 처리
-            });
-
-
-        //  window.location.href = '/Order';
-        } else {
-          console.error('결제 검증 및 처리 실패', result);
-          alert('결제 검증 및 처리 실패');
-        }
-      })
-      .catch(error => {
-        console.error('결제 검증 및 처리 실패', error);
-        alert('결제 검증 및 처리 실패');
-      });
+  const paymentDataObject = {
+    amount: `${response.paid_amount}`,
+    dataProductId: `${productId}`,
+    imp_uid: `${response.imp_uid}`,
   };
+
+  verifyPayment1(paymentDataObject)
+    .then(result => {
+      if (result.success) {
+        console.log('결제 검증 및 처리 성공', result);
+        alert('결제 검증 및 처리 성공');
+
+        setIsPaymentSuccessful(true); // 상태를 true로 변경
+
+        const token = localStorage.getItem('accessToken');
+        const formData = new FormData();
+        
+        // zipFile 추가
+        formData.append('zipFile', zipFileData, 'test.zip');
+
+        // JSON 데이터를 문자열로 직렬화하여 추가
+        formData.append(
+          'request',
+          new Blob([JSON.stringify({
+            orderId: result.payload.data.orderId,
+            dataProductId: productId,
+          })], { type: 'application/json' }),
+          'jsondata.json'
+        );
+        
+
+        const apiUrl = '/v1/data-products/after';
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+
+        // axios로 POST 요청을 보냅니다.
+        axios.post(apiUrl, formData, {
+            headers: {
+              ...headers,
+              'Content-Type': 'multipart/form-data', // 멀티파트(form-data) 형식
+            },
+            withCredentials: true,
+          })
+          .then(response1 => {
+            const responseData1 = response1.data;
+            console.log(responseData1);
+            if (responseData1.code === 0) {
+              console.log('after 함수 성공:', responseData1.message);
+            } else {
+              console.error('after 함수 실패:', responseData1.message);
+            }
+          })
+          .catch(error => {
+            console.error('after 함수 오류:', error);
+          });
+      } else {
+        console.error('결제 검증 및 처리 실패', result);
+        alert('결제 검증 및 처리 실패');
+      }
+    })
+    .catch(error => {
+      console.error('결제 검증 및 처리 실패', error);
+      alert('결제 검증 및 처리 실패');
+    });
+};
+
+
+// const verifyAndProcessPayment = (response, productId) => {
+//     const paymentDataObject = {
+//       amount: `${response.paid_amount}`,
+//       dataProductId: `${productId}`,
+//       imp_uid: `${response.imp_uid}`,
+//     };
+  
+
+//     verifyPayment1(paymentDataObject) // Use paymentDataObject directly
+//       .then(result => {
+//         if (result.success) {
+//           console.log('결제 검증 및 처리 성공', result);
+//           alert('결제 검증 및 처리 성공');
+
+//           setIsPaymentSuccessful(true); // 상태를 true로 변경
+       
+//           console.log(result)
+
+
+//           const token = localStorage.getItem('accessToken');
+//           const request = {
+//             "orderId" : result.payload.data.orderId,
+//             "dataProductId" : productId
+//           };
+          
+//           console.log(request)
+
+//           const apiUrl = '/v1/data-products/after';
+//           const jsonHeaders = {
+//             Authorization: `Bearer ${token}`,
+//             'Content-Type': 'application/json',
+//           };
+
+//           const formData = new FormData();
+//           formData.append('zipFile', zipFileData, 'test.zip');
+
+//           axios.post(apiUrl, JSON.stringify(request), {
+//               headers: jsonHeaders,
+//               withCredentials: true,
+//             })
+//             .then((response1) => {
+//               const responseData1 = response1.data;
+//               console.log(responseData1);
+//               if (responseData1.code === 0) {
+//                 console.log('after 함수 성공:', responseData1.message);
+//               } else {
+//                 console.error('after 함수 실패:', responseData1.message);
+//               }
+//             })
+//             .catch((error) => {
+//               console.error('after 함수 오류:', error);
+//             });
+
+
+            
+//         } else {
+//           console.error('결제 검증 및 처리 실패', result);
+//           alert('결제 검증 및 처리 실패');
+//         }
+//       })
+//       .catch((error) => {
+//         console.error('결제 검증 및 처리 실패', error);
+//         alert('결제 검증 및 처리 실패');
+//       });
+//   };
   
     const [Title, setTitle] = useState('');
     const [Description, setDescription] = useState('');
     const [Datasize, setDatasize] = useState([]);
     const [Category, setCategory] = useState([]);
-    const [SelectedFiles, setSelectedFiles] = useState([]);
 
     const [CustomCategory, setCustomCategory] = useState("");
     const [zipFileData, setZipFileData] = useState(null);
+    // const onFileChange = (event) => {
+    //   const file = event.target.files[0];
+    //   console.log(file); // 파일이 올바르게 선택되었는지 확인
+    //   setZipFileData(file);
+   
+    // };
+
     const onFileChange = (event) => {
       const file = event.target.files[0];
       console.log(file); // 파일이 올바르게 선택되었는지 확인
-      setZipFileData(file);
-      setSelectedFiles(file);
+      if (file) {
+        setZipFileData(file);
+      } else {
+        console.error('파일이 선택되지 않았습니다.');
+      }
     };
 
-
+    
 
     const titleChangeHandler = (event) => {
         setTitle(event.currentTarget.value);
@@ -168,8 +263,8 @@ const verifyAndProcessPayment = (response, productId) => {
           !Description ||
           !Datasize ||
           !Category ||
-          !SelectedFiles ||
-          SelectedFiles.length === 0
+          !zipFileData
+
         ) {
           return alert('모든 값을 넣어주셔야 합니다.');
         }
