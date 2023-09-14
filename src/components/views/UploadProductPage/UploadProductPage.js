@@ -100,28 +100,44 @@ const verifyAndProcessPayment = (response, productId) => {
       const token = localStorage.getItem('accessToken');
       const formData = new FormData();
       // 이름, 변수, 파일이름
-      const zipFile = new File([zipFileData], 'test.zip', { type: 'application/zip' });
-      formData.append('zipFile', zipFile);
-      //formData.append('zipFile', zipFileData, 'test.zip', zipFileData.type)
-      // 이름, 변수, 파일이름 (콘솔창에서 잘 나오는지 확인)
-      formData.append('requestpart', new Blob([JSON.stringify({
-          "orderId": result.payload.data.orderId,
-          "dataProductId": productId,
-        })], { type: 'application/json' }), 'jsondata.json');
+      let zipFileBlob; // 블록 외부에서 변수를 먼저 선언
 
-      console.log(result.payload.data.orderId, productId)
-      
-      console.log(new Blob([JSON.stringify({
-        "orderId": result.payload.data.orderId,
-        "dataProductId": productId,
-      })],{ type: 'application/json' }),'jsondata.json')
+if (zipFileData) {
+  // zipFileBlob 정의
+  zipFileBlob = new Blob([zipFileData], { type: 'application/zip' });
+  formData.append('zipFile', zipFileBlob, 'test.zip');
+} else {
+  console.error('zip 파일이 선택되지 않았습니다.');
+  return; // zip 파일이 없으면 중단
+}
 
-      console.log([zipFileData], 'test.zip', { type: 'application/zip' })
+// 이제 zipFileBlob을 여기서도 사용할 수 있습니다.
+
+      const requestPartData = {
+        orderId: result.payload.data.orderId,
+        dataProductId: productId,
+      };
+      const requestPartBlob = new Blob([JSON.stringify(requestPartData)], {
+        type: 'application/json'
+      });
+      formData.append('request', requestPartBlob, 'jsondata');
+
+
+      console.log(zipFileData);
+      console.log(zipFileBlob);
+      console.log(requestPartData);
+      console.log(requestPartBlob);
+      for (let key of formData.keys()) {
+        console.log(key);
+      }
+      for (let value of formData.values()) {
+        console.log(value);
+      }
 
       const apiUrl = '/v1/data-products/after';
       const headers = {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data; charset=utf-8',
+  'Content-Type': `multipart/mixed; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm`,
       };
 
       axios.post(apiUrl, formData, {
@@ -237,12 +253,13 @@ const verifyAndProcessPayment = (response, productId) => {
       const file = event.target.files[0];
       console.log(file); // 파일이 올바르게 선택되었는지 확인
       if (file) {
-        setZipFileData(file);
+        // 파일을 File 객체로 생성하여 zipFileData로 설정
+        const zipFile = new File([file], file.name, { type: file.type });
+        setZipFileData(zipFile);
       } else {
         console.error('파일이 선택되지 않았습니다.');
       }
     };
-
     
 
     const titleChangeHandler = (event) => {
