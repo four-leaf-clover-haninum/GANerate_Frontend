@@ -39,8 +39,6 @@ import {
 
 
 
-
-
 // 제품 상세 조회
 export function getProductDetail(dataProductId) {
   const token = localStorage.getItem('accessToken');

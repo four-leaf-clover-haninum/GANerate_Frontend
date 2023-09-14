@@ -150,6 +150,8 @@ if (zipFileData) {
         console.log(responseData1);
         if (responseData1.code === 0) {
           console.log('after 함수 성공:', responseData1.message);
+          alert('상품 등록이 성공적으로 완료되었습니다. 유사 데이터가 생성되는 데에는 약 15-20분이 소요될 예정입니다. 일정 시간 이후 [MyPage] 함의 [구매한 내역 다운로드] 항목에서 해당 상품을 다운로드 받으실 수 있습니다.')
+          window.location.href = '/MyPage';
         } else {
           console.error('after 함수 실패:', responseData1.message);
         }
@@ -360,6 +362,7 @@ if (zipFileData) {
 
         <Form onSubmit={submitHandler}>
   <h5>zip 이미지 파일 업로드</h5>
+  <p>      *폴더 압축이 아닌 이미지 압축 zip파일을 업로드 해주세요 </p>
   <input 
     type="file" 
     className="upload-button" 
