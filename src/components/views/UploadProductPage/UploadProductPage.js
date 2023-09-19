@@ -14,6 +14,7 @@ const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
 const [data, setData] = useState(null); // 초기에는 null로 설정
 
 const { TextArea } = Input;
+//
 
 const DataSizeOptions = [
     { key: 1, value: "100장" },
