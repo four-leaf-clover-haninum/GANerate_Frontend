@@ -3,7 +3,7 @@ import { Typography, Button, Form, Input,Checkbox } from 'antd';
 import { Navbar as CustomNavbar, Nav } from 'react-bootstrap';
 import { FaUserCircle} from 'react-icons/fa';
 import './UploadProductPage.css'
-import {createDataProduct, productbox, after, verifyPayment1} from '../../../_actions/user_action'
+import {createDataProduct, productbox, after, verifyPayment1, eventSource, loginUser} from '../../../_actions/user_action'
 import axios from '../../axiosConfig'
 //import EventSource from 'eventsource';
 
@@ -19,8 +19,8 @@ const { TextArea } = Input;
 //
 
 const DataSizeOptions = [
-    { key: 1, value: "100장" },
-    { key: 2, value: "500장" },
+    { key: 1, value: "10장" },
+    { key: 2, value: "100장" },
     { key: 3, value: "1000장" },
     { key: 4, value: "직접입력" }
 ]
@@ -48,6 +48,8 @@ useEffect(() => {
       setData(JSON.parse(savedData));
     }
   }, []);
+
+  
 
 
 const handlePayment = () => {
@@ -172,6 +174,36 @@ if (zipFileData) {
 // };
 
 
+const eventSource =  new EventSource(`http://3.35.255.4/v1/subscribe?token=${token}`);
+
+// eventSource.addEventListener('sse', (event) => {
+// const eventData = event.data
+//   console.log('SSE Event Data:', eventData);
+//   alert ('상품이 생성되었습니다. [MYPAGE]에서 확인하세요')
+// });
+
+
+let responseCount = 0; // Initialize a counter to track the number of responses
+
+eventSource.addEventListener('sse', (event) => {
+  const eventData = event.data;
+  console.log('SSE Event Data:', eventData);
+
+  // Check if this is the second response
+  if (responseCount === 1) {
+    alert('상품이 생성되었습니다. [MYPAGE]에서 확인하세요');
+    window.location.href = '/Order';
+          window.scrollTo(0, 0);
+  }
+
+  // Increment the response count
+  responseCount++;
+});
+
+
+eventSource.onerror = (error) => {
+  console.error('SSE Error:', error);
+};
 
 
 
@@ -185,7 +217,7 @@ if (zipFileData) {
         console.log(responseData1);
         if (responseData1.code === 0) {
           console.log('after 함수 성공:', responseData1.message);
-          alert('상품 등록이 성공적으로 완료되었습니다. 유사 데이터가 생성되는 데에는 약 15-20분이 소요될 예정입니다. 일정 시간 이후 [MyPage] 함의 [구매한 내역 다운로드] 항목에서 해당 상품을 다운로드 받으실 수 있습니다.')
+         // alert('상품 등록이 성공적으로 완료되었습니다. 유사 데이터가 생성되는 데에는 약 15-20분이 소요될 예정입니다. 일정 시간 이후 [MyPage] 함의 [구매한 내역 다운로드] 항목에서 해당 상품을 다운로드 받으실 수 있습니다.')
         //  window.location.href = '/MyPage';
         } else {
           console.error('after 함수 실패:', responseData1.message);

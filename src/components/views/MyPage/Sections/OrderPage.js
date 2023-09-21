@@ -177,13 +177,12 @@ function OrderPage(props) {
           </p>
           <p>
             <IoMailSharp style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-            Email: john@example.com
+            Email: hanium@example.com
           </p>
         </div>
         <div style={{ color: 'white', flex: 1 }}>
         <p>
-        <FaDollarSign style={{ verticalAlign: 'middle', marginRight: '5px' }} />
-        Points: {userPoints.data}
+
       </p>
         </div>
         </div>
@@ -201,6 +200,7 @@ function OrderPage(props) {
                   <p>상품명: {order.title || "상품명 정보 없음"}</p>
                   <p>가격: {order.price || "가격 정보 없음"}</p>
                   <img src={order.imageUrl} alt={order.title} style={{ maxWidth: '200px', maxHeight: '200px' }} />
+             
                   <Button onClick={() => handleDownloadOrder(order.orderId)}> {/* orderId로 수정 */}
                   <FaDownload style={{ marginRight: '5px' }} />
                   다운로드

@@ -50,7 +50,7 @@ function CartPage() {
     const handleCategoryChange = (checkedValues) => {
       // 카테고리 체크박스 선택 시 동작
       setCategory(checkedValues);
-      setCurrentPage(0); // 페이지 초기화
+      setCurrentPage(1); // 페이지 초기화
     };
 
     const handleSearchQueryChange = (e) => {

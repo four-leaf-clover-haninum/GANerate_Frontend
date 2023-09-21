@@ -88,32 +88,13 @@ export function loginUser(dataToSubmit) {
 
         console.log("로그인에 성공하였습니다."); // 로그인 성공 메시지는 개발 도구의 콘솔에만 출력
 
-        // Set up EventSource for SSE
-     //   const token = data.accessToken;
-        // const token = localStorage.getItem('accessToken');
-        // console.log('Token:', token);
-
-        // const eventSource = new EventSource('http://3.35.255.4/v1/subscribe', {
-        //   headers: {
-        //     Authorization: `Bearer ${token}` // JWT 토큰을 "Authorization" 헤더에 추가
-        //   }
-        // });
-
-        // console.log('Token:', eventSource);
-
-        // eventSource.addEventListener('sse', event => {
-        //   console.log(event);
-        // });
-
-        // eventSource.onerror = (error) => {
-        //   console.error('SSE Error:', error);
-        // };
-
         const token = localStorage.getItem('accessToken');
         console.log('Token:', token);
 
 
   const eventSource = new EventSource(`http://3.35.255.4/v1/subscribe?token=${token}`);
+
+ 
 
   eventSource.addEventListener('sse', (event) => {
  const eventData = event.data
@@ -126,8 +107,9 @@ export function loginUser(dataToSubmit) {
 
 
 
-        return data; // dispatch 후 data 반환 (다음 then에서 사용하게 됨)
+        return data, eventSource
       } 
+     
       
       
       
@@ -140,6 +122,8 @@ export function loginUser(dataToSubmit) {
     }
   };
 }
+
+
 
 
 // export function loginUser(dataToSubmit) {
