@@ -103,10 +103,15 @@ const verifyAndProcessPayment = (response, productId) => {
       // 이름, 변수, 파일이름
       let zipFileBlob; // 블록 외부에서 변수를 먼저 선언
 
+      // 업로드한 파일 이름 가져오기
+const uploadedFileName = zipFileData.name;
+
+// zip 파일 업로드 설정
+
 if (zipFileData) {
   // zipFileBlob 정의
   zipFileBlob = new Blob([zipFileData], { type: 'application/zip' });
-  formData.append('zipFile', zipFileBlob, 'test.zip');
+  formData.append('zipFile', zipFileBlob, uploadedFileName);
 } else {
   console.error('zip 파일이 선택되지 않았습니다.');
   return; // zip 파일이 없으면 중단
@@ -152,7 +157,7 @@ if (zipFileData) {
         if (responseData1.code === 0) {
           console.log('after 함수 성공:', responseData1.message);
           alert('상품 등록이 성공적으로 완료되었습니다. 유사 데이터가 생성되는 데에는 약 15-20분이 소요될 예정입니다. 일정 시간 이후 [MyPage] 함의 [구매한 내역 다운로드] 항목에서 해당 상품을 다운로드 받으실 수 있습니다.')
-          window.location.href = '/MyPage';
+        //  window.location.href = '/MyPage';
         } else {
           console.error('after 함수 실패:', responseData1.message);
         }
@@ -335,7 +340,7 @@ if (zipFileData) {
   
           {/* 로그인 및 마이페이지 링크 추가 및 라우팅 설정 */}
           <Nav className="ml-auto">
-          <Nav.Link href="/v1/users/sign-in" className="btn btn-1" style={{ fontSize: '20px', color: 'white' }}>Log In</Nav.Link>
+          <Nav.Link href="/v1/users/sign-in" className="btn btn-1" style={{ fontSize: '20px', color: 'white' }}>Log Out</Nav.Link>
           <Nav.Link href="/MyPage" className="btn btn-2 ml-2" style={{ fontSize: '20px', color: 'white', marginLeft: '20px' }}>
             <FaUserCircle style={{ fontSize: '24px', marginRight: '10px' }} />
             My Page

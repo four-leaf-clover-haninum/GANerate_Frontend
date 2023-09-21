@@ -32,7 +32,7 @@ function LandingPage(props) {
   
           {/* 로그인 및 마이페이지 링크 추가 및 라우팅 설정 */}
           <Nav className="ml-auto">
-          <Nav.Link href="/v1/users/sign-in" className="btn btn-1" style={{ fontSize: '20px', color: 'white' }}>Log In</Nav.Link>
+          <Nav.Link href="/v1/users/sign-in" className="btn btn-1" style={{ fontSize: '20px', color: 'white' }}>Log Out</Nav.Link>
           <Nav.Link href="/MyPage" className="btn btn-2 ml-2" style={{ fontSize: '20px', color: 'white', marginLeft: '20px' }}>
             <FaUserCircle style={{ fontSize: '24px', marginRight: '10px' }} />
             My Page
