@@ -83,18 +83,23 @@ const IMP = window.IMP;
   };
 
 
-const verifyAndProcessPayment = (response, productId) => {
+const verifyAndProcessPayment = (response, dataProductId) => {
   const paymentDataObject = {
     amount: `${response.paid_amount}`,
-    dataProductId: `${productId}`,
+    dataProductId: `${data.dataProductId}`,
     imp_uid: `${response.imp_uid}`,
   };
+
+
+
+
+
 
   verifyPayment1(paymentDataObject)
   .then(result => {
     if (result.success) {
       console.log('결제 검증 및 처리 성공', result);
-      alert('결제 검증 및 처리 성공');
+      alert('결제 검증 및 처리가 정상적으로 완료되었습니다. \n AI를 통해 이미지 데이터가 생성되는 데에 시간이 소요될 예정이니 잠시만 기다려주세요.');
       setIsPaymentSuccessful(true); // 상태를 true로 변경 -> 버튼떄매 설정한 겨
 
       const token = localStorage.getItem('accessToken');
@@ -121,8 +126,9 @@ if (zipFileData) {
 
       const requestPartData = {
         orderId: result.payload.data.orderId,
-        dataProductId: productId,
+        dataProductId: dataProductId,
       };
+
       const requestPartBlob = new Blob([JSON.stringify(requestPartData)], {
         type: 'application/json'
       });
@@ -292,6 +298,8 @@ eventSource.onerror = (error) => {
             if (response.code === 0) {
               console.log('Data created successfully:', response.data);
       
+              const paid_productid = response.data.dataProductId
+          
               // 업로드 성공 시 데이터 저장
               localStorage.setItem('uploadedData', JSON.stringify(response.data));
       
@@ -305,6 +313,7 @@ eventSource.onerror = (error) => {
           }
         };
       
+ 
 
 
     return (
@@ -371,7 +380,7 @@ eventSource.onerror = (error) => {
                 <br />
 
                 <br />
-                <h5 style={{ marginRight: '10px' }}>파일명</h5>
+                <h5 style={{ marginRight: '10px' }}>상품 이름</h5>
                 <Input placeholder="생성하고자 하는 이미지 데이터 파일의 이름을 입력해주세요" onChange={titleChangeHandler} value={Title} />
 
                 <br />
