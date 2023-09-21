@@ -242,8 +242,12 @@ function CartPage() {
 {/* 상품 불러오기 */}
 <div className="row mt-4">
   {Products.map(product => (
-    <Link to={`/v1/data-products/${product.dataProductId}`} key={product.dataProductId} className="link-no-underline">
+    <Link to={`/v1/data-products/${product.dataProductId}`} key={product.dataProductId} className="link-no-underline" onClick={() => window.scrollTo(0, 0)}>
       <div className="col-lg-12 offset-lg-0 product-card">
+
+
+
+
 
       <div className="product-image">
         <img alt="product" src={product.imageUrl} style={{ width: '180px', height: '180px', objectFit: 'cover' }} />
@@ -283,11 +287,18 @@ function CartPage() {
   <div className="pagination">
     {[...Array(10).keys()].map((pageIndex) => (
       <Button
-        key={pageIndex}
-        className={`page-number-button ${currentPage === pageIndex ? 'active' : ''}`}
-        onClick={() => setCurrentPage(pageIndex)}
-        style={{ marginLeft: '5px', marginRight: '5px' }}
-      >
+
+      key={pageIndex}
+      className={`page-number-button ${currentPage === pageIndex ? 'active' : ''}`}
+      onClick={() => {
+        setCurrentPage(pageIndex);
+
+        // 페이지 이동 및 스크롤
+      //  window.location.href = '/Order';
+        window.scrollTo(0, 0);
+      }}
+      style={{ marginLeft: '5px', marginRight: '5px' }}
+    >
         {pageIndex + 1}
       </Button>
     ))}

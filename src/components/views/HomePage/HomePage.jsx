@@ -139,8 +139,8 @@ function HomePage() {
           {/* 플랫폼 이용 안내 */}
           <section className="py-5 bg-image-full" style={{ backgroundImage: `url(${appleBackground})` }}>
   <div className="text-center my-1">
-    <h2 className="text-white fs-0 fw-bolder" style={{ fontSize: '50px', marginBottom: '20px' }}>인기데이터 넣을 예정</h2>
-    <p className="text-white fs-0" style={{ fontSize: '20px', color: '#FECCBE' }}>
+    <h2 className="text-white fs-0 fw-bolder" style={{ fontSize: '50px', marginBottom: '20px' }}> </h2>
+    <p className="text-white fs-0" style={{ fontSize: '40px', color: '#FECCBE' }}>
       GAN:ERATE
     </p>
   </div>

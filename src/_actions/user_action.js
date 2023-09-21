@@ -71,35 +71,104 @@ export function getProductDetail(dataProductId) {
 }
 
 
-
-
 export function loginUser(dataToSubmit) {
   return async (dispatch) => {
-      try {
-          const response = await axios.post('/v1/users/sign-in', dataToSubmit);
-          const { code, data } = response.data;
-          if (code === 0) {
+    try {
+      const response = await axios.post('/v1/users/sign-in', dataToSubmit);
+      const { code, data } = response.data;
+      if (code === 0) {
+        localStorage.setItem('accessToken', data.accessToken);
+        setAuthorizationToken(data.accessToken);
 
-            localStorage.setItem('accessToken', data.accessToken);
-            setAuthorizationToken(data.accessToken);
+        alert('로그인에 성공하였습니다.');
+        dispatch({
+          type: LOGIN_USER,
+          payload: data,
+        });
 
-            alert('로그인에 성공하였습니다.');
-            dispatch({
-                type: LOGIN_USER,
-                payload: data
-            });
+        console.log("로그인에 성공하였습니다."); // 로그인 성공 메시지는 개발 도구의 콘솔에만 출력
 
-            console.log("로그인에 성공하였습니다.");  // 로그인 성공 메시지는 개발 도구의 콘솔에만 출력
-            return data;  // dispatch 후 data 반환 (다음 then에서 사용하게 됨)
-          } else {
-            throw new Error("로그인에 실패하였습니다."); // 로그인 실패 처리
-          }
-      } catch (error) {
-          console.error("There was an error logging in:", error);
-          return null; // 로그인 실패 시 null 반환
+        // Set up EventSource for SSE
+     //   const token = data.accessToken;
+        // const token = localStorage.getItem('accessToken');
+        // console.log('Token:', token);
+
+        // const eventSource = new EventSource('http://3.35.255.4/v1/subscribe', {
+        //   headers: {
+        //     Authorization: `Bearer ${token}` // JWT 토큰을 "Authorization" 헤더에 추가
+        //   }
+        // });
+
+        // console.log('Token:', eventSource);
+
+        // eventSource.addEventListener('sse', event => {
+        //   console.log(event);
+        // });
+
+        // eventSource.onerror = (error) => {
+        //   console.error('SSE Error:', error);
+        // };
+
+        const token = localStorage.getItem('accessToken');
+        console.log('Token:', token);
+
+
+  const eventSource = new EventSource(`http://3.35.255.4/v1/subscribe?token=${token}`);
+
+  eventSource.addEventListener('sse', (event) => {
+ const eventData = event.data
+    console.log('SSE Event Data:', eventData);
+  });
+
+  eventSource.onerror = (error) => {
+    console.error('SSE Error:', error);
+  };
+
+
+
+        return data; // dispatch 후 data 반환 (다음 then에서 사용하게 됨)
+      } 
+      
+      
+      
+      else {
+        throw new Error("로그인에 실패하였습니다."); // 로그인 실패 처리
       }
+    } catch (error) {
+      console.error("There was an error logging in:", error);
+      return null; // 로그인 실패 시 null 반환
+    }
   };
 }
+
+
+// export function loginUser(dataToSubmit) {
+//   return async (dispatch) => {
+//       try {
+//           const response = await axios.post('/v1/users/sign-in', dataToSubmit);
+//           const { code, data } = response.data;
+//           if (code === 0) {
+
+//             localStorage.setItem('accessToken', data.accessToken);
+//             setAuthorizationToken(data.accessToken);
+
+//             alert('로그인에 성공하였습니다.');
+//             dispatch({
+//                 type: LOGIN_USER,
+//                 payload: data
+//             });
+
+//             console.log("로그인에 성공하였습니다.");  // 로그인 성공 메시지는 개발 도구의 콘솔에만 출력
+//             return data;  // dispatch 후 data 반환 (다음 then에서 사용하게 됨)
+//           } else {
+//             throw new Error("로그인에 실패하였습니다."); // 로그인 실패 처리
+//           }
+//       } catch (error) {
+//           console.error("There was an error logging in:", error);
+//           return null; // 로그인 실패 시 null 반환
+//       }
+//   };
+// }
 
 
 

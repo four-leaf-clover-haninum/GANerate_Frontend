@@ -229,10 +229,15 @@ function DetailProductPage(props) {
     <br/>
 
     <div className="payment-button">
-  <Link to={`/v1/orders/${productId}`} className="payment-btn">
-    유료 결제 후 다운로드 받기
-  </Link>
-</div>
+    <Link
+      to={`/v1/orders/${productId}`}
+      className="payment-btn"
+      onClick={() => window.scrollTo(0, 0)}
+    >
+      유료 결제 후 다운로드 받기
+    </Link>
+  </div>
+  
 
         </div>
         </div>    

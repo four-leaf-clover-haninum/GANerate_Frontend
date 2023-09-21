@@ -5,6 +5,8 @@ import { FaUserCircle} from 'react-icons/fa';
 import './UploadProductPage.css'
 import {createDataProduct, productbox, after, verifyPayment1} from '../../../_actions/user_action'
 import axios from '../../axiosConfig'
+//import EventSource from 'eventsource';
+
 
 
 function UploadProductPage(props) {
@@ -78,11 +80,6 @@ const IMP = window.IMP;
     });
   };
 
-  
-
-// verifyAndProcessPayment 함수 내에서의 수정
-// verifyAndProcessPayment function
-
 
 const verifyAndProcessPayment = (response, productId) => {
   const paymentDataObject = {
@@ -107,6 +104,7 @@ const verifyAndProcessPayment = (response, productId) => {
 const uploadedFileName = zipFileData.name;
 
 // zip 파일 업로드 설정
+
 
 if (zipFileData) {
   // zipFileBlob 정의
@@ -146,6 +144,37 @@ if (zipFileData) {
   'Content-Type': `multipart/mixed; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm`,
       };
 
+
+
+
+
+    
+// EventSource를 사용하여 SSE 스트림을 연결하고 인
+
+// const eventSource = new EventSource(`http://3.35.255.4/v1/subscribe`, {
+//   headers: {
+//     Authorization: `Bearer ${token}`
+//   },
+// });
+
+// // 토큰을 로그로 출력합니다.
+// console.log('Token:', token);
+
+// // SSE 이벤트 리스너를 설정합니다.
+// eventSource.addEventListener('sse', (event) => {
+//   const eventData = JSON.parse(event.data);
+//   console.log(eventData);
+// });
+
+// // SSE 오류 핸들러를 설정합니다.
+// eventSource.onerror = (error) => {
+//   console.error('SSE Error:', error);
+// };
+
+
+
+
+
       axios.post(apiUrl, formData, {
         headers:headers,
         withCredentials: true
@@ -176,72 +205,6 @@ if (zipFileData) {
     alert('결제 검증 및 처리 실패');
   })};
 
-
-// const verifyAndProcessPayment = (response, productId) => {
-//     const paymentDataObject = {
-//       amount: `${response.paid_amount}`,
-//       dataProductId: `${productId}`,
-//       imp_uid: `${response.imp_uid}`,
-//     };
-  
-
-//     verifyPayment1(paymentDataObject) // Use paymentDataObject directly
-//       .then(result => {
-//         if (result.success) {
-//           console.log('결제 검증 및 처리 성공', result);
-//           alert('결제 검증 및 처리 성공');
-
-//           setIsPaymentSuccessful(true); // 상태를 true로 변경
-       
-//           console.log(result)
-
-
-//           const token = localStorage.getItem('accessToken');
-//           const request = {
-//             "orderId" : result.payload.data.orderId,
-//             "dataProductId" : productId
-//           };
-          
-//           console.log(request)
-
-//           const apiUrl = '/v1/data-products/after';
-//           const jsonHeaders = {
-//             Authorization: `Bearer ${token}`,
-//             'Content-Type': 'application/json',
-//           };
-
-//           const formData = new FormData();
-//           formData.append('zipFile', zipFileData, 'test.zip');
-
-//           axios.post(apiUrl, JSON.stringify(request), {
-//               headers: jsonHeaders,
-//               withCredentials: true,
-//             })
-//             .then((response1) => {
-//               const responseData1 = response1.data;
-//               console.log(responseData1);
-//               if (responseData1.code === 0) {
-//                 console.log('after 함수 성공:', responseData1.message);
-//               } else {
-//                 console.error('after 함수 실패:', responseData1.message);
-//               }
-//             })
-//             .catch((error) => {
-//               console.error('after 함수 오류:', error);
-//             });
-
-
-            
-//         } else {
-//           console.error('결제 검증 및 처리 실패', result);
-//           alert('결제 검증 및 처리 실패');
-//         }
-//       })
-//       .catch((error) => {
-//         console.error('결제 검증 및 처리 실패', error);
-//         alert('결제 검증 및 처리 실패');
-//       });
-//   };
   
     const [Title, setTitle] = useState('');
     const [Description, setDescription] = useState('');
@@ -250,12 +213,7 @@ if (zipFileData) {
 
     const [CustomCategory, setCustomCategory] = useState("");
     const [zipFileData, setZipFileData] = useState(null);
-    // const onFileChange = (event) => {
-    //   const file = event.target.files[0];
-    //   console.log(file); // 파일이 올바르게 선택되었는지 확인
-    //   setZipFileData(file);
-   
-    // };
+
 
     const onFileChange = (event) => {
       const file = event.target.files[0];

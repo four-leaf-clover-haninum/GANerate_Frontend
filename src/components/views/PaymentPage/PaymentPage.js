@@ -106,6 +106,7 @@ const requestPay = () => {
           console.log('결제 검증 및 처리 성공', result);
           alert('결제 검증 및 처리 성공');
           window.location.href = '/Order';
+          window.scrollTo(0, 0);
         } else {
           console.error('결제 검증 및 처리 실패', result);
         }
