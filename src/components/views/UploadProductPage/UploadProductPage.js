@@ -90,9 +90,7 @@ const verifyAndProcessPayment = (response, dataProductId) => {
     imp_uid: `${response.imp_uid}`,
   };
 
-
-
-
+//
 
 
   verifyPayment1(paymentDataObject)
